@@ -134,6 +134,18 @@
     <ClInclude Include="HolderSprite.h">
       <Filter>Framework\Game Entity\Items</Filter>
     </ClInclude>
+    <ClInclude Include="ItemFivePoints.h">
+      <Filter>Framework\Game Entity\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemEnergy.h">
+      <Filter>Framework\Game Entity\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPowerStone.h">
+      <Filter>Framework\Game Entity\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemManager.h">
+      <Filter>Framework\Game Entity\Items</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameGlobal.cpp">

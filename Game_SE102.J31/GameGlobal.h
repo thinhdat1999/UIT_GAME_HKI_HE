@@ -107,6 +107,7 @@ struct Rect {
 	Rect() {}
 	Rect(float x, float y, float width, float height)
 	{
+		//Bottom-left
 		this->x = x;
 		this->y = y;
 		this->width = width;
@@ -115,6 +116,18 @@ struct Rect {
 	bool isContain(Rect r)
 	{
 		return !((x + width < r.x) || (x > r.x + r.width) || (y < r.y - r.height) || (y - height > r.y));
+	}
+};
+struct Platform {
+	Rect rect;
+	int type;
+	Platform() {}
+	Platform(float x, float y, float width, float height, int type) {
+		this->rect.x = x;
+		this->rect.y = y;
+		this->rect.width = width;
+		this->rect.height = height;
+		this->type = type;
 	}
 };
 struct Wall

@@ -4,14 +4,21 @@
 #include "SceneManager.h"
 #include "WeaponShield.h"
 #include "GameMap.h"
+#include "Grid.h"
+
 class PlayScene : public Scene
 {
 private:
-	float _timeCounter;
+	Grid *grid;
 	GameMap *mMap;
-	int MapWidth, MapHeight;
 	Player *p;
 	Weapon *weapon;
+	
+	
+
+	float _timeCounter;	
+	int MapWidth, MapHeight;
+	std::unordered_set<Object*> visibleObjects;
 	// Counter nhằm Update Scene sau một khoảng thời gian
 public:
 
@@ -20,7 +27,7 @@ public:
 
 	void LoadMap(const char *filePath);
 	void Update(float dt);	// Update các thông số các đối tượng trong Scene
-	void UpdateObject(float dt);
+	void UpdateObjects(float dt);
 	void UpdatePlayer(float dt);
 	void Render();									// Tải Scene lên màn hình
 	void UpdateVisibleObjects();

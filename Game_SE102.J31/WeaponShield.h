@@ -57,7 +57,7 @@ public:
 				this->isOut = false;
 				player->isHoldingShield = true;
 				player->_allow[THROWING] = true;
-				this->isDead = true;
+				/*this->isDead = true;*/
 			}
 		}
 	}

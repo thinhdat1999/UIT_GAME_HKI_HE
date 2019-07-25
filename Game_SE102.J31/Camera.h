@@ -7,7 +7,9 @@ private:
 	static Camera* instance;
 
 public:
-	// Tọa độ top, left
+	// Tọa độ world (top,left)
+	float worldY;
+	// Tọa độ viewport
 	float x, y;
 	int width, height;
 

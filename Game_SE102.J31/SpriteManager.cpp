@@ -18,7 +18,7 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new PlayerSprite(RUNNING, 116, 10, 140, 58));
 	sprites->AddSprite(new PlayerSprite(RUNNING, 147, 10, 172, 58));
 	sprites->AddSprite(new PlayerSprite(SHIELD_UP, 179, 10, 205, 58));
-	sprites->AddSprite(new PlayerSprite(SITTING, 211, 27, 236, 57));
+	sprites->AddSprite(new PlayerSprite(SITTING, 204, 26, 236, 56));
 	sprites->AddSprite(new PlayerSprite(JUMPING, 242, 10, 267, 58));
 	sprites->AddSprite(new PlayerSprite(SPINNING, 274, 27, 296, 51));
 	sprites->AddSprite(new PlayerSprite(SPINNING, 311, 27, 333, 51));
@@ -27,8 +27,8 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new PlayerSprite(THROWING, 56, 73, 97, 113));
 	sprites->AddSprite(new PlayerSprite(ATTACKING_STAND, 104, 70, 145, 113));
 	sprites->AddSprite(new PlayerSprite(ATTACKING_STAND, 153, 70, 185, 113));
-	sprites->AddSprite(new PlayerSprite(ATTACKING_SIT, 195, 83, 233, 113));
-	sprites->AddSprite(new PlayerSprite(ATTACKING_SIT, 243, 83, 274, 113));
+	sprites->AddSprite(new PlayerSprite(ATTACKING_SIT, 194, 82, 232, 112));
+	sprites->AddSprite(new PlayerSprite(ATTACKING_SIT, 234, 82, 272, 112));
 	sprites->AddSprite(new PlayerSprite(DASHING, 279, 83, 314, 113));
 	sprites->AddSprite(new PlayerSprite(DASHING, 320, 83, 362, 113));
 	sprites->AddSprite(new PlayerSprite(SHIELD_DOWN, 368, 83, 392, 113));

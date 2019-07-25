@@ -1,5 +1,5 @@
 #pragma once
-#include "Item.h"
+#include "Object.h"
 #include "Camera.h"
 
 class Holder : public Object
@@ -11,13 +11,19 @@ public:
 	bool isAttacked;
 	int itemID;
 
-	Holder() {}
+	Holder() {
+		this->tag = HOLDER;
+		this->width = HOLDER_WIDTH;
+		this->height = HOLDER_HEIGHT;
+		animation = new Animation(ITEM, 0);
+	}
 	Holder(int itemID)
 	{
 		this->tag = HOLDER;
 		this->width = HOLDER_WIDTH;
 		this->height = HOLDER_HEIGHT;
 		this->itemID = itemID;
+		animation = new Animation(WEAPON, 0);
 	}
 
 	~Holder()

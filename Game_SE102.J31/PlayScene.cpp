@@ -6,6 +6,8 @@ PlayScene::PlayScene()
 	_timeCounter = 0;
 	LoadMap("Resource/CharlestonMap.txt");
 	MapWidth = 2048; MapHeight = 480;
+	grid = new Grid(MapWidth, MapHeight);
+
 	p = player;
 
 	p->posX = p->spawnX = 50;
@@ -17,9 +19,9 @@ PlayScene::PlayScene()
 	weapon->posY = p->posY + 5;
 	weapon->isReverse = p->isReverse;
 	if (!p->isReverse) weapon->vx = -weapon->vx;
-
 	mCamera->x = 0;
 	mCamera->y = p->posY + (mCamera->height >> 1);
+
 }
 
 PlayScene::~PlayScene()
@@ -30,6 +32,8 @@ void PlayScene::LoadMap(const char * filePath)
 {
 	mMap = new GameMap(filePath);
 	//scoreboard = new ScoreBoard();
+
+
 }
 
 void PlayScene::Update(float dt)
@@ -37,18 +41,18 @@ void PlayScene::Update(float dt)
 	mCamera->x = p->posX - (mCamera->width >> 1);
 	mCamera->y = p->posY + (mCamera->height >> 1);
 	mMap->Update(dt);
+	grid->Update();
 
-	//grid->Update();
+	
 
 	//scoreboard->Update(dt);
 
-	/*UpdateObject(dt);*/
-	
+	UpdateObjects(dt);
 	UpdatePlayer(dt);
 
 }
 
-/*void PlayScene::UpdateObject(float dt)
+void PlayScene::UpdateObjects(float dt)
 {
 	auto it = visibleObjects.begin();
 	while (it != visibleObjects.end())
@@ -56,48 +60,17 @@ void PlayScene::Update(float dt)
 		auto o = *it;
 		switch (o->tag)
 		{
-		case ENEMY:
+		case HOLDER:
 		{
-			auto e = (Enemy*)o;
-			e->Update(dt);
-			grid->MoveObject(e, e->x + e->vx*dt, e->y + e->vy*dt);
-
-			switch (e->type)
-			{
-			case E_CLOAKMAN:
-			case E_GUNMAN:
-			case E_BAZOKA:
-			{
-				if (e->isDoneAtk)
-				{
-					if (e->_state == ATTACKING && e->_curAnimation->isLastFrame)
-					{
-						auto bullet = EnemyBullet::CreateBullet(e->type);
-						bullet->isReverse = e->isReverse;
-						if (bullet->isReverse)
-							bullet->vx = -bullet->vx;
-						bullet->x = e->x + (e->isReverse ? -5 : 5);
-						bullet->y = e->y + 3;
-						bullet->ChangeState(ATK_WITH_WEAPON);
-						grid->AddObject(bullet);
-						e->bulletCount--;
-
-						if (e->bulletCount == 0)
-						{
-							e->bulletCount = e->bulletTotal;
-							e->ChangeState(RUNNING);
-						}
-					}
-				}
-				break;
-			}
-			}
+			auto h = (Holder*)o;
+			h->Update(dt);
+			break;
 		}
-		case BULLET:
+		case ITEM:
 		{
-			Bullet* bullet = (Bullet*)o;
-			bullet->Update(dt);
-			grid->MoveObject(bullet, bullet->x + bullet->dx, bullet->y + bullet->dy);
+			Item* i = (Item*)o;
+			i->Update(dt);
+			grid->MoveObject(i, i->posX, i->posY + i->dy);
 			break;
 		}
 		}
@@ -105,11 +78,10 @@ void PlayScene::Update(float dt)
 	}
 	this->UpdateVisibleObjects();
 }
-*/
 void PlayScene::UpdatePlayer(float dt)
 {
 	
-	player->Update(dt);
+	player->Update(dt, grid->GetColliableObjects(player));
 	player->posX += player->vx * dt;
 	player->posY += player->vy * dt;
 	
@@ -122,7 +94,10 @@ void PlayScene::UpdatePlayer(float dt)
 		player->_allow[THROWING] = false;
 		if (!p->isReverse) weapon->vx = -weapon->vx;
 	}
-	weapon->Update(dt);
+	if (player->isHoldingShield)
+		weapon->Update(dt);
+	else
+	weapon->Update(dt, grid->GetColliableObjects(weapon));
 }
 
 // Tải Scene lên màn hình bằng cách vẽ các Sprite trong Scene
@@ -130,8 +105,8 @@ void PlayScene::Render()
 {
 	mMap->Render();
 	//scoreboard->Render();
-	//for (auto o : visibleObjects)
-	//	o->Render(mCamera->GetPositionX(), mCamera->GetPositionY());
+	for (auto o : visibleObjects)
+		o->Render(mCamera->x, mCamera->y);
 	player->Render(mCamera->x, mCamera->y);
 	weapon->Render(mCamera->x, mCamera->y);
 
@@ -139,8 +114,7 @@ void PlayScene::Render()
 
 void PlayScene::UpdateVisibleObjects()
 {
-	//visibleObjects.clear();
-	/*auto it = visibleObjects.begin();
+	auto it = visibleObjects.begin();
 	while (it != visibleObjects.end())
 	{
 		if ((*it)->tag != WEAPON)
@@ -152,7 +126,7 @@ void PlayScene::UpdateVisibleObjects()
 	for (auto o : grid->GetVisibleObjects())
 	{
 		visibleObjects.insert(o);
-	}*/
+	}
 }
 
 void PlayScene::OnKeyDown(int key)

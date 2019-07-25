@@ -6,7 +6,7 @@
 #include "PlayerJumpingState.h"
 #include "PlayerShieldUpState.h"
 #include "PlayerAttackingState.h"
-
+#include "Holder.h"
 class Player : public Object
 {
 private:
@@ -35,7 +35,7 @@ public:
 	void CheckGroundCollision(std::unordered_set<Rect*> grounds);
 	void CheckWallCollision(std::unordered_set<Wall*> walls);
 	void ChangeState(PlayerState* newState);
-	void Update(float dt);
+	void Update(float dt, std::unordered_set<Object*> ColliableObjects);
 	void Render(float cameraX = 0, float cameraY = 0);
 	void OnKeyDown(int keyCode);
 	void OnKeyUp(int keyCode);

@@ -35,15 +35,17 @@ void Camera::Update(Rect mapRect)
 	}
 	// Camera đi về phần trên
 	if (this->y >= mapRect.height) {
-		this->y = 0;
+		this->worldY = 0;
+		this->y = mapRect.height;
 	}
 	// Camera đi về phần dưới 
 	else if (mapRect.height - this->y >= mapRect.height - this->height) {
-		this->y = mapRect.height - this->height;
+		this->worldY = mapRect.height - this->height;
+		this->y = this->height;
 	}
 	// Chuyển đổi tọa độ bottom-left về góc tọa độ top-left để vẽ 
 	else {
-		this->y = mapRect.height - this->y;
+		this->worldY = mapRect.height - this->y;
 	}
 
 }

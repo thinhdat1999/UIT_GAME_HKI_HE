@@ -6,7 +6,7 @@ class Item : public Object
 {
 protected:
 	float existsTime;
-	Rect groundBound;
+	Platform groundBound;
 	CSprite* sprite;
 
 public:
@@ -19,17 +19,17 @@ public:
 		this->height = ITEM_HEIGHT;
 	}
 
-	void DetectGround(std::unordered_set<Rect*> grounds)
+	void DetectGround(std::unordered_set<Platform*> grounds)
 	{
 		for (auto g : grounds)
 		{
-			Rect rect;
-			rect.x = this->posX - (this->width >> 1);
-			rect.y = g->y;
-			rect.width = this->width;
-			rect.height = this->height;
+			Platform pf;
+			pf.rect.x = this->posX - (this->width >> 1);
+			pf.rect.y = g->rect.y;
+			pf.rect.width = this->width;
+			pf.rect.height = this->height;
 
-			if (rect.isContain(*g) && g->y >= groundBound.y && this->posY - (this->height >> 1) >= g->y)
+			if (pf.rect.isContain(g->rect) && g->rect.y >= groundBound.rect.y && this->posY - (this->height >> 1) >= g->rect.y)
 			{
 				groundBound = *g;
 			}
@@ -38,7 +38,7 @@ public:
 
 	void Update(float dt)
 	{
-		if (this->IsCollide(groundBound))
+		if (this->IsCollide(groundBound.rect))
 		{
 			this->vy = 0;
 			this->dy = 0;

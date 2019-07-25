@@ -4,6 +4,8 @@
 #include "Camera.h"
 #include "Cell.h"
 #include "Player.h"
+#include "Holder.h"
+#include "ItemManager.h"
 #include <fstream>
 
 class Grid
@@ -23,6 +25,7 @@ public:
 	Rect viewPort;
 	void CreateGridFile(int level);
 	Grid(int level);
+	Grid(int mapWidth, int mapHeight);
 	~Grid();
 	std::vector<std::vector<Cell*>> cells;
 	std::vector<Cell*> visibleCells;
@@ -34,13 +37,14 @@ public:
 	void MoveObject(Object* obj, float posX, float posY);
 	void RemoveObject(Object* obj);
 	void AddObject(Object* obj);
+	void AddGround(Platform *g);
 	void UpdateVisibleCells();
 
 	std::unordered_set<Object*> GetVisibleObjects();
 	std::unordered_set<Wall*> GetVisibleWalls();
-	std::unordered_set<Rect*> GetVisibleGrounds();
+	std::unordered_set<Platform*> GetVisibleGrounds();
 
 	std::unordered_set<Wall*> GetColliableWalls(Object* obj);
-	std::unordered_set<Rect*> GetColliableGrounds(Object* obj);
+	std::unordered_set<Platform*> GetColliableGrounds(Object* obj);
 	std::unordered_set<Object*> GetColliableObjects(Object* obj);
 };

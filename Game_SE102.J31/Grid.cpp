@@ -304,11 +304,44 @@ Grid::Grid(int level)
 	//ifile.close();
 }
 
+Grid::Grid(int mapWidth, int mapHeight)
+{
+	//Khởi tạo mảng cells[][] theo rows và columns dựa trên độ lớn của map
+	rows = mapHeight / Cell::height;
+	columns = ceil((float)(mapWidth) / Cell::width);
+	for (int y = 0; y < rows; ++y)
+	{
+		auto row = vector<Cell*>();
+		for (int x = 0; x < columns; ++x) {
+			row.push_back(new Cell(x, y));
+		}
+		cells.push_back(row);
+	}
+	auto *h = new Holder(1);
+	h->spawnX = h->posX = 90;
+	h->spawnY = h->posY = 70;
+	AddObject(h);
+	AddGround(new Platform(0, 30, 360, 60, 0));
+}
+void Grid::AddGround(Platform *g)
+{
+	int LeftCell = g->rect.x / Cell::width;
+	int RightCell = (g->rect.x + g->rect.width) / Cell::width;
+	int TopCell = g->rect.y / Cell::height;
+	int BottomCell = (g->rect.y - g->rect.height) / Cell::height;
+	for (int y = BottomCell; y <= TopCell; ++y)
+	{
+		for (int x = LeftCell; x <= RightCell; ++x)
+		{
+			cells[y][x]->grounds.push_back(g);
+		}
+	}
+}
 Grid::~Grid()
 {
 	std::unordered_set<Object*> objs;
 	std::unordered_set<Wall*> walls;
-	std::unordered_set<Rect*> grounds;
+	std::unordered_set<Platform*> grounds;
 
 	for (int i = 0; i < rows; ++i)
 	{
@@ -356,9 +389,9 @@ Grid::~Grid()
 
 void Grid::Update()
 {
-	this->viewPort = Rect(mCamera->x, mCamera->y + Cell::height, mCamera->width, mCamera->height + Cell::height);
+	this->viewPort = Rect(mCamera->x, mCamera->y, mCamera->width, mCamera->height);
 	this->UpdateVisibleCells();
-	this->RespawnEnemies();
+	/*this->RespawnEnemies();*/
 }
 
 void Grid::RespawnEnemies()
@@ -530,111 +563,111 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 {
 	std::unordered_set<Object*> setObjects;
 
-	//for (auto c : visibleCells)
-	//{
-	//	auto it = c->objects.begin();
-	//	while (it != c->objects.end())
-	//	{
-	//		auto o = *it;
-	//		if (o->IsCollide(viewPort))
-	//		{
-	//			switch (o->tag)
-	//			{
-	//			case ENEMY:
-	//			{
-	//				auto e = (Enemy*)o;
-	//				if (e->isDead)
-	//				{
-	//					it = c->objects.erase(it);
-	//					respawnObjects.insert(e);
-	//					continue;
-	//				}
-	//				else if (!(e->isActive || e->isOutScreen))
-	//				{
-	//					e->ChangeState(RUNNING);
-	//					e->isReverse = (player->posX < e->posX);
-	//					e->vx = (e->isReverse ? -e->speed : e->speed);
-	//				}
+	for (auto c : visibleCells)
+	{
+		auto it = c->objects.begin();
+		while (it != c->objects.end())
+		{
+			auto o = *it;
+			if (o->IsCollide(viewPort))
+			{
+				switch (o->tag)
+				{
+				/*case ENEMY:
+				{
+					auto e = (Enemy*)o;
+					if (e->isDead)
+					{
+						it = c->objects.erase(it);
+						respawnObjects.insert(e);
+						continue;
+					}
+					else if (!(e->isActive || e->isOutScreen))
+					{
+						e->ChangeState(RUNNING);
+						e->isReverse = (player->posX < e->posX);
+						e->vx = (e->isReverse ? -e->speed : e->speed);
+					}
 
-	//				if (e->isActive)
-	//				{
-	//					setObjects.insert(e);
-	//				}
-	//				break;
-	//			}
+					if (e->isActive)
+					{
+						setObjects.insert(e);
+					}
+					break;
+				}*/
 
-	//			case HOLDER:
-	//			{
-	//				auto h = (Holder*)o;
-	//				if (h->isDead)
-	//				{
-	//					it = c->objects.erase(it);
-	//					auto i = ItemFactory::CreateItem(h->itemID);
-	//					i->posX = h->posX;
-	//					i->posY = h->posY;
-	//					i->DetectGround(this->GetVisibleGrounds());
-	//					setObjects.insert(i);
-	//					this->AddObject(i);
-	//					this->respawnObjects.insert(h);
-	//					continue;
-	//				}
-	//				else setObjects.insert(o);
-	//				break;
-	//			}
+				case HOLDER:
+				{
+					auto h = (Holder*)o;
+					if (h->isAttacked)
+					{
+						it = c->objects.erase(it);
+						auto i = ItemManager::CreateItem(h->itemID);
+						i->posX = h->posX;
+						i->posY = h->posY;
+						i->DetectGround(this->GetVisibleGrounds());
+						setObjects.insert(i);
+						this->AddObject(i);
+						this->respawnObjects.insert(h);
+						continue;
+					}
+					else setObjects.insert(o);
+					break;
+				}
 
-	//			case WEAPON: case ITEM: case BULLET:
-	//			{
-	//				if (o->isDead)
-	//				{
-	//					it = c->objects.erase(it);
-	//					this->RemoveObject(o);
-	//					delete o;
-	//					continue;
-	//				}
-	//				else setObjects.insert(o);
-	//				break;
-	//			}
-	//			}
-	//		}
+				case ITEM: case BULLET:
+				{
+					if (o->isDead)
+					{
+						it = c->objects.erase(it);
+						this->RemoveObject(o);
+						delete o;
+						continue;
+					}
+					else setObjects.insert(o);
+					break;
+				}
+				}
+			}
 
-	//		else //Object is out of camera
-	//		{
-	//			switch (o->tag)
-	//			{
-	//			case ENEMY:
-	//			{
-	//				auto e = (Enemy*)o;
-	//				if (e->isActive)
-	//				{
-	//					e->isActive = false;
-	//					it = c->objects.erase(it);
-	//					if (e->GetSpawnRect().IsContain(viewPort))
-	//					{
-	//						e->isOutScreen = true;
-	//						respawnObjects.insert(e);
-	//					}
-	//					else
-	//					{
-	//						this->MoveObject(e, e->spawnX, e->spawnY);
-	//					}
-	//					continue;
-	//				}
-	//				break;
-	//			}
+			else //Object is out of camera
+			{
+				switch (o->tag)
+				{
+				//case ENEMY:
+				//{
+				//	auto e = (Enemy*)o;
+				//	if (e->isActive)
+				//	{
+				//		e->isActive = false;
+				//		it = c->objects.erase(it);
+				//		if (e->GetSpawnRect().IsContain(viewPort))
+				//		{
+				//			e->isOutScreen = true;
+				//			respawnObjects.insert(e);
+				//		}
+				//		else
+				//		{
+				//			this->MoveObject(e, e->spawnX, e->spawnY);
+				//		}
+				//		continue;
+				//	}
+				//	break;
+				//}
 
-	//			case ITEM: case BULLET:
-	//			{
-	//				it = c->objects.erase(it);
-	//				this->RemoveObject(o);
-	//				delete o;
-	//				continue;
-	//				break;
-	//			}
-	//			}
-	//		}
-	//		++it;
-	//	}
-	//}
+				case ITEM: case BULLET:
+				{
+					it = c->objects.erase(it);
+					this->RemoveObject(o);
+					delete o;
+					continue;
+					break;
+				}
+				}
+			}
+			++it;
+		}
+	}
 	return setObjects;
 }
 
@@ -663,9 +696,9 @@ std::unordered_set<Wall*> Grid::GetColliableWalls(Object * obj)
 	return walls;
 }
 
-std::unordered_set<Rect*> Grid::GetColliableGrounds(Object * obj)
+std::unordered_set<Platform*> Grid::GetColliableGrounds(Object * obj)
 {
-	std::unordered_set<Rect*> grounds;
+	std::unordered_set<Platform*> grounds;
 
 	auto r = obj->GetRect();
 	int LeftCell = r.x / Cell::width;
@@ -774,15 +807,15 @@ std::unordered_set<Wall*> Grid::GetVisibleWalls()
 	return setWalls;
 }
 
-std::unordered_set<Rect*> Grid::GetVisibleGrounds()
+std::unordered_set<Platform*> Grid::GetVisibleGrounds()
 {
-	std::unordered_set<Rect*> setGrounds;
+	std::unordered_set<Platform*> setGrounds;
 
 	for (auto c : visibleCells)
 	{
 		for (auto g : c->grounds)
 		{
-			if (g->isContain(viewPort))
+			if (g->rect.isContain(viewPort))
 			{
 				setGrounds.insert(g);
 			}

@@ -130,6 +130,10 @@
     <ClInclude Include="Holder.h" />
     <ClInclude Include="HolderSprite.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemEnergy.h" />
+    <ClInclude Include="ItemFivePoints.h" />
+    <ClInclude Include="ItemManager.h" />
+    <ClInclude Include="ItemPowerStone.h" />
     <ClInclude Include="ItemSprite.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Game.h" />

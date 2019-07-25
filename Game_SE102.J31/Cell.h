@@ -13,7 +13,7 @@ public:
 	static int width, height;
 	std::unordered_set<Object*> objects;
 	std::vector<Wall*> walls;
-	std::vector<Rect*> grounds;
+	std::vector<Platform*> grounds;
 
 	Cell(int xID, int yID);
 	~Cell();

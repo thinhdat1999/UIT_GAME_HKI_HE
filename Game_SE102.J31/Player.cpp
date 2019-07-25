@@ -67,7 +67,7 @@ void Player::ChangeState(PlayerState * newState)
 	curAnimation = animations[stateName];
 }
 
-void Player::Update(float dt)
+void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 {
 	curAnimation->Update(dt);
 	state->Update(dt);
@@ -85,7 +85,7 @@ void Player::Update(float dt)
 	BoundingBox boxtest;
 	boxtest.left = 200;
 	boxtest.top = 100;
-	boxtest.right = 300;
+	boxtest.right = 220;
 	boxtest.bottom = 0;
 	boxtest.vx = boxtest.vy = 0;
 	auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), boxtest);
