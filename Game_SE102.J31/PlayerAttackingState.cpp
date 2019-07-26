@@ -8,7 +8,7 @@ PlayerAttackingState::PlayerAttackingState()
 	switch (_curState) {
 	case SITTING:
 		StateName = ATTACKING_SIT;
-		player->posX += (player->isReverse) ? 3 : -3;
+		/*player->posX += (player->isReverse) ? 3 : -3;*/
 		break;
 	case JUMPING: case FALLING: case SHIELD_DOWN:
 		StateName = ATTACKING_JUMP;
@@ -45,7 +45,7 @@ void PlayerAttackingState::Update(float dt)
 		case SITTING:
 			player->posY += 8;
 			player->height += 8;
-			player->posX += (player->isReverse) ? -3 : 3;
+			/*player->posX += (player->isReverse) ? -3 : 3;*/
 			player->ChangeState(new PlayerSittingState());
 			return;
 

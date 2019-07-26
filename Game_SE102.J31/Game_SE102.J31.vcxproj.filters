@@ -36,6 +36,9 @@
     <Filter Include="Framework\Game Entity\Items">
       <UniqueIdentifier>{83fedf6e-7837-447e-83ef-d5add938312a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Game Entity\Enemies">
+      <UniqueIdentifier>{d2c8c3a7-b967-488d-9aef-f5f0fc9fea85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameGlobal.h">
@@ -146,6 +149,15 @@
     <ClInclude Include="ItemManager.h">
       <Filter>Framework\Game Entity\Items</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBlueSoldier.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySprite.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameGlobal.cpp">
@@ -216,6 +228,15 @@
     </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Framework\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBlueSoldier.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySprite.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

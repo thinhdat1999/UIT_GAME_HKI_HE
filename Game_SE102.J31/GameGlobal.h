@@ -58,6 +58,8 @@ extern enum Tag
 	MAP3,
 	FONT,
 	ENEMY,
+	WIZARD,
+	MINIBOSS,
 	HOLDER,
 	BULLET,
 	MENUSCENE,
@@ -71,8 +73,12 @@ extern enum Type
 {
 	NONE,
 	SHIELD,
-	BOSS,
-	EXPLODED,
+	BOSS1,
+	BOSS2,
+	BLUESOLDIER,
+	ORANGESOLDIER,
+	FLYINGROCKET,
+	MINITANK,
 	FIVEPOINT,
 	ENERGY,
 	POWERSTONE,
@@ -98,7 +104,8 @@ extern enum State
 	CLINGING,
 	ACTIVE,
 	DEAD,
-	INJURED
+	INJURED,
+	EXPLODED,
 };
 
 struct Rect {

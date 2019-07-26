@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "PlayerSprite.h"
 #include "WeaponSprite.h"
+#include "EnemySprite.h"
 #include "ItemSprite.h"
 class SpriteManager : CSprite
 {

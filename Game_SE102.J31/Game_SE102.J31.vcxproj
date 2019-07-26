@@ -125,6 +125,9 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyBlueSoldier.h" />
+    <ClInclude Include="EnemySprite.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Holder.h" />
@@ -163,6 +166,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyBlueSoldier.cpp" />
+    <ClCompile Include="EnemySprite.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameGlobal.cpp" />
     <ClCompile Include="GameMap.cpp" />
