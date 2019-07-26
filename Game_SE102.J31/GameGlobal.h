@@ -30,7 +30,7 @@ extern std::unordered_map<int, bool> keyCode;
 #define ITEM_EXISTS_TIME 2000
 #define ITEM_WIDTH 20
 #define ITEM_HEIGHT 20
-#define ITEM_SPEED 0.14f
+#define ITEM_SPEED 0.07f
 // ===== Thông số cho Weapon ======
 #define WEAPON_SHIELD_SPEED 0.6f
 #define WEAPON_SHIELD_MAX_DISTANCEX 4.5f

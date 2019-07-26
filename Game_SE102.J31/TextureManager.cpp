@@ -5,6 +5,9 @@ void TextureManager::StartUp()
 	TextureManager * textures = TextureManager::GetInstance();
 	textures->AddTexture(PLAYER, "Resource/Captain.png", D3DCOLOR_XRGB(0, 166, 81));
 	textures->AddTexture(MAP1, "Resource/CharlestonTiles.png", D3DCOLOR_XRGB(0, 0, 0));
+	textures->AddTexture(ENEMY, "Resource/Enemies.png", D3DCOLOR_XRGB(0, 91, 127));
+	textures->AddTexture(MINIBOSS, "Resource/Miniboss.png", D3DCOLOR_XRGB(0, 91, 127));
+	textures->AddTexture(WIZARD, "Resource/Wizard.png", D3DCOLOR_XRGB(0, 166, 81));
 }
 
 void TextureManager::AddTexture(Tag tag, LPCSTR filePath, D3DCOLOR transparentColor)

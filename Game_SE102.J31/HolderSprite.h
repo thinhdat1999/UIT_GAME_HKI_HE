@@ -5,14 +5,12 @@
 class HolderSprite : public CSprite
 {
 public:
-	Type type;
 	HolderSprite() {};
-	HolderSprite(Type type, int left, int top, int right, int bottom)
+	HolderSprite(State state, int left, int top, int right, int bottom)
 	{
 		this->tag = HOLDER;
-		this->type = type;
 
-		texture = TextureManager::GetInstance()->GetTexture(tag);
+		texture = TextureManager::GetInstance()->GetTexture(ENEMY);
 		rect.top = top;
 		rect.left = left;
 		rect.right = right;

@@ -601,14 +601,17 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 					auto h = (Holder*)o;
 					if (h->isAttacked)
 					{
-						it = c->objects.erase(it);
+						h->isAttacked = false;
+						setObjects.insert(h);
+						
 						auto i = ItemManager::CreateItem(h->itemID);
 						i->posX = h->posX;
-						i->posY = h->posY;
+						i->posY = h->posY + 10;
 						i->DetectGround(this->GetVisibleGrounds());
 						setObjects.insert(i);
 						this->AddObject(i);
-						this->respawnObjects.insert(h);
+						++it;
+						//this->respawnObjects.insert(h);
 						continue;
 					}
 					else setObjects.insert(o);

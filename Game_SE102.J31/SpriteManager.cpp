@@ -42,6 +42,10 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new WeaponSprite(SHIELD, 135, 271, 161, 289));
 	sprites->AddSprite(new WeaponSprite(SHIELD, 163, 279, 189, 289));
 
+	//Load Holder
+	sprites->AddSprite(new HolderSprite(STANDING, 44, 224, 60, 240));
+	sprites->AddSprite(new HolderSprite(ACTIVE, 132, 205, 148, 221));
+
 	//Load Item
 	sprites->AddSprite(new ItemSprite(FIVEPOINT, 167, 305, 177, 321));
 	sprites->AddSprite(new ItemSprite(ENERGY, 184, 310, 193, 321));
