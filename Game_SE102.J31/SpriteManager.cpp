@@ -12,21 +12,21 @@ void SpriteManager::StartUp()
 {
 	auto sprites = SpriteManager::GetInstance();
 	//Load Sprites
-	sprites->AddSprite(new PlayerSprite(STANDING, 20, 10, 43, 58));
-	sprites->AddSprite(new PlayerSprite(RUNNING, 52, 10, 77, 58));
-	sprites->AddSprite(new PlayerSprite(RUNNING, 84, 10, 109, 58));
-	sprites->AddSprite(new PlayerSprite(RUNNING, 116, 10, 140, 58));
-	sprites->AddSprite(new PlayerSprite(RUNNING, 147, 10, 172, 58));
-	sprites->AddSprite(new PlayerSprite(SHIELD_UP, 179, 10, 205, 58));
+	sprites->AddSprite(new PlayerSprite(STANDING, 16, 10, 48, 56));
+	sprites->AddSprite(new PlayerSprite(RUNNING, 52, 10, 77, 56));
+	sprites->AddSprite(new PlayerSprite(RUNNING, 84, 10, 109, 56));
+	sprites->AddSprite(new PlayerSprite(RUNNING, 116, 10, 140, 56));
+	sprites->AddSprite(new PlayerSprite(RUNNING, 147, 10, 172, 56));
+	sprites->AddSprite(new PlayerSprite(SHIELD_UP, 179, 10, 205, 56));
 	sprites->AddSprite(new PlayerSprite(SITTING, 204, 26, 236, 56));
-	sprites->AddSprite(new PlayerSprite(JUMPING, 242, 10, 267, 58));
+	sprites->AddSprite(new PlayerSprite(JUMPING, 236, 10, 267, 56));
 	sprites->AddSprite(new PlayerSprite(SPINNING, 274, 27, 296, 51));
 	sprites->AddSprite(new PlayerSprite(SPINNING, 311, 27, 333, 51));
 	sprites->AddSprite(new PlayerSprite(ATTACKING_JUMP, 338, 22, 382, 50));
-	sprites->AddSprite(new PlayerSprite(THROWING, 8, 73, 45, 113));
-	sprites->AddSprite(new PlayerSprite(THROWING, 56, 73, 97, 113));
-	sprites->AddSprite(new PlayerSprite(ATTACKING_STAND, 104, 70, 145, 113));
-	sprites->AddSprite(new PlayerSprite(ATTACKING_STAND, 153, 70, 185, 113));
+	sprites->AddSprite(new PlayerSprite(THROWING, 3, 66, 43, 112));
+	sprites->AddSprite(new PlayerSprite(THROWING, 57, 66, 99, 112));
+	sprites->AddSprite(new PlayerSprite(ATTACKING_STAND, 105, 66, 147, 112));
+	sprites->AddSprite(new PlayerSprite(ATTACKING_STAND, 145, 66, 187, 112));
 	sprites->AddSprite(new PlayerSprite(ATTACKING_SIT, 193, 82, 239, 112));
 	sprites->AddSprite(new PlayerSprite(ATTACKING_SIT, 233, 82, 279, 112));
 	sprites->AddSprite(new PlayerSprite(DASHING, 279, 83, 314, 113));
