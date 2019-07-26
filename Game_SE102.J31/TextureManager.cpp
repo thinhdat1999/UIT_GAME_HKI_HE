@@ -3,7 +3,7 @@ TextureManager * TextureManager::_instance = NULL;
 void TextureManager::StartUp()
 {
 	TextureManager * textures = TextureManager::GetInstance();
-	textures->AddTexture(PLAYER, "Captain.png", D3DCOLOR_XRGB(0, 166, 81));
+	textures->AddTexture(PLAYER, "Resource/Captain.png", D3DCOLOR_XRGB(0, 166, 81));
 	textures->AddTexture(MAP1, "Resource/CharlestonTiles.png", D3DCOLOR_XRGB(0, 0, 0));
 }
 

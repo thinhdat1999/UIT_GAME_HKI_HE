@@ -37,10 +37,10 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new PlayerSprite(EXPLODED, 269, 265, 299, 295));			//22
 
 	//Load Weapon
-	sprites->AddSprite(new WeaponSprite(SHIELD, 99, 271, 108, 289));
-	sprites->AddSprite(new WeaponSprite(SHIELD, 115, 271, 132, 289));
-	sprites->AddSprite(new WeaponSprite(SHIELD, 140, 271, 157, 289));
-	sprites->AddSprite(new WeaponSprite(SHIELD, 164, 279, 189, 289));
+	sprites->AddSprite(new WeaponSprite(SHIELD, 90, 271, 116, 289));
+	sprites->AddSprite(new WeaponSprite(SHIELD, 110, 271, 136, 289));
+	sprites->AddSprite(new WeaponSprite(SHIELD, 135, 271, 161, 289));
+	sprites->AddSprite(new WeaponSprite(SHIELD, 163, 279, 189, 289));
 
 	//Load Item
 	sprites->AddSprite(new ItemSprite(FIVEPOINT, 167, 305, 177, 321));
