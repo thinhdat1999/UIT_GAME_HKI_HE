@@ -5,6 +5,7 @@
 #include "WeaponShield.h"
 #include "GameMap.h"
 #include "Grid.h"
+#include "BulletManager.h"
 
 class PlayScene : public Scene
 {

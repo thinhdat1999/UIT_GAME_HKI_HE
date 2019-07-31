@@ -6,6 +6,7 @@
 #include "EnemySprite.h"
 #include "ItemSprite.h"
 #include "HolderSprite.h"
+#include "BulletSprite.h"
 class SpriteManager : CSprite
 {
 private:

@@ -4,7 +4,7 @@ PlayScene::PlayScene()
 {
 	_backColor = D3DCOLOR_XRGB(0, 0, 0);
 	_timeCounter = 0;
-	LoadMap("Resource/CharlestonMap.txt");
+	LoadMap("Resource/BossRoom.txt");
 	MapWidth = 2048; MapHeight = 480;
 	grid = new Grid(MapWidth, MapHeight);
 
@@ -60,6 +60,80 @@ void PlayScene::UpdateObjects(float dt)
 		auto o = *it;
 		switch (o->tag)
 		{
+		case ENEMY:
+		{
+			auto e = (Enemy*)o;
+			e->Update(dt);
+			grid->MoveObject(e, e->posX + e->dx, e->posY + e->dy);
+			switch (e->type)
+			{
+			case BOSS1:
+			{
+				auto boss = (EnemyWizard*)e;
+				/*if (boss->bulletCountdown == 0)
+				{
+					for (int i = 0; i < 3; ++i)
+					{
+						auto b = BulletManager::CreateBullet(BOSS1);
+						b->vx = !e->isReverse ? -0.5 : 0.5;
+						b->posX = e->posX + (!e->isReverse ? 15 * i : -15 * i);
+						b->posY = e->posY + (i - 1) * 20;
+						b->ChangeState(ACTIVE);
+						grid->AddObject(b);
+					}
+					boss->bulletCountdown = 3;
+				}*/
+				if (boss->isFinishAttack())
+				{
+					auto b = BulletManager::CreateBullet(BOSS1);
+					b->bulletType = boss->bulletType;
+					b->ChangeType(b->bulletType);
+					b->isReverse = e->isReverse;
+					if (!b->isReverse) 
+						b->vx = -b->vx;
+					b->posX = e->posX + (e->isReverse ? 5 : -5);
+					b->posY = e->posY + 5;
+					b->ChangeState(ACTIVE);
+					grid->AddObject(b);
+					boss->bulletCount--;
+					if (e->bulletCount == 0)
+					{
+						e->bulletCount = e->bullets;
+						boss->ChangeState(JUMPING);
+					}
+				}
+				if (boss->stateName == ATTACKING_JUMP && boss->bulletCount > 0) {
+					auto r = boss->GetRect();
+					r.y = player->GetRect().y;
+					if (r.isContain(player->GetRect())) {
+						auto b = BulletManager::CreateBullet(BOSS1);
+						b->bulletType = boss->bulletType;
+						b->ChangeType(b->bulletType);
+						b->isReverse = e->isReverse;
+						b->posX = e->posX;
+						b->posY = e->posY - 15;
+						b->ChangeState(ACTIVE);
+						grid->AddObject(b);
+						boss->bulletCount--;
+					}
+				}
+
+				if (boss->stateName == DEAD)
+				{
+					for (auto o : visibleObjects)
+					{
+						if (o->tag == BULLET)
+						{
+							auto b = (Bullet*)o;
+							b->ChangeState(DEAD);
+						}
+					}
+				}
+			}
+			}
+
+			break;
+		}
 		case HOLDER:
 		{
 			auto h = (Holder*)o;
@@ -71,6 +145,13 @@ void PlayScene::UpdateObjects(float dt)
 			Item* i = (Item*)o;
 			i->Update(dt);
 			grid->MoveObject(i, i->posX, i->posY + i->dy);
+			break;
+		}
+		case BULLET:
+		{
+			Bullet* b = (Bullet*)o;
+			b->Update(dt);
+			grid->MoveObject(b, b->posX + b->dx, b->posY + b->dy);
 			break;
 		}
 		}

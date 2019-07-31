@@ -5,6 +5,7 @@ class ItemEnergy : public Item {
 public:
 	ItemEnergy() {
 		this->type = ENERGY;
-		this->sprite = SpriteManager::GetInstance()->GetSprite(ITEM, 1);
+		this->animations[STANDING] = new Animation(ITEM, 2);
+		this->curAnimation = animations[STANDING];
 	}
 };

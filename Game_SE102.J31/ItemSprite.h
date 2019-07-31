@@ -6,11 +6,11 @@ class ItemSprite : public CSprite
 public:
 	Type type;
 	ItemSprite() {};
-	ItemSprite(Type type, int left, int top, int right, int bottom)
+	ItemSprite(Type type, int left, int top, int right, int bottom, int alpha = 255)
 	{
 		this->tag = ITEM;
 		this->type = type;
-
+		this->alpha = alpha;
 		texture = TextureManager::GetInstance()->GetTexture(PLAYER);
 		rect.top = top;
 		rect.left = left;

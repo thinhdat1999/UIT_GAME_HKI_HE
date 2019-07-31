@@ -16,6 +16,7 @@ Player::Player()
 	animations[ATTACKING_SIT] = new Animation(PLAYER, 15, 16, DEFAULT_TPF);
 	animations[DASHING] = new Animation(PLAYER, 17, 18, DEFAULT_TPF);
 	animations[SHIELD_DOWN] = new Animation(PLAYER, 19);
+	animations[INJURED] = new Animation(PLAYER, 24);
 	tag = PLAYER;
 	width = PLAYER_WIDTH;
 	height = PLAYER_STANDING_HEIGHT;
@@ -83,9 +84,9 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 	result.nx = result.ny = 0;
 	result.entryTime = 1.0f;
 	BoundingBox boxtest;
-	boxtest.left = 200;
+	boxtest.left = 250;
 	boxtest.top = 100;
-	boxtest.right = 220;
+	boxtest.right = 260;
 	boxtest.bottom = 0;
 	boxtest.vx = boxtest.vy = 0;
 	auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), boxtest);
@@ -98,10 +99,31 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 		dy = vy * dt;
 	}
 	else
-	{	
-		this->posY += 100;
+	{
+		this->isReverse = (result.nx == 1);
+		this->ChangeState(new PlayerInjuredState());
 	}
 	//END
+	// Test sweptaabb với grid objects
+	//BEGIN
+	//for (auto o : ColliableObjects) {
+	//	auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), o->GetBoundingBox());
+	//	if (r.isCollide) {
+	//		result = r;
+	//	}
+	//	if (!result.isCollide || stateName == INJURED)
+	//	{
+	//		dx = (_allow[RUNNING] ? vx * dt : 0);
+	//		dy = vy * dt;
+	//	}
+	//	else
+	//	{
+	//		this->posY += 100;
+	//		this->ChangeState(new PlayerFallingState());
+	//	}
+	//}
+	//END
+
 }
 
 bool Player::DetectGround(std::unordered_set<Rect*> grounds)

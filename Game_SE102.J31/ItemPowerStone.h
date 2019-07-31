@@ -5,6 +5,7 @@ class ItemPowerStone : public Item {
 public:
 	ItemPowerStone() {
 		this->type = POWERSTONE;
-		this->sprite = SpriteManager::GetInstance()->GetSprite(ITEM, 2);
+		this->animations[STANDING] = new Animation(ITEM, 3);
+		this->curAnimation = animations[STANDING];
 	}
 };

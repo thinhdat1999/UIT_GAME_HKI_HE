@@ -35,6 +35,10 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new PlayerSprite(EXPLODED, 227, 265, 237, 295));			//20
 	sprites->AddSprite(new PlayerSprite(EXPLODED, 237, 265, 267, 295));			//21
 	sprites->AddSprite(new PlayerSprite(EXPLODED, 269, 265, 299, 295));			//22
+	sprites->AddSprite(new PlayerSprite(INJURED, 16, 10, 48, 56));				//23
+	sprites->AddSprite(new PlayerSprite(INJURED, 201, 186, 233, 232));			//24
+	sprites->AddSprite(new PlayerSprite(INJURED, 84, 186, 116, 232));			//25
+
 
 	//Load Weapon
 	sprites->AddSprite(new WeaponSprite(SHIELD, 90, 271, 116, 289));
@@ -48,33 +52,35 @@ void SpriteManager::StartUp()
 
 	//Load Item
 	sprites->AddSprite(new ItemSprite(FIVEPOINT, 167, 305, 177, 321));
+	sprites->AddSprite(new ItemSprite(FIVEPOINT, 167, 305, 177, 321, 0));
 	sprites->AddSprite(new ItemSprite(ENERGY, 184, 310, 193, 321));
 	sprites->AddSprite(new ItemSprite(POWERSTONE, 87, 305, 97, 321));
 	sprites->AddSprite(new ItemSprite(POWERSTONEX10, 121, 303, 136, 321));
 
 	//ENEMY
 	//Load Boss1
-	sprites->AddSprite(new EnemySprite(BOSS1, 10, 15, 32, 64));				//0
-	sprites->AddSprite(new EnemySprite(BOSS1, 42, 15, 64, 64));				//1
-	sprites->AddSprite(new EnemySprite(BOSS1, 73, 15, 104, 64));				//2
-	sprites->AddSprite(new EnemySprite(BOSS1, 112, 15, 128, 64));				//3
-	sprites->AddSprite(new EnemySprite(BOSS1, 139, 15, 168, 64));				//4
-	sprites->AddSprite(new EnemySprite(BOSS1, 176, 15, 205, 64));				//5
-	sprites->AddSprite(new EnemySprite(BOSS1, 48, 130, 77, 181));				//6
-	sprites->AddSprite(new EnemySprite(BOSS1, 88, 130, 107, 181));		//7
-	sprites->AddSprite(new EnemySprite(BOSS1, 220, 37, 253, 64));				//8
-	sprites->AddSprite(new EnemySprite(BOSS1, 267, 37, 303, 64));				//9
-	sprites->AddSprite(new EnemySprite(BOSS1, 128, 130, 157, 181));		//10
-	sprites->AddSprite(new EnemySprite(BOSS1, 32, 74, 56, 120));		//11
-	sprites->AddSprite(new EnemySprite(BOSS1, 66, 74, 104, 120));		//12
-	sprites->AddSprite(new EnemySprite(BOSS1, 111, 74, 153, 121));	//13
-	sprites->AddSprite(new EnemySprite(BOSS1, 160, 74, 193, 121));	//14
-			//Bullet
-				//Horizontal
-	sprites->AddSprite(new EnemySprite(BOSS1, 247, 161, 257, 168));			//15
-	sprites->AddSprite(new EnemySprite(BOSS1, 207, 139, 225, 150));			//16
+	sprites->AddSprite(new EnemySprite(BOSS1, 5, 12, 37, 64));					//0   STANDING
+	sprites->AddSprite(new EnemySprite(BOSS1, 37, 12, 69, 64));					//1	  RUNNING
+	sprites->AddSprite(new EnemySprite(BOSS1, 72, 12, 104, 64));				//2	  RUNNING
+	sprites->AddSprite(new EnemySprite(BOSS1, 105, 12, 137, 64));				//3	  RUNNING
+	sprites->AddSprite(new EnemySprite(BOSS1, 137, 12, 169, 64));				//4   RUNNING
+	sprites->AddSprite(new EnemySprite(BOSS1, 174, 12, 206, 64));				//5   INJURED
+	sprites->AddSprite(new EnemySprite(BOSS1, 219, 32, 255, 66));				//6   DEAD
+	sprites->AddSprite(new EnemySprite(BOSS1, 268, 32, 304, 66));				//7   DEAD
+	sprites->AddSprite(new EnemySprite(BOSS1, 16, 68, 56, 120));				//8   ATTACKING
+	sprites->AddSprite(new EnemySprite(BOSS1, 64, 68, 104, 120));				//9	  ATTACKING
+	sprites->AddSprite(new EnemySprite(BOSS1, 112, 68, 152, 120));				//10  ATTACKING
+	sprites->AddSprite(new EnemySprite(BOSS1, 152, 68, 192, 120));				//11  ATTACKING (SHOOT)
+	sprites->AddSprite(new EnemySprite(BOSS1, 47, 129, 77, 181));				//12  JUMPING
+	sprites->AddSprite(new EnemySprite(BOSS1, 87, 129, 117, 181));				//13  FALLING
+	sprites->AddSprite(new EnemySprite(BOSS1, 127, 129, 157, 181));				//14  ATTACKING (JUMP)
+	sprites->AddSprite(new EnemySprite(BOSS1, 167, 129, 197, 181));				//15  ATTACKING (JUMP)
+	//Bullet
+	//Horizontal
+	sprites->AddSprite(new BulletSprite(BOSS1, 244, 159, 260, 171));			//0	SMALL BULLET
+	sprites->AddSprite(new BulletSprite(BOSS1, 208, 138, 224, 150));			//1	BIG BULLET
 	//Vertical		
-	sprites->AddSprite(new EnemySprite(BOSS1, 254, 135, 265, 154));			//17
+	sprites->AddSprite(new BulletSprite(BOSS1, 251, 136, 267, 152));			//2    BIG BULLET
 
 	//Load Boss2
 	sprites->AddSprite(new EnemySprite(BOSS2, 239, 28, 271, 73));			//18
@@ -91,9 +97,9 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new EnemySprite(BOSS2, 179, 87, 214, 129));			//29
 	sprites->AddSprite(new EnemySprite(BOSS2, 222, 87, 258, 129));			//30
 	//Bullet
-	sprites->AddSprite(new EnemySprite(BOSS2, 214, 40, 233, 53));			//31
+	sprites->AddSprite(new BulletSprite(BOSS2, 214, 40, 233, 53));			//31
 	//Bin
-	sprites->AddSprite(new EnemySprite(BOSS2, 401, 41, 425, 57));			//32
+	sprites->AddSprite(new BulletSprite(BOSS2, 401, 41, 425, 57));			//32
 	//BlueSoldier
 	sprites->AddSprite(new EnemySprite(BLUESOLDIER, 71, 13, 97, 55));				//33
 	sprites->AddSprite(new EnemySprite(BLUESOLDIER, 103, 13, 129, 55));				//34

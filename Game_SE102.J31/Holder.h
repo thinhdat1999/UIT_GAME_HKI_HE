@@ -9,9 +9,8 @@ protected:
 	Animation *curAnimation;
 	State stateName;
 public:
-	bool isAttacked;
-	int itemID;
-
+	bool isAttacked, isActive;
+	int itemID, maxItem;
 	Holder() {
 		this->tag = HOLDER;
 		this->width = HOLDER_WIDTH;
@@ -23,9 +22,10 @@ public:
 		this->width = HOLDER_WIDTH;
 		this->height = HOLDER_HEIGHT;
 		this->itemID = itemID;
+		maxItem = 1;
 		animations[STANDING] = new Animation(HOLDER, 0);
-		animations[ACTIVE] = new Animation(HOLDER, 0, 1);
-		curAnimation = animations[ACTIVE];
+		animations[ACTIVE] = new Animation(HOLDER, 0, 1, DEFAULT_TPF);
+		curAnimation = animations[STANDING];
 	}
 
 	~Holder()
@@ -49,8 +49,9 @@ public:
 
 		}*/
 		if (this->isAttacked) {
-			if (!this->curAnimation->isLastFrame)
+			if (!this->curAnimation->isLastFrame) {
 				stateName = ACTIVE;
+			}
 			else
 				stateName = STANDING;
 		}

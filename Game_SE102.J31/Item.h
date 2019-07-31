@@ -7,7 +7,9 @@ class Item : public Object
 protected:
 	float existsTime;
 	Platform groundBound;
-	CSprite* sprite;
+	unordered_map<State, Animation*> animations;
+	Animation *curAnimation;
+	State stateName;
 
 public:
 	Item()
@@ -51,12 +53,14 @@ public:
 		{
 			this->isDead = true;
 		}
+		curAnimation = animations[stateName];
+		curAnimation->Update(dt);
 	}
 
 	void Render(float cameraX = 0, float cameraY = 0)
 	{
 		screenX = this->posX - cameraX;
 		screenY = cameraY - this->posY;
-		sprite->Render(screenX, screenY);
+		curAnimation->AlphaRender(screenX, screenY, D3DCOLOR_XRGB(255,255,255));
 	}
 };

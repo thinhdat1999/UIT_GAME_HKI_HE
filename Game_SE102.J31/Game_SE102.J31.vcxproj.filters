@@ -39,6 +39,9 @@
     <Filter Include="Framework\Game Entity\Enemies">
       <UniqueIdentifier>{d2c8c3a7-b967-488d-9aef-f5f0fc9fea85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Game Entity\Bullets">
+      <UniqueIdentifier>{73be6e41-41e8-4bb2-bde6-1aa84a0db0d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameGlobal.h">
@@ -158,6 +161,30 @@
     <ClInclude Include="EnemySprite.h">
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerInjuredState.h">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerDashingState.h">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerShieldDownState.h">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyWizard.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Framework\Game Entity\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletSprite.h">
+      <Filter>Framework\Game Entity\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletWizard.h">
+      <Filter>Framework\Game Entity\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletManager.h">
+      <Filter>Framework\Game Entity\Bullets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameGlobal.cpp">
@@ -236,6 +263,18 @@
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemySprite.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerInjuredState.cpp">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerDashingState.cpp">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerShieldDownState.cpp">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyWizard.cpp">
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
   </ItemGroup>

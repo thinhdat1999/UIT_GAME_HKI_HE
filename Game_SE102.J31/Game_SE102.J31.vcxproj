@@ -122,12 +122,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="BulletSprite.h" />
+    <ClInclude Include="BulletWizard.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBlueSoldier.h" />
     <ClInclude Include="EnemySprite.h" />
+    <ClInclude Include="EnemyWizard.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Holder.h" />
@@ -143,9 +148,12 @@
     <ClInclude Include="GameGlobal.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PlayerAttackingState.h" />
+    <ClInclude Include="PlayerDashingState.h" />
     <ClInclude Include="PlayerFallingState.h" />
+    <ClInclude Include="PlayerInjuredState.h" />
     <ClInclude Include="PlayerJumpingState.h" />
     <ClInclude Include="PlayerRunningState.h" />
+    <ClInclude Include="PlayerShieldDownState.h" />
     <ClInclude Include="PlayerShieldUpState.h" />
     <ClInclude Include="PlayerSittingState.h" />
     <ClInclude Include="PlayerSprite.h" />
@@ -169,6 +177,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBlueSoldier.cpp" />
     <ClCompile Include="EnemySprite.cpp" />
+    <ClCompile Include="EnemyWizard.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameGlobal.cpp" />
     <ClCompile Include="GameMap.cpp" />
@@ -176,9 +185,12 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerAttackingState.cpp" />
+    <ClCompile Include="PlayerDashingState.cpp" />
     <ClCompile Include="PlayerFallingState.cpp" />
+    <ClCompile Include="PlayerInjuredState.cpp" />
     <ClCompile Include="PlayerJumpingState.cpp" />
     <ClCompile Include="PlayerRunningState.cpp" />
+    <ClCompile Include="PlayerShieldDownState.cpp" />
     <ClCompile Include="PlayerShieldUpState.cpp" />
     <ClCompile Include="PlayerSittingState.cpp" />
     <ClCompile Include="PlayerStandingState.cpp" />

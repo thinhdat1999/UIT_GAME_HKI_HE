@@ -5,6 +5,7 @@ class ItemFivePoint : public Item {
 public:
 	ItemFivePoint() {
 		this->type = FIVEPOINT;
-		this->sprite = SpriteManager::GetInstance()->GetSprite(ITEM, 0);
+		this->animations[STANDING] = new Animation(ITEM, 0, 1, DEFAULT_TPF >> 1);
+		this->curAnimation = animations[STANDING];
 	}
 };

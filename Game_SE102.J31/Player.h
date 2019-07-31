@@ -6,6 +6,7 @@
 #include "PlayerJumpingState.h"
 #include "PlayerShieldUpState.h"
 #include "PlayerAttackingState.h"
+#include "PlayerInjuredState.h"
 #include "Holder.h"
 class Player : public Object
 {

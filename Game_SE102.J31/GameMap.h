@@ -29,5 +29,4 @@ private:
 	int rows, columns;
 	int cBegin, cEnd;
 	int rBegin, rEnd;
-	
 };

@@ -10,6 +10,15 @@ void Animation::Render(float x, float y)
 	}
 }
 
+void Animation::AlphaRender(float x, float y, D3DCOLOR color)
+{
+	if (sprites[CurFrameIndex] != NULL)
+	{
+		sprites[CurFrameIndex]->_isFlipHorizontal = this->isReverse;
+		sprites[CurFrameIndex]->AlphaRender(x, y, color);
+	}
+}
+
 // Update Animation sau thời gian delta-time
 void Animation::Update(float dt)
 {
@@ -58,6 +67,13 @@ Animation::Animation(Tag tag, int firstIndex, int lastIndex, int tpf)
 	timePerFrame = tpf;
 	CurFrameIndex = 0;
 	isLastFrame = false;
+}
+
+void Animation::AddSprite(Tag tag, int index)
+{
+	sprites.push_back(SpriteManager::GetInstance()->GetSprite(tag, index));
+	totalFrames++;
+
 }
 
 CSprite * Animation::GetSprite(int i)

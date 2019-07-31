@@ -15,7 +15,7 @@ public:
 	Type type;
 	float spawnX, spawnY;
 	float posX, posY;							// Vị trí (đồng thời là tâm của Object đó)
-	float screenX, screenY;
+	float screenX, screenY;						// vị trí trên màn hình
 	float vx, vy;								// Vận tốc
 	float dx, dy;
 	int width, height;							// Kích thước
