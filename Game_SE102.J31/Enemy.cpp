@@ -74,17 +74,38 @@ void Enemy::Render(float cameraX, float cameraY)
 	curAnimation->AlphaRender(screenX, screenY, curColor, NULL);
 }
 
-void Enemy::DetectGround(std::unordered_set<Platform*> grounds)
+void Enemy::DetectSpawnY(std::unordered_set<Platform*> grounds)
 {
 	for (auto g : grounds)
 	{
 		if (g->rect.x < this->posX && this->posX < g->rect.x + g->rect.width
-			&& g->rect.y >= groundBound.y && this->posY > g->rect.y)
+			&& g->rect.y >= groundBound.rect.y && this->posY > g->rect.y)
 		{
-			groundBound = g->rect;
+			groundBound = *g;
 		}
 	}
 	//this->spawnY = this->posY = this->groundBound.y + (this->height >> 1);
+}
+
+bool Enemy::DetectGround(std::unordered_set<Platform*> grounds)
+{
+	auto rbp = this->GetRect();					//rect broading-phase
+	auto bottom = rbp.y - rbp.height;
+	rbp.y = rbp.y + dy;
+	rbp.height = rbp.height - dy;
+
+	if (rbp.isContain(groundBound.rect) && (bottom >= groundBound.rect.y))
+		return true;
+
+	for (auto g : grounds)
+	{
+		if (rbp.isContain(g->rect) && (bottom >= g->rect.y))
+		{
+			groundBound = *g;
+			return true;
+		}
+	}
+	return false;
 }
 
 void Enemy::UpdateColor()

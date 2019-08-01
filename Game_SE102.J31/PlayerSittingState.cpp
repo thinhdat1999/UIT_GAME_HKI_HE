@@ -24,7 +24,6 @@ void PlayerSittingState::HandleKeyboard()
 {
 	if (!keyCode[DIK_DOWN])
 	{
-		player->_allow[JUMPING] = true;
 		player->height = PLAYER_STANDING_HEIGHT;
 		player->posY += 8;
 
@@ -38,4 +37,5 @@ void PlayerSittingState::HandleKeyboard()
 		}
 		player->ChangeState(new PlayerStandingState());
 	}
+	
 }

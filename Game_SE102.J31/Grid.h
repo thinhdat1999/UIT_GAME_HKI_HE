@@ -31,6 +31,7 @@ public:
 	void RemoveObject(Object* obj);
 	void AddObject(Object* obj);
 	void AddGround(Platform *g);
+	void AddWall(Wall *w);
 	void UpdateVisibleCells();
 
 	std::unordered_set<Object*> GetVisibleObjects();

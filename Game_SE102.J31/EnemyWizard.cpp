@@ -70,10 +70,10 @@ void EnemyWizard::UpdateDistance(float dt)
 		this->dx = this->vx = 0;
 		this->posX = ENEMY_BOSS_RIGHT - (this->width >> 1);
 	}
-	if (this->posY - (this->height >> 1) + dy < this->groundBound.y)
+	if (this->posY - (this->height >> 1) + dy < this->groundBound.rect.y)
 	{
 		this->ChangeState(STANDING);
-		this->posY = this->groundBound.y + (this->height >> 1);
+		this->posY = this->groundBound.rect.y + (this->height >> 1);
 	}
 }
 
@@ -123,10 +123,8 @@ void EnemyWizard::UpdateState(float dt)
 		break;
 	}
 	case FALLING: {
-		/*if (this->posY <= 70) {
-			this->posY = 70;
+		if (this->vy == 0)
 			this->ChangeState(STANDING);
-		}*/
 		break;
 	}
 	case STANDING:
@@ -251,13 +249,14 @@ void EnemyWizard::ChangeState(State StateName)
 	{
 		this->vx = this->dx = 0;
 		this->vy = this->dy = 0;
+		this->posY = this->groundBound.rect.y + (this->width >>1);
 		//Sound::getInstance()->play("bossdie", true);
 		break;
 	}
 	case INJURED:
 	{
-		this->vx = this->dx = (this->isReverse ? 0.4f : -0.4f);
-		this->vy = 0.4f;
+		this->vx = this->dx = (this->isReverse ? -0.02f : 0.02f);
+		this->vy = 0.15f;
 		break;
 	}
 	}
@@ -284,6 +283,29 @@ void EnemyWizard::SubtractHealth()
 			this->ChangeState(DEAD);
 		}
 		else this->ChangeState(INJURED);
+	}
+}
+
+void EnemyWizard::CheckGroundCollision(std::unordered_set<Platform*> grounds)
+{
+	// Trên không
+	if (this->vy)
+	{
+		this->isOnGround = false;
+	}
+	// Tìm được vùng đất va chạm
+	if (DetectGround(grounds))
+	{
+		if (this->vy < 0)
+		{
+			this->isOnGround = true;
+			this->vy = this->dy = 0;
+			this->posY = groundBound.rect.y + (this->height >> 1);
+		}
+	}
+	else if (!this->vy)
+	{
+		this->ChangeState(FALLING);
 	}
 }
 

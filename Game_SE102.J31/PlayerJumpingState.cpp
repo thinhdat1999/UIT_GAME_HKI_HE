@@ -12,8 +12,10 @@ PlayerJumpingState::PlayerJumpingState()
 	holdingTime = 0;
 	State prevState = player->state->StateName;
 
-	if (prevState == RUNNING || prevState == STANDING || prevState == CLINGING)
+	if (prevState == RUNNING || prevState == STANDING || prevState == CLINGING || prevState == SITTING) {
+		player->height = PLAYER_STANDING_HEIGHT;
 		player->vy = PLAYER_JUMPING_SPEED;
+	}
 	StateName = JUMPING;
 }
 
@@ -40,13 +42,13 @@ void PlayerJumpingState::HandleKeyboard()
 	if (keyCode[DIK_LEFT])
 	{
 		player->isReverse = false;
-		player->vx = _reverse ? -PLAYER_RUNNING_SPEED : -PLAYER_RUNNING_SPEED / 2;
+		player->vx = _reverse ? -PLAYER_RUNNING_SPEED : -PLAYER_RUNNING_SPEED ;
 	}
 
 	else if (keyCode[DIK_RIGHT])
 	{
 		player->isReverse = true;
-		player->vx = _reverse ? PLAYER_RUNNING_SPEED / 2 : PLAYER_RUNNING_SPEED;
+		player->vx = _reverse ? PLAYER_RUNNING_SPEED : PLAYER_RUNNING_SPEED;
 	}
 	if (keyCode[DIK_SPACE]) {
 		if (holdingTime < 200) {

@@ -69,17 +69,17 @@ void Player::ChangeState(PlayerState * newState)
 }
 void Player::DetectSpawnY(std::unordered_set<Platform*> grounds)
 {
-	this->groundBound = Rect();
+	this->groundBound = Platform();
 
 	for (auto g : grounds)
 	{
 		if (g->rect.x < this->spawnX && this->spawnX < g->rect.x + g->rect.width
-			&& g->rect.y >= groundBound.y && this->spawnY > g->rect.y)
+			&& g->rect.y >= groundBound.rect.y && this->spawnY > g->rect.y)
 		{
-			groundBound = g->rect;
+			groundBound = *g;
 		}
 	}
-	this->spawnY = this->posY = groundBound.y + (this->height >> 1);
+	this->spawnY = this->posY = groundBound.rect.y + (this->height >> 1);
 }
 void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 {
@@ -159,14 +159,14 @@ bool Player::DetectGround(std::unordered_set<Platform*> grounds)
 	rbp.y = rbp.y + dy;
 	rbp.height = rbp.height - dy;
 
-	if (rbp.isContain(groundBound) && (bottom >= groundBound.y))
+	if (rbp.isContain(groundBound.rect) && (bottom >= groundBound.rect.y))
 		return true;
 
 	for (auto g : grounds)
 	{
-		if (rbp.isContain(g->rect)/* && (bottom >= g->rect.y)*/)
+  		if (rbp.isContain(g->rect) && (bottom >= g->rect.y))
 		{
-			groundBound = g->rect;
+			groundBound = *g;
 			return true;
 		}
 	}
@@ -219,7 +219,7 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 		{
 			this->isOnGround = true;
 			this->vy = this->dy = 0;
-			this->posY = groundBound.y + (this->height >> 1);
+			this->posY = groundBound.rect.y + (this->height >> 1);
 
 			if (stateName == ATTACKING_STAND)
 				this->_allow[RUNNING] = false;
@@ -305,11 +305,18 @@ void Player::OnKeyDown(int keyCode)
 			}
 		break;
 	case DIK_SPACE:
+
 		if (_allow[JUMPING])
 		{
 			_allow[JUMPING] = false;
+			if (stateName == SITTING && groundBound.type == 0) {
+				player->height = PLAYER_STANDING_HEIGHT;
+				ChangeState(new PlayerFallingState());
+			}
+			else 
 			ChangeState(new PlayerJumpingState());
 		}
+		
 		break;
 	case DIK_UP:
 		if (_allow[SHIELD_UP]) {

@@ -11,7 +11,7 @@ public:
 		this->type = BOSS1;
 		this->height = 12;
 		this->width = 16;
-		vx = 0.08f;
+		vx = 0.1f;
 		vy = 0;
 		bulletType = 0;
 	}
@@ -26,7 +26,7 @@ public:
 			activeAnimation = new Animation(BULLET, 1);
 			this->height = 8;
 			this->width = 16;
-			vx = 0.15f;
+			vx = 0.25f;
 			vy = 0;
 			break;
 		case 2:

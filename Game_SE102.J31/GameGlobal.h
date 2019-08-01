@@ -38,11 +38,11 @@ extern std::unordered_map<int, bool> keyCode;
 #define WEAPON_SHIELD_WIDTH 16
 #define WEAPON_SHIELD_HEIGHT 10
 // ===== Thông số Captain =====
-#define PLAYER_RUNNING_SPEED 0.095f
+#define PLAYER_RUNNING_SPEED 0.15f
 #define PLAYER_JUMPING_SPEED 0.22f
 #define PLAYER_FALLING_SPEED 0.25f
 #define PLAYER_WIDTH 20
-#define PLAYER_STANDING_HEIGHT 39
+#define PLAYER_STANDING_HEIGHT 40
 #define PLAYER_SITTING_HEIGHT 23
 #define GRAVITY_SPEED 0.014f	
 // ====== Thông số Wizard  ======
@@ -157,7 +157,7 @@ struct Wall
 	Rect rect;
 
 	Wall() {}
-	Wall(float x, float y, float width, float height, int type)
+	Wall(float x, float y, float width, float height)
 	{
 		this->rect.x = x;
 		this->rect.y = y;

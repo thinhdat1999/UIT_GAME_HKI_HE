@@ -14,20 +14,97 @@ Grid::Grid(int mapWidth, int mapHeight)
 		}
 		cells.push_back(row);
 	}
-	auto *h = new Holder(5);
-	h->spawnX = h->posX = 90;
-	h->spawnY = h->posY = 70;
-	AddObject(h);
-	auto *h2 = new Holder(6);
-	h2->spawnX = h2->posX = 200;
-	h2->spawnY = h2->posY = 90;
-	AddObject(h2);
-	AddGround(new Platform(0, 47, 360, 60, 0));
-	/*auto *e = new EnemyWizard();
+
+	//Add Object, grounds, wall Stage 1
+	//BEGIN
+	//auto *h = new Holder(4);
+	//h->spawnX = h->posX = 72;
+	//h->spawnY = h->posY = 200;
+	//AddObject(h);
+	//auto *h2 = new Holder(4);
+	//h2->spawnX = h2->posX = 136;
+	//h2->spawnY = h2->posY = 104;
+	//AddObject(h2);
+	//auto *h3 = new Holder(4);
+	//h3->spawnX = h3->posX = 328;
+	//h3->spawnY = h3->posY = 88;
+	//AddObject(h3);
+	//auto *h4 = new Holder(2);
+	//h4->spawnX = h4->posX = 424;
+	//h4->spawnY = h4->posY = 184;
+	//AddObject(h4);
+	//auto *h5 = new Holder(6);
+	//h5->spawnX = h5->posX = 584;
+	//h5->spawnY = h5->posY = 151;
+	//AddObject(h5);
+	//auto *h6 = new Holder(2);
+	//h6->spawnX = h6->posX = 840;
+	//h6->spawnY = h6->posY = 151;
+	//AddObject(h6);
+	//auto *h7 = new Holder(3);
+	//h7->spawnX = h7->posX = 1096;
+	//h7->spawnY = h7->posY = 88;
+	//AddObject(h7);
+	//auto *h8 = new Holder(5);
+	//h8->spawnX = h8->posX = 1192;
+	//h8->spawnY = h8->posY = 184;
+	//AddObject(h8);
+	//auto *h9 = new Holder(2);
+	//h9->spawnX = h9->posX = 1416;
+	//h9->spawnY = h9->posY = 104;
+	//AddObject(h9);
+	//auto *h10 = new Holder(5);
+	//h10->spawnX = h10->posX = 1352;
+	//h10->spawnY = h10->posY = 200;
+	//AddObject(h10);
+	//auto *h11 = new Holder(3);
+	//h11->spawnX = h11->posX = 1608;
+	//h11->spawnY = h11->posY = 88;
+	//AddObject(h11);
+	//auto *h12 = new Holder(6);
+	//h12->spawnX = h12->posX = 1704;
+	//h12->spawnY = h12->posY = 184;
+	//AddObject(h12);
+
+	//AddGround(new Platform(0, 47, 96, 16, 0));
+	//AddGround(new Platform(160, 47, 1216, 16, 0));
+	//AddGround(new Platform(1436, 47, 360, 16, 0));
+	//AddGround(new Platform(1791, 64, 65, 16, 1));
+	//AddGround(new Platform(1857, 49, 160, 16, 1));
+	//AddGround(new Platform(1791, 180, 256, 16, 1));
+	//AddGround(new Platform(48, 176, 48, 16, 0));
+	//AddGround(new Platform(34, 288, 222, 16, 0));
+	//AddGround(new Platform(290, 288, 222, 16, 0));
+	//AddGround(new Platform(546, 288, 222, 16, 0));
+	//AddGround(new Platform(802, 288, 222, 16, 0));
+	//AddGround(new Platform(1058, 288, 222, 16, 0));
+	//AddGround(new Platform(1314, 288, 222, 16, 0));
+	//AddGround(new Platform(1568, 288, 224, 16, 0));
+	//AddGround(new Platform(576, 128, 32, 16, 0));
+	//AddGround(new Platform(624, 208, 32, 16, 0));
+	//AddGround(new Platform(672, 128, 48, 16, 0));
+	//AddGround(new Platform(928, 128, 48, 16, 0));
+	//AddGround(new Platform(832, 128, 32, 16, 0));
+	//AddGround(new Platform(880, 208, 32, 16, 0));
+	//AddGround(new Platform(1328, 176, 48, 16, 0));
+	//// WALL
+	//AddWall(new Wall(1790, 60, 66, 63));
+	//AddWall(new Wall(1766, 277, 28, 109));
+	//END
+
+	//Add Ground & Boss Map2
+	//BEGIN
+
+	auto *e = new EnemyWizard();
 	e->spawnX = e->posX = 230;
 	e->spawnY = e->posY = 220;
 	e->ChangeState(FALLING);
-	AddObject(e);*/
+	e->DetectSpawnY(this->GetVisibleGrounds());
+	AddObject(e);
+
+	AddGround(new Platform(0, 32, 255, 32, 1));
+	AddGround(new Platform(48, 128, 48, 16, 0));
+	//END
 }
 void Grid::AddGround(Platform *g)
 {
@@ -40,6 +117,19 @@ void Grid::AddGround(Platform *g)
 		for (int x = LeftCell; x <= RightCell; ++x)
 		{
 			cells[y][x]->grounds.push_back(g);
+		}
+	}
+}
+void Grid::AddWall(Wall *w) {
+	int LeftCell = w->rect.x / Cell::width;
+	int RightCell = (w->rect.x + w->rect.width) / Cell::width;
+	int TopCell = w->rect.y / Cell::height;
+	int BottomCell = (w->rect.y - w->rect.height) / Cell::height;
+	for (int y = BottomCell; y <= TopCell; ++y)
+	{
+		for (int x = LeftCell; x <= RightCell; ++x)
+		{
+			cells[y][x]->walls.push_back(w);
 		}
 	}
 }

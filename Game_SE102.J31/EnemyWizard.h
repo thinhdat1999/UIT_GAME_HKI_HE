@@ -20,5 +20,6 @@ public:
 	void Update(float dt);
 	void ChangeState(State StateName);
 	void SubtractHealth();
+	void CheckGroundCollision(std::unordered_set<Platform*> grounds);
 	void Render(float cameraX = 0, float cameraY = 0);
 };

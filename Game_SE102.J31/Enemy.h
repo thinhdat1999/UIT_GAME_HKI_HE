@@ -7,7 +7,7 @@ class Enemy : public Object
 protected:
 	std::unordered_map<State, Animation*> animations;
 	Animation* curAnimation;
-	Rect groundBound;
+	Platform groundBound;
 
 public:
 	float speed;
@@ -27,6 +27,7 @@ public:
 	bool isFinishAttack();
 	virtual void Update(float dt);
 	virtual void Render(float cameraX = 0, float cameraY = 0);
-	virtual void DetectGround(std::unordered_set<Platform*> grounds);
+	virtual void DetectSpawnY(std::unordered_set<Platform*> grounds);
+	virtual bool DetectGround(std::unordered_set<Platform*> grounds);
 	void UpdateColor();
 };
