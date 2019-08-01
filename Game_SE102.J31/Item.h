@@ -10,6 +10,9 @@ protected:
 	unordered_map<State, Animation*> animations;
 	Animation *curAnimation;
 	State stateName;
+	D3DCOLOR originalColor = D3DCOLOR_XRGB(255, 255, 255);
+	D3DCOLOR flashColor = D3DCOLOR_ARGB(0, 255, 255, 255);
+	D3DCOLOR curColor;
 
 public:
 	Item()
@@ -48,7 +51,12 @@ public:
 		else this->dy = vy * dt;
 
 		existsTime -= dt;
-
+		if (existsTime <= 1200 && flashingTime <= 0) {
+			this->flashingTime = 1200;
+		}
+		if (flashingTime > 0) {
+			flashingTime -= dt;
+		}
 		if (existsTime <= 0)
 		{
 			this->isDead = true;
@@ -56,11 +64,23 @@ public:
 		curAnimation = animations[stateName];
 		curAnimation->Update(dt);
 	}
+	void UpdateColor() {
+		if (flashingTime > 0) {
+			if (curColor == flashColor) {
+				curColor = originalColor;
+			}
+			else {
+				curColor = flashColor;
+			}
+		}
+		else curColor = originalColor;
+	}
 
 	void Render(float cameraX = 0, float cameraY = 0)
 	{
+		UpdateColor();
 		screenX = this->posX - cameraX;
 		screenY = cameraY - this->posY;
-		curAnimation->AlphaRender(screenX, screenY, D3DCOLOR_XRGB(255,255,255));
+		curAnimation->AlphaRender(screenX, screenY, curColor, NULL);
 	}
 };

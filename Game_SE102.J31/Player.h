@@ -13,14 +13,16 @@ class Player : public Object
 private:
 	unordered_map<State, Animation*> animations;		// Danh sách các Animation tương ứng với từng State
 	static Player* _instance;
-	bool DetectGround(std::unordered_set<Rect*> grounds);
+	bool DetectGround(std::unordered_set<Platform*> grounds);
 	bool DetectWall(std::unordered_set<Wall*> walls);
 public:
 	Player();
 	~Player();
 
 	static Player* GetInstance();
-
+	LPDIRECT3DTEXTURE9 curTexture;
+	LPDIRECT3DTEXTURE9 originalTexture = TextureManager::GetInstance()->GetTexture(PLAYER);
+	LPDIRECT3DTEXTURE9 flashTexture = TextureManager::GetInstance()->GetTexture(PLAYERFLASHING);
 	Rect groundBound;
 	Wall wallBound;
 	PlayerState* state;
@@ -30,13 +32,17 @@ public:
 	unordered_map<State, bool> _allow;
 	bool isThrowing, isAttacking, isHoldingShield;
 	bool isOnGround, isOnWall;
-
+	int timeOfFirstButton, dashingTime;
+	bool buttonPressed = false;
+	int FirstButton;
 
 	void Respawn();
-	void CheckGroundCollision(std::unordered_set<Rect*> grounds);
+	void DetectSpawnY(unordered_set<Platform*> grounds);
+	void CheckGroundCollision(std::unordered_set<Platform*> grounds);
 	void CheckWallCollision(std::unordered_set<Wall*> walls);
 	void ChangeState(PlayerState* newState);
 	void Update(float dt, std::unordered_set<Object*> ColliableObjects);
+	void UpdateTexture();
 	void Render(float cameraX = 0, float cameraY = 0);
 	void OnKeyDown(int keyCode);
 	void OnKeyUp(int keyCode);

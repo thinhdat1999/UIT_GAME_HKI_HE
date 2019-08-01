@@ -10,12 +10,12 @@ void Animation::Render(float x, float y)
 	}
 }
 
-void Animation::AlphaRender(float x, float y, D3DCOLOR color)
+void Animation::AlphaRender(float x, float y, D3DCOLOR color, LPDIRECT3DTEXTURE9 newTexture)
 {
 	if (sprites[CurFrameIndex] != NULL)
 	{
 		sprites[CurFrameIndex]->_isFlipHorizontal = this->isReverse;
-		sprites[CurFrameIndex]->AlphaRender(x, y, color);
+		sprites[CurFrameIndex]->AlphaRender(x, y, color, newTexture);
 	}
 }
 

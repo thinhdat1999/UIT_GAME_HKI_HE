@@ -8,12 +8,11 @@ PlayerAttackingState::PlayerAttackingState()
 	switch (_curState) {
 	case SITTING:
 		StateName = ATTACKING_SIT;
-		/*player->posX += (player->isReverse) ? 3 : -3;*/
 		break;
-	case JUMPING: case FALLING: case SHIELD_DOWN:
+	case JUMPING: case FALLING: case SHIELD_DOWN: case SPINNING:
 		StateName = ATTACKING_JUMP;
 		break;
-	case STANDING: case RUNNING: case SHIELD_UP:
+	case STANDING: case RUNNING: case SHIELD_UP: case DASHING:
 		if (player->isThrowing)
 		{
 			StateName = THROWING;
@@ -38,7 +37,7 @@ void PlayerAttackingState::Update(float dt)
 
 		switch (_curState)
 		{
-		case STANDING: case RUNNING:
+		case STANDING: case RUNNING: case DASHING:
 			player->ChangeState(new PlayerStandingState());
 			return;
 
@@ -48,16 +47,15 @@ void PlayerAttackingState::Update(float dt)
 			/*player->posX += (player->isReverse) ? -3 : 3;*/
 			player->ChangeState(new PlayerSittingState());
 			return;
-
-		case FALLING:
+		case SHIELD_UP:
+			player->ChangeState(new PlayerShieldUpState());
+			return;
+		case FALLING: case SPINNING:
 			player->ChangeState(new PlayerFallingState());
 			return;
 
 		case JUMPING:
 			player->ChangeState(new PlayerJumpingState());
-			return;
-		case SHIELD_UP:
-			player->ChangeState(new PlayerShieldUpState());
 			return;
 		}
 	}

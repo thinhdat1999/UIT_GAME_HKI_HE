@@ -8,9 +8,9 @@ private:
 	int health;
 	float delayJump;
 	float delayDead;
-	float delayHit;
 
 public:
+	bool isOnGround;
 	int bulletCountdown;
 	int bulletType;
 	EnemyWizard();
@@ -19,6 +19,6 @@ public:
 	void UpdateState(float dt);
 	void Update(float dt);
 	void ChangeState(State StateName);
-	//void SubtractHealth();
+	void SubtractHealth();
 	void Render(float cameraX = 0, float cameraY = 0);
 };

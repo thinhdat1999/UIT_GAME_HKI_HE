@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 #include "EnemySprite.h"
+#include <unordered_set>
 class Enemy : public Object
 {
 protected:
@@ -14,7 +15,6 @@ public:
 	bool isActive, isOutScreen;
 	int bulletCount;
 	int bullets;
-	int flashingTime = 2000;
 	D3DCOLOR originalColor = D3DCOLOR_XRGB(255, 255, 255);
 	D3DCOLOR flashColor = D3DCOLOR_ARGB(0, 255, 255, 255);
 	D3DCOLOR curColor;
@@ -27,5 +27,6 @@ public:
 	bool isFinishAttack();
 	virtual void Update(float dt);
 	virtual void Render(float cameraX = 0, float cameraY = 0);
+	virtual void DetectGround(std::unordered_set<Platform*> grounds);
 	void UpdateColor();
 };

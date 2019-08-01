@@ -8,7 +8,8 @@ PlayerJumpingState::PlayerJumpingState()
 	player->_allow[ATTACKING] = true;
 	player->_allow[CLINGING] = true;
 	player->_allow[THROWING] = false;
-
+	player->_allow[SHIELD_UP] = false;
+	holdingTime = 0;
 	State prevState = player->state->StateName;
 
 	if (prevState == RUNNING || prevState == STANDING || prevState == CLINGING)
@@ -20,6 +21,9 @@ void PlayerJumpingState::Update(float dt)
 {
 	// Cập nhật tốc độ vy đến khi vy >= 0 -> FALLING
 	player->vy -= GRAVITY_SPEED;
+	if (holdingTime <= 200) {
+		holdingTime += dt;
+	}
 
 	if (player->vy <= 0)
 	{
@@ -43,5 +47,13 @@ void PlayerJumpingState::HandleKeyboard()
 	{
 		player->isReverse = true;
 		player->vx = _reverse ? PLAYER_RUNNING_SPEED / 2 : PLAYER_RUNNING_SPEED;
+	}
+	if (keyCode[DIK_SPACE]) {
+		if (holdingTime < 200) {
+			player->vy += 0.02f;
+		}
+		else {
+   			player->ChangeState(new PlayerSpinningState());
+		}
 	}
 }

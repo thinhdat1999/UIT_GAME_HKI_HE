@@ -4,6 +4,7 @@ void TextureManager::StartUp()
 {
 	TextureManager * textures = TextureManager::GetInstance();
 	textures->AddTexture(PLAYER, "Resource/Captain.png", D3DCOLOR_XRGB(0, 166, 81));
+	textures->AddTexture(PLAYERFLASHING, "Resource/CaptainFlashing.png", D3DCOLOR_XRGB(0, 166, 81));
 	textures->AddTexture(MAP1, "Resource/CharlestonTiles.png", D3DCOLOR_XRGB(0, 0, 0));
 	textures->AddTexture(MAP2, "Resource/BossRoomTiles.png", D3DCOLOR_XRGB(0, 0, 0));
 	textures->AddTexture(ENEMY, "Resource/Enemies.png", D3DCOLOR_XRGB(0, 91, 127));

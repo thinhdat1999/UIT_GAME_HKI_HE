@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "PlayerState.h"
 #include "PlayerStandingState.h"
+#include "PlayerDashingState.h"
 
 class PlayerRunningState : public PlayerState
 {

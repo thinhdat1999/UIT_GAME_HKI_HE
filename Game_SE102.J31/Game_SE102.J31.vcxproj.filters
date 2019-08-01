@@ -185,6 +185,21 @@
     <ClInclude Include="BulletManager.h">
       <Filter>Framework\Game Entity\Bullets</Filter>
     </ClInclude>
+    <ClInclude Include="ItemEnergyBig.h">
+      <Filter>Framework\Game Entity\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPowerStoneBig.h">
+      <Filter>Framework\Game Entity\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemKey.h">
+      <Filter>Framework\Game Entity\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSpinningState.h">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameGlobal.cpp">
@@ -276,6 +291,9 @@
     </ClCompile>
     <ClCompile Include="EnemyWizard.cpp">
       <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSpinningState.cpp">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

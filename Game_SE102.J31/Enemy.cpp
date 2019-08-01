@@ -71,7 +71,20 @@ void Enemy::Render(float cameraX, float cameraY)
 	screenX = this->posX - cameraX;
 	screenY = cameraY - this->posY;
 	curAnimation->isReverse = this->isReverse;
-	curAnimation->AlphaRender(screenX, screenY, curColor);
+	curAnimation->AlphaRender(screenX, screenY, curColor, NULL);
+}
+
+void Enemy::DetectGround(std::unordered_set<Platform*> grounds)
+{
+	for (auto g : grounds)
+	{
+		if (g->rect.x < this->posX && this->posX < g->rect.x + g->rect.width
+			&& g->rect.y >= groundBound.y && this->posY > g->rect.y)
+		{
+			groundBound = g->rect;
+		}
+	}
+	//this->spawnY = this->posY = this->groundBound.y + (this->height >> 1);
 }
 
 void Enemy::UpdateColor()

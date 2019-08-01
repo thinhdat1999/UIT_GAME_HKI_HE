@@ -12,12 +12,11 @@ EnemyWizard::EnemyWizard()
 	animations[ATTACKING_JUMP] = new Animation(ENEMY, 14);
 	tag = ENEMY;
 	type = BOSS1;
-	//health = ENEMY_BOSS_HEALTH;
-	//width = ENEMY_BOSS_WIDTH;
-	//height = ENEMY_BOSS_HEIGHT;
+	health = 3;
+	width = ENEMY_BOSS_WIDTH;
+	height = ENEMY_BOSS_HEIGHT;
 	bullets = bulletCount = 3;
 	delayDead = ENEMY_BOSS_DELAY_DEATH;
-	delayHit = ENEMY_BOSS_DELAY_HIT;
 	speed = delayJump = 0;
 	firstJump = true;
 	bulletType = 0;
@@ -63,13 +62,18 @@ void EnemyWizard::UpdateDistance(float dt)
 	this->dy = vy * dt;
 	if (this->posX - (this->width >> 1) + dx <= ENEMY_BOSS_LEFT)
 	{
-		this->dx = 0;
+		this->dx = this->vx = 0;
 		this->posX = ENEMY_BOSS_LEFT + (this->width >> 1);
 	}
 	else if (this->posX + (this->width >> 1) + dx >= ENEMY_BOSS_RIGHT)
 	{
-		this->dx = 0;
+		this->dx = this->vx = 0;
 		this->posX = ENEMY_BOSS_RIGHT - (this->width >> 1);
+	}
+	if (this->posY - (this->height >> 1) + dy < this->groundBound.y)
+	{
+		this->ChangeState(STANDING);
+		this->posY = this->groundBound.y + (this->height >> 1);
 	}
 }
 
@@ -78,13 +82,18 @@ void EnemyWizard::UpdateState(float dt)
 	switch (stateName) {
 	case JUMPING:
 	{
-		this->vy -= GRAVITY_SPEED;
-
-		if (this->vy <= 0)
+		//this->vy -= 0.002;
+		if (this->posY + (this->height >> 1) + dy > 200)
 		{
+			this->posY = 206 - (this->height >> 1);
+			this->vy = 0;
 			this->ChangeState(ATTACKING_JUMP);
-			return;
 		}
+		//if (this->vy <= 0)
+		//{
+		//	this->ChangeState(ATTACKING_JUMP);
+		//	return;
+		//}
 		break;
 	}
 	case ATTACKING_JUMP:
@@ -98,7 +107,7 @@ void EnemyWizard::UpdateState(float dt)
 			else {
 				this->ChangeState(FALLING);
 			}
-			this->vx -= 0.03;
+			this->vx -= 0.002;
 		}
 		// <---- isReverse = false
 		else {
@@ -109,15 +118,15 @@ void EnemyWizard::UpdateState(float dt)
 			else {
 				this->ChangeState(FALLING);
 			}
-			this->vx += 0.03;
+			this->vx += 0.002;
 		}
 		break;
 	}
 	case FALLING: {
-		if (this->posY <= 70) {
+		/*if (this->posY <= 70) {
 			this->posY = 70;
 			this->ChangeState(STANDING);
-		}
+		}*/
 		break;
 	}
 	case STANDING:
@@ -139,6 +148,15 @@ void EnemyWizard::UpdateState(float dt)
 			this->bulletType = 1;
 		break;
 	}
+	case INJURED:
+	{
+		this->vy -= GRAVITY_SPEED;
+		//if (this->posY <= 70) {
+		//	this->posY = 70;
+		//	this->ChangeState(STANDING);
+		//}
+		break;
+	}
 	}
 }
 
@@ -156,33 +174,28 @@ void EnemyWizard::Update(float dt)
 	if (flashingTime > 0) {
 		flashingTime -= dt;
 	}
+	else {
+		flashingTime = 0;
+	}
 	this->UpdateState(dt);
 	this->UpdateDistance(dt);
 	curAnimation->Update(dt);
-	//if (delayHit)
-	//{
-	//	delayHit -= dt;
-	//	if (delayHit <= 0)
-	//	{
-	//		delayHit = 0;
-	//	}
-	//}
 
-	//if (this->stateName == DEAD)
-	//{
-	//	delayDead -= dt;
+	if (this->stateName == DEAD)
+	{
+		delayDead -= dt;
 
-	//	/*if (isFrozenEnemies)
-	//	{
-	//		curAnimation->Update(dt);
-	//	}*/
+		/*if (isFrozenEnemies)
+		{
+			curAnimation->Update(dt);
+		}*/
 
-	//	if (delayDead <= 0)
-	//	{
-	//		this->isDead = true;
-	//		this->isActive = false;
-	//	}
-	//}
+		if (delayDead <= 0)
+		{
+			this->isDead = true;
+			this->isActive = false;
+		}
+	}
 }
 
 void EnemyWizard::ChangeState(State StateName)
@@ -215,14 +228,14 @@ void EnemyWizard::ChangeState(State StateName)
 	case FALLING:
 	{
 		this->isActive = true;
-		this->vy = -0.3f;
+		this->vy = -0.2f;
 		this->vx = 0;
 		break;
 	}
 	case ATTACKING_JUMP:
 	{
 		this->vy = 0;
-		this->vx = (this->isReverse ? 0.8f : -0.8f);
+		this->vx = (this->isReverse ? 0.25f : -0.25f);
 		this->bullets = this->bulletCount = 1;
 		this->bulletType = 2;
 		break;
@@ -241,30 +254,38 @@ void EnemyWizard::ChangeState(State StateName)
 		//Sound::getInstance()->play("bossdie", true);
 		break;
 	}
+	case INJURED:
+	{
+		this->vx = this->dx = (this->isReverse ? 0.4f : -0.4f);
+		this->vy = 0.4f;
+		break;
+	}
 	}
 
 	this->stateName = StateName;
-
-	if (stateName != DEAD)
-	{
-		this->curAnimation = animations[stateName];
-	}
+	this->curAnimation = animations[stateName];
+	//if (stateName != DEAD)
+	//{
+	//	
+	//}
 }
 
-//void EnemyWizard::SubtractHealth()
-//{
-//	if (!delayHit)
-//	{
-//		--this->health;
-//		--scoreboard->bossHealth;
-//		this->delayHit = ENEMY_BOSS_DELAY_HIT;
-//
-//		if (this->health == 0)
-//		{
-//			this->ChangeState(DEAD);
-//		}
-//	}
-//}
+void EnemyWizard::SubtractHealth()
+{
+	if (!flashingTime)
+	{
+		--this->health;
+		//--scoreboard->bossHealth;
+		this->flashingTime = 2000;
+
+		if (this->health == 0)
+		{
+			this->flashingTime = 3000;
+			this->ChangeState(DEAD);
+		}
+		else this->ChangeState(INJURED);
+	}
+}
 
 void EnemyWizard::Render(float cameraX, float cameraY)
 {
@@ -272,6 +293,6 @@ void EnemyWizard::Render(float cameraX, float cameraY)
 	screenX = this->posX - cameraX;
 	screenY = cameraY - this->posY;
 	curAnimation->isReverse = this->isReverse;
-	curAnimation->AlphaRender(screenX, screenY, curColor);
+	curAnimation->AlphaRender(screenX, screenY, curColor, NULL);
 
 }

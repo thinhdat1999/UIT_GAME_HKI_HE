@@ -19,6 +19,7 @@ public:
 	float vx, vy;								// Vận tốc
 	float dx, dy;
 	int width, height;							// Kích thước
+	int flashingTime;
 	bool isReverse;								// Kiểm tra lật hình theo chiều ngang
 	bool isDead;
 

@@ -21,7 +21,6 @@ public:
 	}
 	void UpdateDistance(float dt) {
 		this->dx = vx * dt;
-		this->dy = WEAPON_SHIELD_SPEED * player->vy * dt;
 		if (this->posX > player->posX) {
 			if (vx > 0)
 			{
@@ -42,6 +41,10 @@ public:
 			if (vx >= 0)
 				this->isBack = true;
 		}
+		if (player->posY < this->posY) {
+			this->dy = min(-3.5f, dy);
+		}
+		else this->dy = max(3.5f, dy);
 		// Nếu player đang ném vũ khí:
 		if (this->GetRect().isContain(player->GetRect()) && !player->isHoldingShield)
 		{
@@ -65,11 +68,13 @@ public:
 	{
 	/*	auto frameIndex = player->curAnimation->CurFrameIndex - 1;
 		if (frameIndex != 0 && frameIndex != 1) return;*/
-		auto sprite = curAnimation->GetSprite(0);
-		sprite->_isFlipHorizontal = player->isReverse;
 
 		screenX = this->posX - cameraX;
 		screenY = cameraY - this->posY;
-		sprite->Render(screenX, screenY);
+		curAnimation->isReverse = player->isReverse;
+		if (isRender)
+			curAnimation->Render(screenX, screenY);
+		else
+			curAnimation->AlphaRender(screenX, screenY, D3DCOLOR_ARGB(0, 255, 255, 255), NULL);
 	}
 };

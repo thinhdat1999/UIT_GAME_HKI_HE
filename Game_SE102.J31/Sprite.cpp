@@ -56,7 +56,7 @@ void CSprite::ScaleRender(float x, float y, float scaleX, float scaleY)
 	spriteHandler->Draw(texture, &rect, &center, &pPosition, D3DCOLOR_XRGB(255, 255, 255));
 	spriteHandler->SetTransform(&oldMatrix);
 }
-void CSprite::AlphaRender(float x, float y, D3DCOLOR color)
+void CSprite::AlphaRender(float x, float y, D3DCOLOR color, LPDIRECT3DTEXTURE9 newTexture)
 {
 	//Tao rect de ve Sprite
 
@@ -72,6 +72,9 @@ void CSprite::AlphaRender(float x, float y, D3DCOLOR color)
 	D3DXMatrixTransformation2D(&curMatrix, &pScalingCenter, 0, &pScaling, &pRotationCenter, 0, NULL);
 	spriteHandler->GetTransform(&oldMatrix);
 	spriteHandler->SetTransform(&curMatrix);
-	spriteHandler->Draw(texture, &rect, &center, &pPosition, color);
+	if (newTexture != NULL)
+		spriteHandler->Draw(newTexture, &rect, &center, &pPosition, D3DCOLOR_XRGB(255,255,255));
+	else
+		spriteHandler->Draw(texture, &rect, &center, &pPosition, color);
 	spriteHandler->SetTransform(&oldMatrix);
 }

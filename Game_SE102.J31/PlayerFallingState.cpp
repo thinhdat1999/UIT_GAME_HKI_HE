@@ -7,6 +7,7 @@ PlayerFallingState::PlayerFallingState()
 	player->_allow[ATTACKING] = true;
 	player->_allow[CLINGING] = true;
 	player->_allow[THROWING] = false;
+	player->_allow[SHIELD_UP] = false;
 	player->vy = -PLAYER_FALLING_SPEED;
 	StateName = FALLING;
 }
@@ -14,10 +15,9 @@ PlayerFallingState::PlayerFallingState()
 // Nếu đã rơi xuống điểm va chạm -> _curState về trạng thái RUNNING
 void PlayerFallingState::Update(float dt)
 {
-	if (/*player->vy == 0 ||*/ player->posY <= 70)
+	if (player->vy == 0 )
 	{
 		player->ChangeState(new PlayerSittingState());
-		player->posY = 62;
 		return;
 	}
 	this->HandleKeyboard();

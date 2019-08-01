@@ -14,20 +14,20 @@ Grid::Grid(int mapWidth, int mapHeight)
 		}
 		cells.push_back(row);
 	}
-	auto *h = new Holder(1);
+	auto *h = new Holder(5);
 	h->spawnX = h->posX = 90;
 	h->spawnY = h->posY = 70;
 	AddObject(h);
-	auto *h2 = new Holder(2);
+	auto *h2 = new Holder(6);
 	h2->spawnX = h2->posX = 200;
 	h2->spawnY = h2->posY = 90;
 	AddObject(h2);
-	AddGround(new Platform(0, 30, 360, 60, 0));
-	auto *e = new EnemyWizard();
+	AddGround(new Platform(0, 47, 360, 60, 0));
+	/*auto *e = new EnemyWizard();
 	e->spawnX = e->posX = 230;
 	e->spawnY = e->posY = 220;
 	e->ChangeState(FALLING);
-	AddObject(e);
+	AddObject(e);*/
 }
 void Grid::AddGround(Platform *g)
 {
@@ -455,6 +455,15 @@ std::unordered_set<Object*> Grid::GetColliableObjects(Object * obj)
 					if (e->isActive && e->stateName != DEAD)
 					{
 						objs.insert(e);
+					}
+					break;
+				}
+				case BULLET:
+				{
+					auto b = (Bullet*)o;
+					if (b->StateName != DEAD)
+					{
+						objs.insert(b);
 					}
 					break;
 				}

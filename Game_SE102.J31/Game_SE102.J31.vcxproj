@@ -131,6 +131,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBlueSoldier.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="EnemySprite.h" />
     <ClInclude Include="EnemyWizard.h" />
     <ClInclude Include="GameMap.h" />
@@ -139,9 +140,12 @@
     <ClInclude Include="HolderSprite.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemEnergy.h" />
+    <ClInclude Include="ItemEnergyBig.h" />
     <ClInclude Include="ItemFivePoints.h" />
+    <ClInclude Include="ItemKey.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="ItemPowerStone.h" />
+    <ClInclude Include="ItemPowerStoneBig.h" />
     <ClInclude Include="ItemSprite.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Game.h" />
@@ -156,6 +160,7 @@
     <ClInclude Include="PlayerShieldDownState.h" />
     <ClInclude Include="PlayerShieldUpState.h" />
     <ClInclude Include="PlayerSittingState.h" />
+    <ClInclude Include="PlayerSpinningState.h" />
     <ClInclude Include="PlayerSprite.h" />
     <ClInclude Include="PlayerStandingState.h" />
     <ClInclude Include="PlayerState.h" />
@@ -193,6 +198,7 @@
     <ClCompile Include="PlayerShieldDownState.cpp" />
     <ClCompile Include="PlayerShieldUpState.cpp" />
     <ClCompile Include="PlayerSittingState.cpp" />
+    <ClCompile Include="PlayerSpinningState.cpp" />
     <ClCompile Include="PlayerStandingState.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="SceneManager.cpp" />

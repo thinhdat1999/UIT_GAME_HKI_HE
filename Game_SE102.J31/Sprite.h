@@ -15,7 +15,7 @@ public:
 	CSprite() {};
 	CSprite(Tag tag, int left, int top, int right, int bottom);
 	void Render(float x = 0, float y = 0);
-	void AlphaRender(float x = 0, float y = 0, D3DCOLOR color = 0);
+	void AlphaRender(float x = 0, float y = 0, D3DCOLOR color = 0, LPDIRECT3DTEXTURE9 newTexture = NULL);
 	void ScaleRender(float x = 0, float y = 0, float scaleX = 1, float scaleY = 1);
 
 	Tag tag; //sprite Tag

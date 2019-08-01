@@ -16,7 +16,7 @@ Player::Player()
 	animations[ATTACKING_SIT] = new Animation(PLAYER, 15, 16, DEFAULT_TPF);
 	animations[DASHING] = new Animation(PLAYER, 17, 18, DEFAULT_TPF);
 	animations[SHIELD_DOWN] = new Animation(PLAYER, 19);
-	animations[INJURED] = new Animation(PLAYER, 24);
+	animations[INJURED] = new Animation(PLAYER, 23);
 	tag = PLAYER;
 	width = PLAYER_WIDTH;
 	height = PLAYER_STANDING_HEIGHT;
@@ -67,66 +67,92 @@ void Player::ChangeState(PlayerState * newState)
 	stateName = newState->StateName;
 	curAnimation = animations[stateName];
 }
+void Player::DetectSpawnY(std::unordered_set<Platform*> grounds)
+{
+	this->groundBound = Rect();
 
+	for (auto g : grounds)
+	{
+		if (g->rect.x < this->spawnX && this->spawnX < g->rect.x + g->rect.width
+			&& g->rect.y >= groundBound.y && this->spawnY > g->rect.y)
+		{
+			groundBound = g->rect;
+		}
+	}
+	this->spawnY = this->posY = groundBound.y + (this->height >> 1);
+}
 void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 {
+	if (flashingTime > 0)
+		flashingTime -= dt;
+	else flashingTime = 0;
 	curAnimation->Update(dt);
 	state->Update(dt);
 	if (player->posX < 0)
 		player->posX = 0;
 	if (player->posY < 0)
 		player->posY = 0;
-
-	//Tạo một box ở vị trí (200,100) để test AABB
-	//BEGIN
 	CollisionResult result;
 	result.isCollide = false;
 	result.nx = result.ny = 0;
 	result.entryTime = 1.0f;
-	BoundingBox boxtest;
-	boxtest.left = 250;
-	boxtest.top = 100;
-	boxtest.right = 260;
-	boxtest.bottom = 0;
-	boxtest.vx = boxtest.vy = 0;
-	auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), boxtest);
-	if (r.isCollide) {
-		result = r;
+	// Sweptaabb với grid objects
+	//BEGIN
+	for (auto o : ColliableObjects) {
+		switch (o->tag)
+		{
+		case ENEMY:
+		case BULLET:
+		{
+			if (this->stateName != INJURED)
+			{
+				auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), o->GetBoundingBox());
+				if (r.isCollide)
+				{
+					switch (o->type)
+					{
+					case BOSS1:
+						//set máu
+						break;
+					default:
+						/*this->SetHealth(health - 1);*/
+						break;
+					}
+					result = r;
+					break;
+				}
+			}
+			break;
+		}
+		}
 	}
-	if (!result.isCollide || stateName == INJURED)
+	if (!result.isCollide || flashingTime)
 	{
 		dx = (_allow[RUNNING] ? vx * dt : 0);
 		dy = vy * dt;
 	}
 	else
 	{
-		this->isReverse = (result.nx == 1);
+		this->flashingTime = 2000;
 		this->ChangeState(new PlayerInjuredState());
 	}
 	//END
-	// Test sweptaabb với grid objects
-	//BEGIN
-	//for (auto o : ColliableObjects) {
-	//	auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), o->GetBoundingBox());
-	//	if (r.isCollide) {
-	//		result = r;
-	//	}
-	//	if (!result.isCollide || stateName == INJURED)
-	//	{
-	//		dx = (_allow[RUNNING] ? vx * dt : 0);
-	//		dy = vy * dt;
-	//	}
-	//	else
-	//	{
-	//		this->posY += 100;
-	//		this->ChangeState(new PlayerFallingState());
-	//	}
-	//}
-	//END
-
 }
 
-bool Player::DetectGround(std::unordered_set<Rect*> grounds)
+void Player::UpdateTexture()
+{
+	if (flashingTime > 0) {
+		if (curTexture == flashTexture) {
+			curTexture = originalTexture;
+		}
+		else {
+			curTexture = flashTexture;
+		}
+	}
+	else curTexture = originalTexture;
+}
+
+bool Player::DetectGround(std::unordered_set<Platform*> grounds)
 {
 	auto rbp = this->GetRect();					//rect broading-phase
 	auto bottom = rbp.y - rbp.height;
@@ -138,9 +164,9 @@ bool Player::DetectGround(std::unordered_set<Rect*> grounds)
 
 	for (auto g : grounds)
 	{
-		if (rbp.isContain(*g) && (bottom >= g->y))
+		if (rbp.isContain(g->rect)/* && (bottom >= g->rect.y)*/)
 		{
-			groundBound = *g;
+			groundBound = g->rect;
 			return true;
 		}
 	}
@@ -176,7 +202,7 @@ bool Player::DetectWall(std::unordered_set<Wall*> walls)
 }
 
 // Xử lí va chạm với mặt đất theo các vùng đất hiển thị
-void Player::CheckGroundCollision(std::unordered_set<Rect*> grounds)
+void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 {
 	if (this->isOnWall) return;
 
@@ -251,10 +277,11 @@ void Player::CheckWallCollision(std::unordered_set<Wall*> walls)
 
 void Player::Render(float cameraX, float cameraY)
 {
+	UpdateTexture();
 	screenX = this->posX - cameraX;
 	screenY = cameraY - this->posY;
 	curAnimation->isReverse = this->isReverse;
-	curAnimation->Render(screenX, screenY);
+	curAnimation->AlphaRender(screenX, screenY, NULL, curTexture);
 
 }
 
@@ -285,7 +312,9 @@ void Player::OnKeyDown(int keyCode)
 		}
 		break;
 	case DIK_UP:
-		ChangeState(new PlayerShieldUpState());
+		if (_allow[SHIELD_UP]) {
+			ChangeState(new PlayerShieldUpState());
+		}
 		break;
 	}
 }

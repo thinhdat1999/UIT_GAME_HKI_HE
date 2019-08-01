@@ -4,7 +4,7 @@ PlayScene::PlayScene()
 {
 	_backColor = D3DCOLOR_XRGB(0, 0, 0);
 	_timeCounter = 0;
-	LoadMap("Resource/BossRoom.txt");
+	LoadMap("Resource/CharlestonMap.txt");
 	MapWidth = 2048; MapHeight = 480;
 	grid = new Grid(MapWidth, MapHeight);
 
@@ -12,6 +12,7 @@ PlayScene::PlayScene()
 
 	p->posX = p->spawnX = 50;
 	p->posY = p->spawnY = 70;
+	p->DetectSpawnY(grid->GetColliableGrounds(p));
 	p->Respawn();
 
 	weapon = new WeaponShield();
@@ -33,7 +34,6 @@ void PlayScene::LoadMap(const char * filePath)
 	mMap = new GameMap(filePath);
 	//scoreboard = new ScoreBoard();
 
-
 }
 
 void PlayScene::Update(float dt)
@@ -42,8 +42,6 @@ void PlayScene::Update(float dt)
 	mCamera->y = p->posY + (mCamera->height >> 1);
 	mMap->Update(dt);
 	grid->Update();
-
-	
 
 	//scoreboard->Update(dt);
 
@@ -70,6 +68,9 @@ void PlayScene::UpdateObjects(float dt)
 			case BOSS1:
 			{
 				auto boss = (EnemyWizard*)e;
+				if (!boss->isOnGround) {
+					boss->DetectGround(grid->GetVisibleGrounds());
+				}
 				/*if (boss->bulletCountdown == 0)
 				{
 					for (int i = 0; i < 3; ++i)
@@ -110,7 +111,7 @@ void PlayScene::UpdateObjects(float dt)
 						b->bulletType = boss->bulletType;
 						b->ChangeType(b->bulletType);
 						b->isReverse = e->isReverse;
-						b->posX = e->posX;
+						b->posX = player->posX;
 						b->posY = e->posY - 15;
 						b->ChangeState(ACTIVE);
 						grid->AddObject(b);
@@ -163,6 +164,7 @@ void PlayScene::UpdatePlayer(float dt)
 {
 	
 	player->Update(dt, grid->GetColliableObjects(player));
+	player->CheckGroundCollision(grid->GetColliableGrounds(player));
 	player->posX += player->vx * dt;
 	player->posY += player->vy * dt;
 	

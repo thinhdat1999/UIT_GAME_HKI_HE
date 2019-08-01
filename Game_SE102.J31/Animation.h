@@ -19,7 +19,7 @@ public:
 	Animation(Tag tag, int firstIndex, int lastIndex, int timePerFrame = DEFAULT_TPF);
 	void AddSprite(Tag tag, int index);
 	void Render(float x, float y);
-	void AlphaRender(float x, float y, D3DCOLOR color);
+	void AlphaRender(float x, float y, D3DCOLOR color, LPDIRECT3DTEXTURE9 newTexture);
 	void Update(float dt);
 
 	int CurFrameIndex;

@@ -18,8 +18,8 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new PlayerSprite(RUNNING, 116, 10, 140, 56));
 	sprites->AddSprite(new PlayerSprite(RUNNING, 147, 10, 172, 56));
 	sprites->AddSprite(new PlayerSprite(SHIELD_UP, 179, 10, 205, 56));
-	sprites->AddSprite(new PlayerSprite(SITTING, 204, 26, 236, 56));
-	sprites->AddSprite(new PlayerSprite(JUMPING, 236, 10, 267, 56));
+	sprites->AddSprite(new PlayerSprite(SITTING, 205, 26, 236, 56));
+	sprites->AddSprite(new PlayerSprite(JUMPING, 238, 10, 266, 56));
 	sprites->AddSprite(new PlayerSprite(SPINNING, 274, 27, 296, 51));
 	sprites->AddSprite(new PlayerSprite(SPINNING, 311, 27, 333, 51));
 	sprites->AddSprite(new PlayerSprite(ATTACKING_JUMP, 338, 22, 382, 50));
@@ -35,9 +35,8 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new PlayerSprite(EXPLODED, 227, 265, 237, 295));			//20
 	sprites->AddSprite(new PlayerSprite(EXPLODED, 237, 265, 267, 295));			//21
 	sprites->AddSprite(new PlayerSprite(EXPLODED, 269, 265, 299, 295));			//22
-	sprites->AddSprite(new PlayerSprite(INJURED, 16, 10, 48, 56));				//23
-	sprites->AddSprite(new PlayerSprite(INJURED, 201, 186, 233, 232));			//24
-	sprites->AddSprite(new PlayerSprite(INJURED, 84, 186, 116, 232));			//25
+	sprites->AddSprite(new PlayerSprite(INJURED, 201, 186, 233, 232));			//23
+	sprites->AddSprite(new PlayerSprite(INJURED, 84, 186, 116, 232));			//24
 
 
 	//Load Weapon
@@ -51,11 +50,15 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new HolderSprite(ACTIVE, 132, 205, 148, 221));
 
 	//Load Item
-	sprites->AddSprite(new ItemSprite(FIVEPOINT, 167, 305, 177, 321));
-	sprites->AddSprite(new ItemSprite(FIVEPOINT, 167, 305, 177, 321, 0));
-	sprites->AddSprite(new ItemSprite(ENERGY, 184, 310, 193, 321));
-	sprites->AddSprite(new ItemSprite(POWERSTONE, 87, 305, 97, 321));
-	sprites->AddSprite(new ItemSprite(POWERSTONEX10, 121, 303, 136, 321));
+	sprites->AddSprite(new ItemSprite(FIVEPOINT, 167, 305, 177, 321));			//0
+	sprites->AddSprite(new ItemSprite(ENERGY, 180, 310, 196, 322));				//1
+	sprites->AddSprite(new ItemSprite(ENERGYX10, 196, 309, 212, 321));			//2
+	sprites->AddSprite(new ItemSprite(POWERSTONE, 87, 305, 97, 321));			//3
+	sprites->AddSprite(new ItemSprite(POWERSTONE, 103, 305, 113, 321));			//4
+	sprites->AddSprite(new ItemSprite(POWERSTONEX10, 121, 303, 136, 321));		//5
+	sprites->AddSprite(new ItemSprite(POWERSTONEX10, 145, 303, 160, 321));		//6
+	sprites->AddSprite(new ItemSprite(KEY, 232, 304, 248, 320));				//7
+	sprites->AddSprite(new ItemSprite(KEY, 256, 304, 272, 320));				//8
 
 	//ENEMY
 	//Load Boss1

@@ -27,7 +27,7 @@ extern std::unordered_map<int, bool> keyCode;
 // ===== CÁC THÔNG SỐ CHO HOLDERS & ITEM ====
 #define HOLDER_WIDTH 16
 #define HOLDER_HEIGHT 16
-#define ITEM_EXISTS_TIME 2000
+#define ITEM_EXISTS_TIME 4000
 #define ITEM_WIDTH 10
 #define ITEM_HEIGHT 10
 #define ITEM_SPEED 0.07f
@@ -39,29 +39,29 @@ extern std::unordered_map<int, bool> keyCode;
 #define WEAPON_SHIELD_HEIGHT 10
 // ===== Thông số Captain =====
 #define PLAYER_RUNNING_SPEED 0.095f
-#define PLAYER_JUMPING_SPEED 0.28f
+#define PLAYER_JUMPING_SPEED 0.22f
 #define PLAYER_FALLING_SPEED 0.25f
 #define PLAYER_WIDTH 20
-#define PLAYER_STANDING_HEIGHT 46
-#define PLAYER_SITTING_HEIGHT 30
+#define PLAYER_STANDING_HEIGHT 39
+#define PLAYER_SITTING_HEIGHT 23
 #define GRAVITY_SPEED 0.014f	
 // ====== Thông số Wizard  ======
-#define ENEMY_BOSS_WIDTH 36
-#define ENEMY_BOSS_HEIGHT 50
+#define ENEMY_BOSS_WIDTH 28
+#define ENEMY_BOSS_HEIGHT 45
 #define ENEMY_BOSS_HEALTH 16
 #define ENEMY_BOSS_DELAY_DEATH 3000
 #define ENEMY_BOSS_DELAY_HIT 400
 #define ENEMY_BOSS_DELAY_JUMP 1200
-#define ENEMY_BOSS_LEFT 30
+#define ENEMY_BOSS_LEFT 5
 #define ENEMY_BOSS_RIGHT 230
-#define ENEMY_BOSS_JUMP_SPEED 0.48f
+#define ENEMY_BOSS_JUMP_SPEED 0.2f
 #define ENEMY_BOSS_SPEED 0.175f
 
 // ====== ENUM của Object  ======
 extern enum Tag
 {
 	PLAYER,
-	CAPTAIN,
+	PLAYERFLASHING,
 	ITEM,
 	WEAPON,
 	GROUND,
@@ -93,8 +93,10 @@ extern enum Type
 	MINITANK,
 	FIVEPOINT,
 	ENERGY,
+	ENERGYX10,
 	POWERSTONE,
 	POWERSTONEX10,
+	KEY,
 };
 
 extern enum State
