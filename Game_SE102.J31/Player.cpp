@@ -164,7 +164,8 @@ bool Player::DetectGround(std::unordered_set<Platform*> grounds)
 	auto rbp = this->GetRect();					//rect broading-phase
 	auto bottom = rbp.y - rbp.height;
 	rbp.y = rbp.y + dy;
-	rbp.height = rbp.height - dy;
+	//rbp.height = rbp.height - dy;
+	rbp.height = rbp.height + abs(dy);
 
 	if (rbp.isContain(groundBound.rect) && (bottom >= groundBound.rect.y))
 		return true;

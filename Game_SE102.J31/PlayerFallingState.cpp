@@ -36,9 +36,11 @@ void PlayerFallingState::HandleKeyboard()
 		player->vx = _reverse ? PLAYER_RUNNING_SPEED / 2 : PLAYER_RUNNING_SPEED;
 		player->isReverse = true;
 	}
-
 	else
 	{
 		player->vx = 0;
+	}
+	if (keyCode[DIK_DOWN] && player->_allow[SHIELD_DOWN]) {
+		player->ChangeState(new PlayerShieldDownState());
 	}
 }

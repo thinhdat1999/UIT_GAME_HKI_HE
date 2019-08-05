@@ -5,8 +5,8 @@
 
 class PlayerShieldDownState : public PlayerState
 {
-//private:
-//	bool _reverse;
+private:
+	bool _reverse;
 public:
 	PlayerShieldDownState();
 	void Update(float dt);
