@@ -8,6 +8,7 @@
 #include "PlayerAttackingState.h"
 #include "PlayerInjuredState.h"
 #include "Holder.h"
+#include "BulletManager.h"
 class Player : public Object
 {
 private:

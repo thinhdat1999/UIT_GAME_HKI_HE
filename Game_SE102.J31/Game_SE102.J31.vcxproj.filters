@@ -200,6 +200,21 @@
     <ClInclude Include="PlayerSpinningState.h">
       <Filter>Framework\Game Entity\PlayerState</Filter>
     </ClInclude>
+    <ClInclude Include="BulletBlueSoldier.h">
+      <Filter>Framework\Game Entity\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletRocketSoldier.h">
+      <Filter>Framework\Game Entity\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyRocketSoldier.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletMiniBoss.h">
+      <Filter>Framework\Game Entity\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyMiniBoss.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameGlobal.cpp">
@@ -294,6 +309,12 @@
     </ClCompile>
     <ClCompile Include="PlayerSpinningState.cpp">
       <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyRocketSoldier.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyMiniBoss.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

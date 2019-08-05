@@ -16,9 +16,9 @@ void Enemy::Respawn()
 	this->isActive = false;
 }
 
-void Enemy::ChangeState(State newState)
+void Enemy::ChangeState(State StateName)
 {
-	switch (stateName)
+	switch (StateName)
 	{
 	case STANDING:
 	{
@@ -33,14 +33,13 @@ void Enemy::ChangeState(State newState)
 		this->isActive = true;
 		break;
 	}
-
 	case DEAD:
 	{
 		break;
 	}
 	}
 
-	this->stateName = stateName;
+	this->stateName = StateName;
 	this->curAnimation = animations[stateName];
 }
 
@@ -52,17 +51,33 @@ Rect Enemy::GetSpawnRect()
 
 bool Enemy::isFinishAttack()
 {
-	return (this->stateName == ATTACKING && curAnimation->isLastFrame);
+	return ((this->stateName == ATTACKING || this->stateName == ATTACKING_SIT) && curAnimation->isLastFrame);
 }
 
 
 void Enemy::Update(float dt)
 {
-	if (isActive == true)
-		curAnimation->Update(dt);
-	if(flashingTime > 0)
+	UpdateDistance(dt);
+	curAnimation->Update(dt);
+	if (flashingTime > 0) {
 		flashingTime -= dt;
-	else flashingTime = 2000;
+	}
+	else {
+		flashingTime = 0;
+	}
+	if (this->stateName == DEAD)
+	{
+		if (curAnimation->isLastFrame == true) {
+			this->isDead = true;
+			this->isActive = false;
+		}
+	}
+}
+
+void Enemy::UpdateDistance(float dt)
+{
+	this->dx = vx * dt;
+	this->dy = vy * dt;
 }
 
 void Enemy::Render(float cameraX, float cameraY)
@@ -84,7 +99,7 @@ void Enemy::DetectSpawnY(std::unordered_set<Platform*> grounds)
 			groundBound = *g;
 		}
 	}
-	//this->spawnY = this->posY = this->groundBound.y + (this->height >> 1);
+	this->spawnY = this->posY = this->groundBound.rect.y + (this->height >> 1);
 }
 
 bool Enemy::DetectGround(std::unordered_set<Platform*> grounds)

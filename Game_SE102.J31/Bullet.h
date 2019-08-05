@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Object.h"
 #include "Camera.h"
 #include <unordered_set>
@@ -9,14 +9,15 @@ protected:
 	Animation* activeAnimation;
 	Animation* deadAnimation;
 	Animation* curAnimation;
-
+	Platform groundBound;
 public:
+	bool isOnGround;
 	State StateName;
 	int bulletType;	
 	Bullet()
 	{
 		this->tag = BULLET;
-		deadAnimation = new Animation(WEAPON, 0, 2, 85);
+		deadAnimation = new Animation(PLAYER, 20, 22, 85);
 	}
 
 	~Bullet()
@@ -66,7 +67,42 @@ public:
 		}
 	}
 	virtual void ChangeType(int type) {}
+	virtual bool DetectGround(std::unordered_set<Platform*> grounds) {
+		auto rbp = this->GetRect();					//rect broading-phase
+		auto bottom = rbp.y - rbp.height;
+		rbp.y = rbp.y + dy;
+		rbp.height = rbp.height - dy;
 
+		if (rbp.isContain(groundBound.rect) && (bottom >= groundBound.rect.y))
+			return true;
+
+		for (auto g : grounds)
+		{
+			if (rbp.isContain(g->rect) && (bottom >= g->rect.y))
+			{
+				groundBound = *g;
+				return true;
+			}
+		}
+		return false;
+	}
+	virtual void CheckGroundCollision(std::unordered_set<Platform*> grounds) {
+		// Trên không
+		if (this->vy)
+		{
+			this->isOnGround = false;
+		}
+		// Tìm được vùng đất va chạm
+		if (DetectGround(grounds))
+		{
+			if (this->vy < 0)
+			{
+				this->isOnGround = true;
+				this->vy = this->dy = 0;
+				this->posY = groundBound.rect.y + (this->height >> 1);
+			}
+		}
+	}
 	void ChangeState(State StateName)
 	{
 		this->StateName = StateName;

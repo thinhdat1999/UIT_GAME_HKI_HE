@@ -6,6 +6,7 @@ PlayerSpinningState::PlayerSpinningState()
 	player->_allow[THROWING] = false;
 	_reverse = player->isReverse;
 	StateName = SPINNING;
+	player->height = PLAYER_SITTING_HEIGHT;
 	/*player->vy == 0.03f;*/
 }
 
@@ -15,6 +16,7 @@ void PlayerSpinningState::Update(float dt)
 
 	if (player->vy <= 0)
 	{
+		player->height = PLAYER_STANDING_HEIGHT;
 		player->ChangeState(new PlayerFallingState());
 		return;
 	}

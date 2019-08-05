@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "Holder.h"
 #include "ItemManager.h"
-#include "EnemyWizard.h"
+#include "EnemyManager.h"
 #include "BulletManager.h"
 #include <fstream>
 

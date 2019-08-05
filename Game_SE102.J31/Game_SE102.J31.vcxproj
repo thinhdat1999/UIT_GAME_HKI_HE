@@ -123,7 +123,10 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletBlueSoldier.h" />
     <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="BulletMiniBoss.h" />
+    <ClInclude Include="BulletRocketSoldier.h" />
     <ClInclude Include="BulletSprite.h" />
     <ClInclude Include="BulletWizard.h" />
     <ClInclude Include="Camera.h" />
@@ -132,6 +135,8 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBlueSoldier.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EnemyMiniBoss.h" />
+    <ClInclude Include="EnemyRocketSoldier.h" />
     <ClInclude Include="EnemySprite.h" />
     <ClInclude Include="EnemyWizard.h" />
     <ClInclude Include="GameMap.h" />
@@ -181,6 +186,8 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBlueSoldier.cpp" />
+    <ClCompile Include="EnemyMiniBoss.cpp" />
+    <ClCompile Include="EnemyRocketSoldier.cpp" />
     <ClCompile Include="EnemySprite.cpp" />
     <ClCompile Include="EnemyWizard.cpp" />
     <ClCompile Include="Game.cpp" />

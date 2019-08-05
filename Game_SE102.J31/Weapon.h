@@ -142,16 +142,38 @@ public:
 				{
 				case ENEMY:
 				{
-					if (obj->type != BOSS1)
-					{
-						auto e = (Enemy*)obj;
-						e->ChangeState(DEAD);
-					}
-					else
+					switch (obj->type) {
+					case BOSS1:
 					{
 						auto e = (EnemyWizard*)obj;
 						e->SubtractHealth();
-
+						break;
+					}
+					case BOSS2:
+					{
+						/*auto e = (EnemyMiniBoss*)obj;
+						e->SubtractHealth();*/
+						break;
+					}
+					default:
+					{
+						auto e = (Enemy*)obj;
+						e->ChangeState(DEAD);
+						break;
+					}
+					}
+					break;
+				}
+				case BULLET: 
+				{
+					switch (obj->type) {
+					case BOSS2:
+					{
+						auto b = (BulletMiniBoss*)obj;
+						if(b->bulletType == 0) 
+							b->ChangeState(DEAD);
+						break;
+					}
 					}
 					break;
 				}

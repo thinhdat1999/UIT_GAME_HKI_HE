@@ -39,7 +39,7 @@ extern std::unordered_map<int, bool> keyCode;
 #define WEAPON_SHIELD_HEIGHT 10
 // ===== Thông số Captain =====
 #define PLAYER_RUNNING_SPEED 0.15f
-#define PLAYER_JUMPING_SPEED 0.22f
+#define PLAYER_JUMPING_SPEED 0.235f
 #define PLAYER_FALLING_SPEED 0.25f
 #define PLAYER_WIDTH 20
 #define PLAYER_STANDING_HEIGHT 40
@@ -52,7 +52,7 @@ extern std::unordered_map<int, bool> keyCode;
 #define ENEMY_BOSS_DELAY_DEATH 3000
 #define ENEMY_BOSS_DELAY_HIT 400
 #define ENEMY_BOSS_DELAY_JUMP 1200
-#define ENEMY_BOSS_LEFT 5
+#define ENEMY_BOSS_LEFT 20
 #define ENEMY_BOSS_RIGHT 230
 #define ENEMY_BOSS_JUMP_SPEED 0.2f
 #define ENEMY_BOSS_SPEED 0.175f
@@ -88,8 +88,8 @@ extern enum Type
 	BOSS1,
 	BOSS2,
 	BLUESOLDIER,
-	ORANGESOLDIER,
 	FLYINGROCKET,
+	ROCKETSOLDIER,
 	MINITANK,
 	FIVEPOINT,
 	ENERGY,
@@ -102,7 +102,9 @@ extern enum Type
 extern enum State
 {
 	STANDING,
+	LOWHP_STANDING,
 	RUNNING,
+	LOWHP_ATTACKING,
 	SHIELD_UP,
 	SHIELD_DOWN,
 	DASHING,

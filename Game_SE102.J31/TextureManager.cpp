@@ -8,7 +8,7 @@ void TextureManager::StartUp()
 	textures->AddTexture(MAP1, "Resource/CharlestonTiles.png", D3DCOLOR_XRGB(0, 0, 0));
 	textures->AddTexture(MAP2, "Resource/BossRoomTiles.png", D3DCOLOR_XRGB(0, 0, 0));
 	textures->AddTexture(ENEMY, "Resource/Enemies.png", D3DCOLOR_XRGB(0, 91, 127));
-	textures->AddTexture(MINIBOSS, "Resource/Miniboss.png", D3DCOLOR_XRGB(0, 91, 127));
+	textures->AddTexture(MINIBOSS, "Resource/MiniBossTest.png", D3DCOLOR_XRGB(0, 91, 127));
 	textures->AddTexture(WIZARD, "Resource/Wizard.png", D3DCOLOR_XRGB(0, 166, 81));
 }
 

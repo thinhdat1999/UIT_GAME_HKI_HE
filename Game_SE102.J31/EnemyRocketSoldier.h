@@ -1,7 +1,7 @@
 #pragma once
 #include "Enemy.h"
 
-class EnemyBlueSoldier : public Enemy
+class EnemyRocketSoldier : public Enemy
 {
 private:
 	Platform curGroundBound;
@@ -9,8 +9,8 @@ public:
 	bool isOnGround;
 	float delayTime;
 	float activeDistance;
-	EnemyBlueSoldier();
-	~EnemyBlueSoldier() {};
+	EnemyRocketSoldier();
+	~EnemyRocketSoldier();
 	void DetectCurGround(std::unordered_set<Platform*> grounds);
 	void UpdateDistance(float dt);
 	void ChangeState(State StateName);

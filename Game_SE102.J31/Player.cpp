@@ -114,6 +114,13 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 					case BOSS1:
 						//set máu
 						break;
+					case ROCKETSOLDIER:
+						if (!flashingTime && o->tag == BULLET) {
+							auto b = (BulletRocketSoldier*)o;
+							b->ChangeState(DEAD);
+						}
+						break;
+
 					default:
 						/*this->SetHealth(health - 1);*/
 						break;

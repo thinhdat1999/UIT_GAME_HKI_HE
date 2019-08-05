@@ -40,7 +40,7 @@ void GameMap::LoadMap(const char* filePath)
 		auto sprites = SpriteManager::GetInstance();
 		for (int i = 0; i < numSetTiles; ++i)
 		{
-			sprites->AddSprite(new CSprite(MAP2, i << 4, 0, i + 1 << 4, 16));
+			sprites->AddSprite(new CSprite(MAP1, i << 4, 0, i + 1 << 4, 16));
 		}
 	}
 
@@ -54,7 +54,7 @@ void GameMap::Render()
 	{
 		for (int j = cBegin; j != cEnd; ++j)
 		{
-			auto sprite = sprites->GetSprite(MAP2, mapMatrix[i][j]);
+			auto sprite = sprites->GetSprite(MAP1, mapMatrix[i][j]);
 			
 			auto x = (j << 4) + (16 >> 1) - (int)mCamera->x;
 			auto y = (i << 4) + (16 >> 1) - (int)mCamera->worldY;

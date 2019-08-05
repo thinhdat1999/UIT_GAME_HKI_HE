@@ -1,19 +1,19 @@
 #pragma once
 #include "Enemy.h"
-class EnemyWizard : public Enemy
+class EnemyMiniBoss : public Enemy
 {
 private:
-	bool firstJump;
 	int health;
-	float delayJump;
 	float delayDead;
+	float delayAttack;
 
 public:
+	Bullet *b;
+	bool canShoot;
 	bool isOnGround;
-	int bulletCountdown;
 	int bulletType;
-	EnemyWizard();
-	~EnemyWizard() {};
+	EnemyMiniBoss();
+	~EnemyMiniBoss() {};
 	void UpdateDistance(float dt);
 	void UpdateState(float dt);
 	void Update(float dt);

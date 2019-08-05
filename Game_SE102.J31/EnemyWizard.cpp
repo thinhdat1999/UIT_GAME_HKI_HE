@@ -12,7 +12,7 @@ EnemyWizard::EnemyWizard()
 	animations[ATTACKING_JUMP] = new Animation(ENEMY, 14);
 	tag = ENEMY;
 	type = BOSS1;
-	health = 3;
+	health = 8;
 	width = ENEMY_BOSS_WIDTH;
 	height = ENEMY_BOSS_HEIGHT;
 	bullets = bulletCount = 3;
@@ -285,6 +285,7 @@ void EnemyWizard::SubtractHealth()
 		else this->ChangeState(INJURED);
 	}
 }
+
 
 void EnemyWizard::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 {

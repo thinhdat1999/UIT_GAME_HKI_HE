@@ -66,6 +66,8 @@ Grid::Grid(int mapWidth, int mapHeight)
 	//h12->spawnY = h12->posY = 184;
 	//AddObject(h12);
 
+
+
 	//AddGround(new Platform(0, 47, 96, 16, 0));
 	//AddGround(new Platform(160, 47, 1216, 16, 0));
 	//AddGround(new Platform(1436, 47, 360, 16, 0));
@@ -90,20 +92,67 @@ Grid::Grid(int mapWidth, int mapHeight)
 	//// WALL
 	//AddWall(new Wall(1790, 60, 66, 63));
 	//AddWall(new Wall(1766, 277, 28, 109));
+
+	//auto *e = EnemyManager::CreateEnemy(1);
+	//e->posX = e->spawnX = 694;
+	//e->posY = e->spawnY = 150;
+	//e->typeAI = 0;
+	//e->DetectSpawnY(this->GetColliableGrounds(e));
+	//AddObject(e);
+
+	//auto *e2 = EnemyManager::CreateEnemy(1);
+	//e2->posX = e2->spawnX = 951;
+	//e2->posY = e2->spawnY = 150;
+	//e2->typeAI = 0;
+	//e2->DetectSpawnY(this->GetColliableGrounds(e2));
+	//AddObject(e2);
+
+	//auto *e3 = EnemyManager::CreateEnemy(1);
+	//e3->posX = e3->spawnX = 808;
+	//e3->posY = e3->spawnY = 71;
+	//e3->typeAI = 1;
+	//e3->DetectSpawnY(this->GetColliableGrounds(e3));
+	//AddObject(e3);
+
+	//auto *e4 = EnemyManager::CreateEnemy(1);
+	//e4->posX = e4->spawnX = 1114;
+	//e4->posY = e4->spawnY = 318;
+	//e4->typeAI = 1;
+	//e4->DetectSpawnY(this->GetColliableGrounds(e4));
+	//AddObject(e4);
+
+
+	//auto *e5 = EnemyManager::CreateEnemy(3);
+	//e5->posX = e5->spawnX = 403;
+	//e5->posY = e5->spawnY = 72;
+	//e5->typeAI = 0;
+	//e5->DetectSpawnY(this->GetColliableGrounds(e5));
+	//AddObject(e5);
+	//auto *e6 = EnemyManager::CreateEnemy(3);
+	//e6->posX = e6->spawnX = 589;
+	//e6->posY = e6->spawnY = 72;
+	//e6->typeAI = 0;
+	//e6->DetectSpawnY(this->GetColliableGrounds(e6));
+	//AddObject(e6);
+	//auto *e7 = EnemyManager::CreateEnemy(3);
+	//e7->posX = e7->spawnX = 1623;
+	//e7->posY = e7->spawnY = 77;
+	//e7->typeAI = 0;
+	//e7->DetectSpawnY(this->GetColliableGrounds(e7));
+	//AddObject(e7);
 	//END
 
 	//Add Ground & Boss Map2
 	//BEGIN
 
-	auto *e = new EnemyWizard();
-	e->spawnX = e->posX = 230;
-	e->spawnY = e->posY = 220;
-	e->ChangeState(FALLING);
-	e->DetectSpawnY(this->GetVisibleGrounds());
-	AddObject(e);
-
 	AddGround(new Platform(0, 32, 255, 32, 1));
 	AddGround(new Platform(48, 128, 48, 16, 0));
+	auto e = EnemyManager::CreateEnemy(4);
+	e->spawnX = e->posX = 190;
+	e->spawnY = e->posY = 220;
+	e->ChangeState(FALLING);
+	AddObject(e);
+
 	//END
 }
 void Grid::AddGround(Platform *g)
@@ -380,9 +429,17 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 					}
 					else if (!(e->isActive || e->isOutScreen))
 					{
-						e->ChangeState(RUNNING);
-						/*e->isReverse = !(player->posX < e->posX);
-						e->vx = (e->isReverse ? e->speed : -e->speed);*/
+						if (e->type == BLUESOLDIER && e->typeAI == 0)
+						{
+							e->ChangeState(SITTING);
+						}
+						else 
+						{
+							e->ChangeState(RUNNING);
+						}
+						/*e->DetectSpawnY(this->GetColliableGrounds(e));*/
+						e->isReverse = !(player->posX < e->posX);
+						e->vx = (e->isReverse ? e->speed : -e->speed);
 					}
 
 					if (e->isActive)

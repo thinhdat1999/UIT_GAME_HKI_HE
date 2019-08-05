@@ -4,7 +4,7 @@ PlayScene::PlayScene()
 {
 	_backColor = D3DCOLOR_XRGB(0, 0, 0);
 	_timeCounter = 0;
-	LoadMap("Resource/BossRoom.txt");
+	LoadMap("Resource/CharlestonMap.txt");
 	MapWidth = 2048; MapHeight = 480;
 	grid = new Grid(MapWidth, MapHeight);
 
@@ -71,19 +71,6 @@ void PlayScene::UpdateObjects(float dt)
 				if (!boss->isOnGround) {
 					boss->CheckGroundCollision(grid->GetVisibleGrounds());
 				}
-				/*if (boss->bulletCountdown == 0)
-				{
-					for (int i = 0; i < 3; ++i)
-					{
-						auto b = BulletManager::CreateBullet(BOSS1);
-						b->vx = !e->isReverse ? -0.5 : 0.5;
-						b->posX = e->posX + (!e->isReverse ? 15 * i : -15 * i);
-						b->posY = e->posY + (i - 1) * 20;
-						b->ChangeState(ACTIVE);
-						grid->AddObject(b);
-					}
-					boss->bulletCountdown = 3;
-				}*/
 				if (boss->isFinishAttack())
 				{
 					auto b = BulletManager::CreateBullet(BOSS1);
@@ -130,6 +117,126 @@ void PlayScene::UpdateObjects(float dt)
 						}
 					}
 				}
+				break;
+			}
+			case BOSS2: 
+			{
+				auto boss = (EnemyMiniBoss*)e;
+				if (!boss->isOnGround) {
+					boss->CheckGroundCollision(grid->GetVisibleGrounds());
+				}
+				if (boss->stateName == ATTACKING && boss->bulletType == 0) {
+					if (!boss->isFinishAttack() && boss->bulletCount > 0) {
+						auto b = new BulletMiniBoss();
+						b->bulletType = boss->bulletType;
+						b->ChangeType(b->bulletType);
+						b->isReverse = e->isReverse;
+						if (!b->isReverse)
+							b->vx = -b->vx;
+						b->posX = e->posX;
+						b->posY = e->posY + (e->height >> 1) + (b->height >> 1);
+						b->ChangeState(ACTIVE);
+						grid->AddObject(b);
+						boss->bulletCount--;
+						boss->b = b;
+					}
+					else if (boss->canShoot) {
+						auto b = (BulletMiniBoss*)boss->b;
+						b->isOut = true;
+						boss->canShoot = false;
+					}
+				}
+				if (boss->bulletType == 1 && boss->isFinishAttack() && boss->canShoot)
+				{
+					auto b = BulletManager::CreateBullet(BOSS2);
+					b->bulletType = boss->bulletType;
+					b->ChangeType(b->bulletType);
+					b->isReverse = e->isReverse;
+					if (!b->isReverse)
+						b->vx = -b->vx;
+					b->posX = e->posX + (e->isReverse ? 5 : -5);
+					b->posY = e->posY + 8;
+					b->ChangeState(ACTIVE);
+					grid->AddObject(b);
+					boss->canShoot = false;
+				}
+				break;
+			}
+			case BLUESOLDIER: 
+			{
+				auto soldier = (EnemyBlueSoldier*)e;
+				if (soldier->typeAI == 1) {
+					
+					if (!soldier->isOnGround)
+					{
+						soldier->DetectCurGround(grid->GetColliableGrounds(soldier));
+					}
+					break;
+				}
+				if (soldier->isFinishAttack())
+				{
+					if (soldier->bulletCount > 0)
+					{
+						auto b = BulletManager::CreateBullet(e->type);
+						b->isReverse = e->isReverse;
+						if (!b->isReverse)
+							b->vx = -b->vx;
+						b->posX = e->posX + (e->isReverse ? 10 : -10);
+						b->posY = e->posY + 15;
+						b->ChangeState(ACTIVE);
+						grid->AddObject(b);
+						soldier->bulletCount--;
+					}
+					else if (soldier->bulletCount == 0 && soldier->delayTime < 2200)
+					{
+						soldier->bulletCount = soldier->bullets;
+						if (e->typeAI == 0) {
+							e->ChangeState(SITTING);
+						}
+						else
+							e->ChangeState(RUNNING);
+					}
+				}
+				break;
+			}
+			case ROCKETSOLDIER: 
+			{
+				auto soldier = (EnemyRocketSoldier*)e;
+				if (soldier->typeAI == 1) {
+
+					if (!soldier->isOnGround)
+					{
+						soldier->DetectCurGround(grid->GetColliableGrounds(soldier));
+					}
+					break;
+				}
+				if (soldier->isFinishAttack())
+				{
+					if (soldier->bulletCount > 0)
+					{
+						auto b = BulletManager::CreateBullet(e->type);
+						b->isReverse = e->isReverse;
+						if (!b->isReverse)
+							b->vx = -b->vx;
+						b->posX = e->posX + (e->isReverse ? 10 : -10);
+						b->posY = e->posY + 15;
+						b->ChangeState(ACTIVE);
+						grid->AddObject(b);
+						soldier->bulletCount--;
+					}
+					else if (soldier->bulletCount == 0 && soldier->delayTime < 0)
+					{
+						soldier->bulletCount = soldier->bullets;
+						if (soldier->typeAI == 0) {
+							if(soldier->stateName == ATTACKING_SIT)
+								soldier->ChangeState(ATTACKING);
+							else soldier->ChangeState(ATTACKING_SIT);
+						}
+						else
+							soldier->ChangeState(RUNNING);
+					}
+				}
+				break;
 			}
 			}
 
@@ -151,6 +258,13 @@ void PlayScene::UpdateObjects(float dt)
 		case BULLET:
 		{
 			Bullet* b = (Bullet*)o;
+			switch (b->type) {
+			case BOSS2: {
+				if (!b->isOnGround && b->bulletType == 0)
+					b->CheckGroundCollision(grid->GetColliableGrounds(b));
+				break;
+			}
+			}
 			b->Update(dt);
 			grid->MoveObject(b, b->posX + b->dx, b->posY + b->dy);
 			break;
