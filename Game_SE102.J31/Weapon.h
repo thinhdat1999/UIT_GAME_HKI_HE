@@ -151,8 +151,9 @@ public:
 					}
 					case BOSS2:
 					{
-						/*auto e = (EnemyMiniBoss*)obj;
-						e->SubtractHealth();*/
+						auto e = (EnemyMiniBoss*)obj;
+						if(e->GetHealth() <=3)
+							e->SubtractHealth();
 						break;
 					}
 					default:

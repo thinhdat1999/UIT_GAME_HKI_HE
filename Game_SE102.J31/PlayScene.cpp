@@ -4,7 +4,7 @@ PlayScene::PlayScene()
 {
 	_backColor = D3DCOLOR_XRGB(0, 0, 0);
 	_timeCounter = 0;
-	LoadMap("Resource/CharlestonMap.txt");
+	LoadMap("Resource/BossRoom.txt");
 	MapWidth = 2048; MapHeight = 480;
 	grid = new Grid(MapWidth, MapHeight);
 
@@ -155,7 +155,7 @@ void PlayScene::UpdateObjects(float dt)
 					if (!b->isReverse)
 						b->vx = -b->vx;
 					b->posX = e->posX + (e->isReverse ? 5 : -5);
-					b->posY = e->posY + 8;
+					b->posY = e->posY + 10;
 					b->ChangeState(ACTIVE);
 					grid->AddObject(b);
 					boss->canShoot = false;

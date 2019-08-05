@@ -72,15 +72,6 @@ void EnemyMiniBoss::UpdateState(float dt)
 				canShoot = false;
 			}
 		}
-
-		//else {
-		//	if (delayAttack <= 0)
-		//	{
-		//		this->ChangeState(ATTACKING);
-
-		//		delayAttack = 500;
-		//	}
-		//}
 		break;
 	}
 	case RUNNING:
@@ -200,6 +191,11 @@ void EnemyMiniBoss::Update(float dt)
 	}
 }
 
+int EnemyMiniBoss::GetHealth()
+{
+	return health;
+}
+
 void EnemyMiniBoss::ChangeState(State StateName)
 {
 	this->stateName = StateName;
@@ -260,8 +256,7 @@ void EnemyMiniBoss::ChangeState(State StateName)
 	case INJURED:
 	{
 		if (this->health > 3) this->bulletType = 1;
-	/*	this->vx = this->dx = (this->isReverse ? -0.02f : 0.02f);
-		this->vy = 0.15f;*/
+		this->bullets = this->bulletCount = 2;
 		break;
 	}
 	}

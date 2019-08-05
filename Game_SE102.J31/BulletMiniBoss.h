@@ -3,7 +3,6 @@
 class BulletMiniBoss : public Bullet
 {
 public:
-	int delayTime;
 	bool isOut;
 	//Type 0: Barrel
 	//Type 1: Bullet
@@ -16,22 +15,10 @@ public:
 		vx = 0.08f;
 		vy = 0.3f;
 		bulletType = 0;
-		delayTime = 1500;
 	}
 	void UpdateDistance(float dt)
 	{
 		if (bulletType == 0) {
-			//delayTime -= dt;
-			//if (delayTime < 0) {
-			//	//if(vy > 0)
-			//	//	vy -= 0.014f;
-			//	//else if (vy <= 0) {
-			//	//	vy = -0.25f;
-			//	//}
-			//	if (vy > 0)
-			//		vy -= 0.014f;
-			//	if (vy <= 0)
-			//		vy = -0.3f;
 			if(isOut){
 				if(vy > 0)
 				if (vy > 0)

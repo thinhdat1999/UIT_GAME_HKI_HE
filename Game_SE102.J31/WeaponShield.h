@@ -41,7 +41,7 @@ public:
 			if (vx >= 0)
 				this->isBack = true;
 		}
-		if (player->posY < this->posY) {
+		if (player->posY + 4 < this->posY) {
 			this->dy = min(-3.5f, dy);
 		}
 		else this->dy = max(3.5f, dy);

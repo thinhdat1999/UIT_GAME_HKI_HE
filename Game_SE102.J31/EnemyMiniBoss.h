@@ -17,6 +17,7 @@ public:
 	void UpdateDistance(float dt);
 	void UpdateState(float dt);
 	void Update(float dt);
+	int GetHealth();
 	void ChangeState(State StateName);
 	void SubtractHealth();
 	void CheckGroundCollision(std::unordered_set<Platform*> grounds);
