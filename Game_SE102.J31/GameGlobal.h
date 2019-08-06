@@ -124,6 +124,10 @@ extern enum State
 	INJURED,
 	FLASHING,
 	EXPLODED,
+
+	//MINITANK
+	TOP,TOPLEFT,LEFT,BOTLEFT,BOT,BOTRIGHT,RIGHT,TOPRIGHT,
+	SPINNING_LEFT, SPINNING_RIGHT,
 };
 
 struct Rect {
@@ -146,13 +150,16 @@ struct Rect {
 struct Platform {
 	Rect rect;
 	int type;
+	float vx, vy;
 	Platform() {}
-	Platform(float x, float y, float width, float height, int type) {
+	Platform(float x, float y, float width, float height, int type, float vx = 0, float vy = 0) {
 		this->rect.x = x;
 		this->rect.y = y;
 		this->rect.width = width;
 		this->rect.height = height;
 		this->type = type;
+		this->vx = vx;
+		this->vy = vy;
 	}
 };
 struct Wall

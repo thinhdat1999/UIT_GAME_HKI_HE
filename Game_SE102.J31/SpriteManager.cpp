@@ -127,19 +127,22 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 258, 94, 274, 110));
 
 	//FLyingOrangeSoldier
-	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 35, 129, 61, 168));
-	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 291, 129, 321, 168));
+	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 35, 129, 61, 168));		
+	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 291, 129, 321, 168));			
 	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 67, 129, 93, 168));
 	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 331, 129, 361, 168));
 	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 99, 129, 125, 168));
 	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 371, 129, 401, 168));
 
 	//MiniTank
-	sprites->AddSprite(new EnemySprite(MINITANK, 236, 343, 252, 360));
-	sprites->AddSprite(new EnemySprite(MINITANK, 260, 343, 276, 360));
-	sprites->AddSprite(new EnemySprite(MINITANK, 284, 343, 300, 360));
-	sprites->AddSprite(new EnemySprite(MINITANK, 308, 343, 324, 360));
-	sprites->AddSprite(new EnemySprite(MINITANK, 332, 343, 348, 360));
+	sprites->AddSprite(new EnemySprite(MINITANK, 236, 343, 252, 360));			//63
+	sprites->AddSprite(new EnemySprite(MINITANK, 284, 343, 300, 360));			//65
+	sprites->AddSprite(new EnemySprite(MINITANK, 332, 343, 348, 360));			//67
+	sprites->AddSprite(new EnemySprite(MINITANK, 260, 343, 276, 360));			//64
+	sprites->AddSprite(new EnemySprite(MINITANK, 308, 343, 324, 360));			//66
+	sprites->AddSprite(new EnemySprite(MINITANK, 308, 343, 324, 360));			//68
+	sprites->AddSprite(new EnemySprite(MINITANK, 284, 343, 300, 360));			//69
+	sprites->AddSprite(new EnemySprite(MINITANK, 260, 343, 276, 360));			//70
 	////ElectricBat
 	////Idle1
 	//sprites->AddSprite(new EnemySprite(IDLE, 114, 222, 126, 241));

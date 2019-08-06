@@ -104,6 +104,16 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 		case ENEMY:
 		case BULLET:
 		{
+			// if(o->type = MOVINGFLATFORM) {
+			//auto rbp = this->GetRect();					//rect broading-phase
+			//auto bottom = rbp.y - rbp.height;
+			//rbp.y = rbp.y + dy;
+
+			//if (rbp.isContain(o->platform.rect) && (bottom >= o->platform.rect.y))
+			//	player->groundBound = *o->platform
+			//	player->posX += o->platform->dx;
+			//	player->posY += o->platform->dy;
+			//}
 			if (this->stateName != INJURED)
 			{
 				auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), o->GetBoundingBox());
@@ -227,7 +237,10 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 			this->isOnGround = true;
 			this->vy = this->dy = 0;
 			this->posY = groundBound.rect.y + (this->height >> 1);
-			
+			/*if (groundBound.type == 3) {
+				this->posX += groundBound.vx;
+				this->posY += groundBound.vy;
+			}*/
 			if (stateName == ATTACKING_STAND)
 				this->_allow[RUNNING] = false;
 		}

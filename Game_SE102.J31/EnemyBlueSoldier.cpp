@@ -105,7 +105,7 @@ void EnemyBlueSoldier::UpdateDistance(float dt)
 			if (delayTime <= 0)
 			{
 				this->ChangeState(ATTACKING);
-				delayTime = 2000;
+				delayTime = 1500;
 			}
 			break;
 		}
