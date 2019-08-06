@@ -12,7 +12,7 @@ PlayerJumpingState::PlayerJumpingState()
 	holdingTime = 0;
 	State prevState = player->state->StateName;
 
-	if (prevState == RUNNING || prevState == STANDING || prevState == CLINGING || prevState == SITTING) {
+	if (prevState == RUNNING || prevState == STANDING || prevState == CLINGING || prevState == SITTING || prevState == SHIELD_DOWN) {
 		player->height = PLAYER_STANDING_HEIGHT;
 		player->vy = PLAYER_JUMPING_SPEED;
 	}

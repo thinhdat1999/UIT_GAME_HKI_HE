@@ -165,7 +165,6 @@ bool Player::DetectGround(std::unordered_set<Platform*> grounds)
 	auto bottom = rbp.y - rbp.height;
 	rbp.y = rbp.y + dy;
 	//rbp.height = rbp.height - dy;
-	rbp.height = rbp.height + abs(dy);
 
 	if (rbp.isContain(groundBound.rect) && (bottom >= groundBound.rect.y))
 		return true;
@@ -228,7 +227,7 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 			this->isOnGround = true;
 			this->vy = this->dy = 0;
 			this->posY = groundBound.rect.y + (this->height >> 1);
-
+			
 			if (stateName == ATTACKING_STAND)
 				this->_allow[RUNNING] = false;
 		}
@@ -317,7 +316,7 @@ void Player::OnKeyDown(int keyCode)
 		if (_allow[JUMPING])
 		{
 			_allow[JUMPING] = false;
-			if (stateName == SITTING && groundBound.type == 0) {
+    			if (stateName == SITTING && groundBound.type == 0) {
 				player->height = PLAYER_STANDING_HEIGHT;
 				ChangeState(new PlayerFallingState());
 			}

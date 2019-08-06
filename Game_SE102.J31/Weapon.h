@@ -42,6 +42,7 @@ public:
 				break;
 			case SHIELD_DOWN:
 				stateName = SHIELD_DOWN;
+				this->posY -= 10;
 				isRender = true;
 				break;
 				// player->isOnGround == false -> JUMPING

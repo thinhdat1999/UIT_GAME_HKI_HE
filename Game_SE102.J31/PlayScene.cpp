@@ -4,7 +4,7 @@ PlayScene::PlayScene()
 {
 	_backColor = D3DCOLOR_XRGB(0, 0, 0);
 	_timeCounter = 0;
-	LoadMap("Resource/BossRoom.txt");
+	LoadMap("Resource/BossRoomv2.txt");
 	MapWidth = 2048; MapHeight = 480;
 	grid = new Grid(MapWidth, MapHeight);
 

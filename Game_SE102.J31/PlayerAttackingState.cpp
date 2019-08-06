@@ -9,7 +9,7 @@ PlayerAttackingState::PlayerAttackingState()
 	case SITTING:
 		StateName = ATTACKING_SIT;
 		break;
-	case JUMPING: case FALLING: case SHIELD_DOWN: case SPINNING:
+	case JUMPING: case FALLING: case SPINNING:
 		StateName = ATTACKING_JUMP;
 		break;
 	case STANDING: case RUNNING: case SHIELD_UP: case DASHING:
@@ -21,7 +21,15 @@ PlayerAttackingState::PlayerAttackingState()
 		else
 			StateName = ATTACKING_STAND;
 		break;
+	case SHIELD_DOWN:
+		if (player->isOnGround) {
+			StateName = ATTACKING_SIT;
+		}
+		else {
+			StateName = ATTACKING_JUMP;
+		}
 	}
+	
 	player->_allow[JUMPING] = player->_allow[SITTING] = false;
 }
 
@@ -56,6 +64,14 @@ void PlayerAttackingState::Update(float dt)
 
 		case JUMPING:
 			player->ChangeState(new PlayerJumpingState());
+			return;
+		case SHIELD_DOWN:
+			if (player->isOnGround) {
+				player->ChangeState(new PlayerSittingState());
+			}
+			else {
+				player->ChangeState(new PlayerFallingState());
+			}
 			return;
 		}
 	}

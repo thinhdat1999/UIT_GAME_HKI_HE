@@ -11,12 +11,16 @@ PlayerShieldDownState::PlayerShieldDownState()
 	player->_allow[JUMPING] = true;
 	player->_allow[SHIELD_DOWN] = false;
 	player->vy = -PLAYER_FALLING_SPEED;
+	player->height = PLAYER_SITTING_HEIGHT;
 	StateName = SHIELD_DOWN;
 }
 
 void PlayerShieldDownState::Update(float dt)
 {
-	
+	//if (player->isOnGround) {
+	//	player->ChangeState(new PlayerStandingState());
+	//	return;
+	//}
 	this->HandleKeyboard();
 }
 
@@ -24,30 +28,40 @@ void PlayerShieldDownState::HandleKeyboard()
 {
 	player->vx = 0;
 
-	if (keyCode[DIK_LEFT])
-	{
-		player->isReverse = false;
-		player->vx = _reverse ? -PLAYER_RUNNING_SPEED : -PLAYER_RUNNING_SPEED;
-	}
+	if (!player->isOnGround) {
+		if (keyCode[DIK_LEFT])
+		{
+			player->isReverse = false;
+			player->vx = _reverse ? -PLAYER_RUNNING_SPEED : -PLAYER_RUNNING_SPEED;
+			return;
+		}
 
-	else if (keyCode[DIK_RIGHT])
-	{
-		player->isReverse = true;
-		player->vx = _reverse ? PLAYER_RUNNING_SPEED : PLAYER_RUNNING_SPEED;
-	}
-	if (!keyCode[DIK_DOWN])
-	{
-	/*	player->height = PLAYER_STANDING_HEIGHT;
-		player->posY += 8;*/
+		else if (keyCode[DIK_RIGHT])
+		{
+			player->isReverse = true;
+			player->vx = _reverse ? PLAYER_RUNNING_SPEED : PLAYER_RUNNING_SPEED;
+			return;
+		}
+		if (!keyCode[DIK_DOWN]) {
+			player->height = PLAYER_STANDING_HEIGHT;
+			player->ChangeState(new PlayerFallingState());
 
+		}
+	}
+	//Khi ngồi trên đất-> đi, đứng, 
+	else {
 		if (keyCode[DIK_LEFT] || keyCode[DIK_RIGHT])
 		{
+			player->height = PLAYER_STANDING_HEIGHT;
+			player->posY += 8;
 			player->ChangeState(new PlayerRunningState());
 		}
-		else
+		else if(keyCode[DIK_UP] || !keyCode[DIK_DOWN])
 		{
+			player->height = PLAYER_STANDING_HEIGHT;
+			player->posY += 8;
 			player->ChangeState(new PlayerStandingState());
 		}
-		player->ChangeState(new PlayerStandingState());
 	}
+
 }

@@ -43,11 +43,11 @@ extern std::unordered_map<int, bool> keyCode;
 #define PLAYER_FALLING_SPEED 0.25f
 #define PLAYER_WIDTH 20
 #define PLAYER_STANDING_HEIGHT 40
-#define PLAYER_SITTING_HEIGHT 23
+#define PLAYER_SITTING_HEIGHT 24
 #define GRAVITY_SPEED 0.014f	
 // ====== Thông số Wizard  ======
 #define ENEMY_BOSS_WIDTH 28
-#define ENEMY_BOSS_HEIGHT 45
+#define ENEMY_BOSS_HEIGHT 46
 #define ENEMY_BOSS_HEALTH 16
 #define ENEMY_BOSS_DELAY_DEATH 3000
 #define ENEMY_BOSS_DELAY_HIT 400
@@ -67,6 +67,7 @@ extern enum Tag
 	GROUND,
 	MAP1,
 	MAP2,
+	MAP2_2,
 	MAP3,
 	FONT,
 	ENEMY,

@@ -17,7 +17,7 @@ void PlayerFallingState::Update(float dt)
 {
 	if (player->vy == 0 )
 	{
-		player->ChangeState(new PlayerSittingState());
+		player->ChangeState(new PlayerStandingState());
 		return;
 	}
 	this->HandleKeyboard();

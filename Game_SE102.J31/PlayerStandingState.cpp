@@ -9,6 +9,7 @@ PlayerStandingState::PlayerStandingState()
 	player->_allow[JUMPING] = true;
 	player->_allow[SITTING] = true;
 	player->_allow[SHIELD_UP] = true;
+	player->_allow[SHIELD_DOWN] = false;
 	StateName = STANDING;
 	if (player->isHoldingShield) player->_allow[THROWING] = true;
 }
