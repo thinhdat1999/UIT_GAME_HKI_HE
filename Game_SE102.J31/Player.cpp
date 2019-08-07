@@ -146,6 +146,10 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 
 					default:
 						this->SetHealth(health - 1);
+						if (o->tag == BULLET) {
+							auto b = (Bullet*)o;
+							b->isDead = true;
+						}
 						break;
 					}
 					result = r;
@@ -177,7 +181,7 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 	}
 	else
 	{
-		this->flashingTime = 2000;
+		this->flashingTime = 3000;
 		this->ChangeState(new PlayerInjuredState());
 	}
 	//END

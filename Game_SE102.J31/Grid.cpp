@@ -36,6 +36,7 @@ Grid::Grid(int mapWidth, int mapHeight)
 	auto *h5 = new Holder(6);
 	h5->spawnX = h5->posX = 584;
 	h5->spawnY = h5->posY = 151;
+	h5->maxItem = 3;
 	AddObject(h5);
 	auto *h6 = new Holder(2);
 	h6->spawnX = h6->posX = 840;
@@ -458,15 +459,16 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 					if (h->isAttacked)
 					{
 						h->isAttacked = false;
-						if (h->maxItem > 0) {
+						if (h->maxItem > 0 && h->isCanDrop) {
 							auto i = ItemManager::CreateItem(h->itemID);
 							i->posX = h->posX;
 							i->posY = h->posY + 10;
 							i->DetectGround(this->GetVisibleGrounds());
 							setObjects.insert(i);
 							this->AddObject(i);
+							h->maxItem--;
+							h->isCanDrop = false;
 						}
-						h->maxItem--;
 						setObjects.insert(h);
 						++it;
 						continue;

@@ -32,6 +32,7 @@ public:
 
 		if (!isOut) {
 			this->dx  = 0;
+			this->dy = 0;
 			this->posX = player->posX;
 			this->posY = player->posY;
 			switch (player->stateName) {
@@ -115,7 +116,7 @@ public:
 	
 			stateName = SHIELD_UP;
 			this->posX += dx;
-			if (isBack) this->posY += dy;
+			if (isBack)	this->posY += dy;
 
 			curAnimation = animations[stateName];
 			curAnimation->isReverse = player->isReverse;
@@ -193,12 +194,12 @@ public:
 								if (b->vy == 0)
 								{
 									b->vx = b->dx = 0;
-									b->vy = b->dy = 2.0f;
+									b->vy = b->dy = 6.0f;
 									b->isStopped = true;
 									break;
 								}
 								else {
-									b->vx = b->dx = 2.0f;
+									b->vx = b->dx = 6.0f;
 									b->vy = b->dy = 0;
 									b->isStopped = true;
 									break;

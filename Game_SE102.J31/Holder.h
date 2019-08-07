@@ -11,6 +11,8 @@ protected:
 public:
 	bool isAttacked, isActive;
 	int itemID, maxItem;
+	float delayDrop;
+	bool isCanDrop;
 	Holder() {
 		this->tag = HOLDER;
 		this->width = HOLDER_WIDTH;
@@ -26,6 +28,7 @@ public:
 		animations[STANDING] = new Animation(HOLDER, 0);
 		animations[ACTIVE] = new Animation(HOLDER, 0, 1, DEFAULT_TPF);
 		curAnimation = animations[STANDING];
+		isCanDrop = true;
 	}
 
 	~Holder()
@@ -48,6 +51,13 @@ public:
 			stateName = ACTIVE;
 
 		}*/
+		if (delayDrop > 0) {
+			delayDrop -= dt;
+		}
+		else {
+			delayDrop = 500;
+			isCanDrop = true;
+		}
 		if (this->isAttacked) {
 			if (!this->curAnimation->isLastFrame) {
 				stateName = ACTIVE;

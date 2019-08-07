@@ -41,7 +41,7 @@ extern std::unordered_map<int, bool> keyCode;
 #define WEAPON_SHIELD_UP_WIDTH 18
 #define WEAPON_SHIELD_UP_HEIGHT 10
 // ===== Thông số Captain =====
-#define PLAYER_RUNNING_SPEED 0.15f
+#define PLAYER_RUNNING_SPEED 0.08f
 #define PLAYER_ONWATER_SPEED -0.015f
 #define PLAYER_JUMPING_SPEED 0.2f
 #define PLAYER_FALLING_SPEED 0.25f

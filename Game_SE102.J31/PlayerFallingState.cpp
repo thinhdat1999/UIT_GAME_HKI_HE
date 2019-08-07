@@ -29,13 +29,13 @@ void PlayerFallingState::HandleKeyboard()
 	if (!player->isOnGround) {
 		if (keyCode[DIK_LEFT])
 		{
-			player->vx = _reverse ? -PLAYER_RUNNING_SPEED : -PLAYER_RUNNING_SPEED / 2;
+			player->vx = _reverse ? -PLAYER_RUNNING_SPEED : -PLAYER_RUNNING_SPEED;
 			player->isReverse = false;
 		}
 
 		else if (keyCode[DIK_RIGHT])
 		{
-			player->vx = _reverse ? PLAYER_RUNNING_SPEED / 2 : PLAYER_RUNNING_SPEED;
+			player->vx = _reverse ? PLAYER_RUNNING_SPEED : PLAYER_RUNNING_SPEED;
 			player->isReverse = true;
 		}
 		else

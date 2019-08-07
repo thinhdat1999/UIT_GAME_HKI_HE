@@ -12,9 +12,13 @@ PlayerJumpingState::PlayerJumpingState()
 	player->_allow[JUMPING] = false;
 	holdingTime = 0;
 	prevState = player->state->StateName;
-	if (prevState == RUNNING || prevState == STANDING || prevState == CLINGING || prevState == SITTING || prevState == SHIELD_DOWN || prevState == ONWATER || prevState == WATER_FALLING) {
+	if (prevState == RUNNING || prevState == STANDING || prevState == CLINGING || prevState == SITTING || prevState == SHIELD_DOWN) {
 		player->height = PLAYER_STANDING_HEIGHT;
 		player->vy = PLAYER_JUMPING_SPEED;
+	}
+	else if (prevState == ONWATER || prevState == WATER_FALLING) {
+		player->height = PLAYER_STANDING_HEIGHT;
+		player->vy = 0.16f;
 	}
 	StateName = JUMPING;
 }
@@ -23,7 +27,7 @@ void PlayerJumpingState::Update(float dt)
 {
 	// Cập nhật tốc độ vy đến khi vy >= 0 -> FALLING
 	player->vy -= GRAVITY_SPEED;
-	if (holdingTime <= 200) {
+	if (holdingTime <= 250) {
 		holdingTime += dt;
 	}
 
@@ -51,7 +55,7 @@ void PlayerJumpingState::HandleKeyboard()
 		player->vx = _reverse ? PLAYER_RUNNING_SPEED : PLAYER_RUNNING_SPEED;
 	}
 	if (keyCode[DIK_X]) {
-		if (holdingTime < 200) {
+		if (holdingTime < 250) {
 			if(!player->groundBound.type != 2 || prevState == SHIELD_DOWN)
 				player->vy += 0.02f;
 		}

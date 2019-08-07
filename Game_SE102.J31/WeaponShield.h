@@ -41,7 +41,10 @@ public:
 			if (vx >= 0)
 				this->isBack = true;
 		}
-		if (player->posY + 4 < this->posY) {
+		if (player->posY == this->posY || player->stateName == SITTING) {
+			this->dy = 0;
+		}
+		else if (player->posY < this->posY) {
 			this->dy = min(-3.5f, dy);
 		}
 		else this->dy = max(3.5f, dy);
@@ -53,7 +56,7 @@ public:
 				this->isOut = true;
 				this->isBack = false;
 				this->posX = player->posX + (player->isReverse ? player->width : -player->width);
-				this->posY = player->posY + 4;
+				this->posY = player->posY;
 				this->width = WEAPON_SHIELD_UP_WIDTH;
 				this->height = WEAPON_SHIELD_UP_HEIGHT;
 			}
