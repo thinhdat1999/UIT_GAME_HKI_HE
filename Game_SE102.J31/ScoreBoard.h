@@ -9,6 +9,7 @@ public:
 	int playerHealth;
 	int playerPower;
 	bool isHasKey;
+	float delayTime;
 	SpriteManager* sprites;
 
 	D3DCOLOR originalColor = D3DCOLOR_XRGB(255, 255, 255);

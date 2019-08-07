@@ -8,7 +8,8 @@ ScoreBoard::ScoreBoard()
 	this->sprites = SpriteManager::GetInstance();
 	this->playerPower = 0;
 	this->playerHealth = 10;
-	exitcurColor = flashColor;
+	this->delayTime = 300;
+	exitcurColor = originalColor;
 }
 
 void ScoreBoard::UpdateColor()
@@ -22,12 +23,14 @@ void ScoreBoard::UpdateColor()
 		}
 	}
 	else curColor = originalColor;
-
-	if (exitcurColor == flashColor) {
-		exitcurColor = originalColor;
-	}
-	else {
-		exitcurColor = flashColor;
+	if (delayTime <= 0) {
+		if (exitcurColor == flashColor) {
+			exitcurColor = originalColor;
+		}
+		else {
+			exitcurColor = flashColor;
+		}
+		delayTime = 300;
 	}
 }
 
@@ -74,6 +77,8 @@ void ScoreBoard::Update(float dt)
 			this->playerPower--;
 		}
 	}*/
+	if (delayTime > 0)
+		delayTime -= dt;
 }
 
 ScoreBoard* ScoreBoard::GetInstance()
