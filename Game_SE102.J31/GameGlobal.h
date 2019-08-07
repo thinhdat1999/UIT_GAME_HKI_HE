@@ -35,13 +35,16 @@ extern std::unordered_map<int, bool> keyCode;
 #define WEAPON_SHIELD_SPEED 0.6f
 #define WEAPON_SHIELD_MAX_DISTANCEX 4.5f
 #define WEAPON_SHIELD_REVERSE_ACCELERATEX 0.02f
-#define WEAPON_SHIELD_WIDTH 16
-#define WEAPON_SHIELD_HEIGHT 10
+#define WEAPON_STANDING_SHIELD_WIDTH 8
+#define WEAPON_STANDING_SHIELD_HEIGHT 16
+#define WEAPON_SHIELD_UP_WIDTH 18
+#define WEAPON_SHIELD_UP_HEIGHT 10
 // ===== Thông số Captain =====
 #define PLAYER_RUNNING_SPEED 0.15f
-#define PLAYER_JUMPING_SPEED 0.235f
+#define PLAYER_ONWATER_SPEED -0.015f
+#define PLAYER_JUMPING_SPEED 0.2f
 #define PLAYER_FALLING_SPEED 0.25f
-#define PLAYER_WIDTH 20
+#define PLAYER_WIDTH 12
 #define PLAYER_STANDING_HEIGHT 40
 #define PLAYER_SITTING_HEIGHT 24
 #define GRAVITY_SPEED 0.014f	
@@ -124,7 +127,11 @@ extern enum State
 	INJURED,
 	FLASHING,
 	EXPLODED,
-
+	ONWATER,
+	WATER_RUNNING,
+	WATER_DIVING,
+	WATER_FALLING,
+	INWATER,
 	//MINITANK
 	TOP,TOPLEFT,LEFT,BOTLEFT,BOT,BOTRIGHT,RIGHT,TOPRIGHT,
 	SPINNING_LEFT, SPINNING_RIGHT,
@@ -147,6 +154,11 @@ struct Rect {
 		return !((x + width < r.x) || (x > r.x + r.width) || (y < r.y - r.height) || (y - height > r.y));
 	}
 };
+//Type platform:
+// 0: có thể nhảy xuyên qua
+// 1: Không thể nhảy xuyên qua
+// 2: Nước
+// 3: Moving platform
 struct Platform {
 	Rect rect;
 	int type;

@@ -280,8 +280,8 @@ void PlayScene::UpdatePlayer(float dt)
 	player->Update(dt, grid->GetColliableObjects(player));
 	player->CheckGroundCollision(grid->GetColliableGrounds(player));
 	player->CheckWallCollision(grid->GetColliableWalls(player));
-	player->posX += player->vx * dt;
-	player->posY += player->vy * dt;
+	player->posX += player->dx;
+	player->posY += player->dy;
 	
 	if (p->isAttacking) {
 		p->isAttacking = false;
@@ -292,9 +292,9 @@ void PlayScene::UpdatePlayer(float dt)
 		player->_allow[THROWING] = false;
 		if (!p->isReverse) weapon->vx = -weapon->vx;
 	}
-	if (player->isHoldingShield)
-		weapon->Update(dt);
-	else
+	//if (player->isHoldingShield)
+	//	weapon->Update(dt);
+	//else
 	weapon->Update(dt, grid->GetColliableObjects(weapon));
 }
 

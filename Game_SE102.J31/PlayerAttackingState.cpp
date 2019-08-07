@@ -48,11 +48,8 @@ void PlayerAttackingState::Update(float dt)
 		case STANDING: case RUNNING: case DASHING:
 			player->ChangeState(new PlayerStandingState());
 			return;
-
 		case SITTING:
 			player->posY += 8;
-			player->height += 8;
-			/*player->posX += (player->isReverse) ? -3 : 3;*/
 			player->ChangeState(new PlayerSittingState());
 			return;
 		case SHIELD_UP:
@@ -67,6 +64,7 @@ void PlayerAttackingState::Update(float dt)
 			return;
 		case SHIELD_DOWN:
 			if (player->isOnGround) {
+				player->posY += 8;
 				player->ChangeState(new PlayerSittingState());
 			}
 			else {

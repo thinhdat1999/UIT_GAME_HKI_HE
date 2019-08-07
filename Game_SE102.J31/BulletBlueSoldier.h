@@ -3,6 +3,7 @@
 
 class BulletBlueSoldier : public Bullet {
 public:
+	bool isStopped;
 	BulletBlueSoldier() {
 		activeAnimation = new Animation(BULLET, 5);
 		this->type = BLUESOLDIER;

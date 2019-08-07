@@ -71,9 +71,9 @@ Grid::Grid(int mapWidth, int mapHeight)
 	AddGround(new Platform(0, 47, 96, 16, 0));
 	AddGround(new Platform(160, 47, 1216, 16, 0));
 	AddGround(new Platform(1436, 47, 360, 16, 0));
-	AddGround(new Platform(1791, 64, 65, 16, 1));
-	AddGround(new Platform(1857, 49, 160, 16, 1));
-	AddGround(new Platform(1791, 180, 256, 16, 1));
+	AddGround(new Platform(1791, 64, 65, 32, 1));
+	AddGround(new Platform(1855, 49, 160, 49, 1));
+	AddGround(new Platform(1791, 180, 256, 50, 1));
 	AddGround(new Platform(48, 176, 48, 16, 0));
 	AddGround(new Platform(34, 288, 222, 16, 0));
 	AddGround(new Platform(290, 288, 222, 16, 0));
@@ -89,9 +89,11 @@ Grid::Grid(int mapWidth, int mapHeight)
 	AddGround(new Platform(832, 128, 32, 16, 0));
 	AddGround(new Platform(880, 208, 32, 16, 0));
 	AddGround(new Platform(1328, 176, 48, 16, 0));
+	AddGround(new Platform(0, 32, 1790, 32, 2));
 	// WALL
 	AddWall(new Wall(1790, 60, 66, 63));
 	AddWall(new Wall(1766, 277, 28, 109));
+	AddWall(new Wall(2016, 173, 31, 173));
 
 	auto *e = EnemyManager::CreateEnemy(1);
 	e->posX = e->spawnX = 694;

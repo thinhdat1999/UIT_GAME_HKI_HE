@@ -8,7 +8,6 @@ PlayerShieldDownState::PlayerShieldDownState()
 	player->_allow[ATTACKING] = true;
 	player->_allow[CLINGING] = true;
 	player->_allow[THROWING] = false;
-	player->_allow[JUMPING] = true;
 	player->_allow[SHIELD_DOWN] = false;
 	player->vy = -PLAYER_FALLING_SPEED;
 	player->height = PLAYER_SITTING_HEIGHT;
@@ -50,17 +49,21 @@ void PlayerShieldDownState::HandleKeyboard()
 	}
 	//Khi ngồi trên đất-> đi, đứng, 
 	else {
+		player->_allow[JUMPING] = true;
 		if (keyCode[DIK_LEFT] || keyCode[DIK_RIGHT])
 		{
+			player->groundBound = Platform();
 			player->height = PLAYER_STANDING_HEIGHT;
 			player->posY += 8;
 			player->ChangeState(new PlayerRunningState());
 		}
 		else if(keyCode[DIK_UP] || !keyCode[DIK_DOWN])
 		{
+			/*player->isOnGround = false;*/
+			player->groundBound = Platform();
 			player->height = PLAYER_STANDING_HEIGHT;
 			player->posY += 8;
-			player->ChangeState(new PlayerStandingState());
+			/*player->ChangeState(new PlayerStandingState());*/
 		}
 	}
 

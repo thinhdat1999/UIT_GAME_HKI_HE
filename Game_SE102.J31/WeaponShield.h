@@ -14,8 +14,8 @@ public:
 		this->vy = 0;
 		type = SHIELD;
 		stateName = STANDING;
-		width = WEAPON_SHIELD_WIDTH;
-		height = WEAPON_SHIELD_HEIGHT;
+		width = WEAPON_STANDING_SHIELD_WIDTH;
+		height = WEAPON_STANDING_SHIELD_HEIGHT;
 		isOut = false;
 		isBack = false;
 	}
@@ -54,12 +54,15 @@ public:
 				this->isBack = false;
 				this->posX = player->posX + (player->isReverse ? player->width : -player->width);
 				this->posY = player->posY + 4;
+				this->width = WEAPON_SHIELD_UP_WIDTH;
+				this->height = WEAPON_SHIELD_UP_HEIGHT;
 			}
 			else
 			{
 				this->isOut = false;
 				player->isHoldingShield = true;
-				player->_allow[THROWING] = true;
+				if(player->groundBound.type != 2)
+					player->_allow[THROWING] = true;
 				/*this->isDead = true;*/
 			}
 		}

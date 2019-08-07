@@ -7,6 +7,7 @@
 #include "PlayerShieldUpState.h"
 #include "PlayerAttackingState.h"
 #include "PlayerInjuredState.h"
+#include "PlayerOnWaterState.h"
 #include "Holder.h"
 #include "BulletManager.h"
 class Player : public Object
@@ -32,7 +33,7 @@ public:
 	Type weaponType;
 	unordered_map<State, bool> _allow;
 	bool isThrowing, isAttacking, isHoldingShield;
-	bool isOnGround, isOnWall;
+	bool isOnGround, isOnWall, isOnWater;
 	int timeOfFirstButton, dashingTime;
 	bool buttonPressed = false;
 	int FirstButton;
@@ -42,6 +43,7 @@ public:
 	void CheckGroundCollision(std::unordered_set<Platform*> grounds);
 	void CheckWallCollision(std::unordered_set<Wall*> walls);
 	void ChangeState(PlayerState* newState);
+	void ChangeAnimation(State stateName);
 	void Update(float dt, std::unordered_set<Object*> ColliableObjects);
 	void UpdateTexture();
 	void Render(float cameraX = 0, float cameraY = 0);

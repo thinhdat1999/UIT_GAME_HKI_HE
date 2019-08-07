@@ -163,6 +163,7 @@
     <ClInclude Include="PlayerFallingState.h" />
     <ClInclude Include="PlayerInjuredState.h" />
     <ClInclude Include="PlayerJumpingState.h" />
+    <ClInclude Include="PlayerOnWaterState.h" />
     <ClInclude Include="PlayerRunningState.h" />
     <ClInclude Include="PlayerShieldDownState.h" />
     <ClInclude Include="PlayerShieldUpState.h" />
@@ -205,6 +206,7 @@
     <ClCompile Include="PlayerFallingState.cpp" />
     <ClCompile Include="PlayerInjuredState.cpp" />
     <ClCompile Include="PlayerJumpingState.cpp" />
+    <ClCompile Include="PlayerOnWaterState.cpp" />
     <ClCompile Include="PlayerRunningState.cpp" />
     <ClCompile Include="PlayerShieldDownState.cpp" />
     <ClCompile Include="PlayerShieldUpState.cpp" />

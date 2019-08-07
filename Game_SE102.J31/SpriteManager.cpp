@@ -36,7 +36,19 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new PlayerSprite(EXPLODED, 237, 265, 267, 295));			//21
 	sprites->AddSprite(new PlayerSprite(EXPLODED, 269, 265, 299, 295));			//22
 	sprites->AddSprite(new PlayerSprite(INJURED, 201, 186, 233, 232));			//23
-	sprites->AddSprite(new PlayerSprite(INJURED, 84, 186, 116, 232));			//24
+	//sprites->AddSprite(new PlayerSprite(INJURED, 84, 186, 116, 232));			//24
+	sprites->AddSprite(new PlayerSprite(ONWATER, 261, 244, 281, 260));			//24
+	sprites->AddSprite(new PlayerSprite(WATER_RUNNING, 292, 243, 312, 259));	//25
+	sprites->AddSprite(new PlayerSprite(WATER_FALLING, 118, 243, 138, 259));	//26
+	sprites->AddSprite(new PlayerSprite(WATER_FALLING, 142, 243, 162, 259));	//27
+	sprites->AddSprite(new PlayerSprite(WATER_FALLING, 166, 243, 186, 259));	//28
+	sprites->AddSprite(new PlayerSprite(WATER_DIVING, 98, 243, 118, 259));		//29
+	sprites->AddSprite(new PlayerSprite(WATER_DIVING, 81, 243, 101, 259));		//30
+	sprites->AddSprite(new PlayerSprite(INWATER, 186, 236, 206, 252));			//31
+	sprites->AddSprite(new PlayerSprite(INWATER, 206, 236, 226, 252));			//32
+	sprites->AddSprite(new PlayerSprite(INWATER, 230, 236, 250, 252));			//33
+
+
 
 
 	//Load Weapon

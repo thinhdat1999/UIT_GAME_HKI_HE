@@ -17,6 +17,11 @@ Player::Player()
 	animations[DASHING] = new Animation(PLAYER, 17, 18, DEFAULT_TPF);
 	animations[SHIELD_DOWN] = new Animation(PLAYER, 19);
 	animations[INJURED] = new Animation(PLAYER, 23);
+	animations[ONWATER] = new Animation(PLAYER, 24);
+	animations[WATER_RUNNING] = new Animation(PLAYER, 24, 25);
+	animations[WATER_FALLING] = new Animation(PLAYER, 26, 28);
+	animations[WATER_DIVING] = new Animation(PLAYER, 29, 30);
+	animations[INWATER] = new Animation(PLAYER, 31, 33);
 	tag = PLAYER;
 	width = PLAYER_WIDTH;
 	height = PLAYER_STANDING_HEIGHT;
@@ -66,6 +71,10 @@ void Player::ChangeState(PlayerState * newState)
 	state = newState;
 	stateName = newState->StateName;
 	curAnimation = animations[stateName];
+}
+void Player::ChangeAnimation(State stateName)
+{
+	this->curAnimation = animations[stateName];
 }
 void Player::DetectSpawnY(std::unordered_set<Platform*> grounds)
 {
@@ -181,7 +190,17 @@ bool Player::DetectGround(std::unordered_set<Platform*> grounds)
 
 	for (auto g : grounds)
 	{
-  		if (rbp.isContain(g->rect) && (bottom >= g->rect.y))
+		//Nếu type platform bằng 1 thì nhảy đụng và rớt xuống
+		if (rbp.isContain(g->rect) && g->type == 1 && this->vy > 0 && (g->rect.y - g->rect.height) > this->posY) {
+			this->ChangeState(new PlayerFallingState());
+
+		}
+		else if (rbp.isContain(g->rect) && g->type == 2 && this->vy <= 0 && player->stateName != SHIELD_DOWN) {
+			player->height = PLAYER_SITTING_HEIGHT;
+			groundBound = *g;
+			return true;
+		}
+  		else if (rbp.isContain(g->rect) && (bottom >= g->rect.y))
 		{
 			groundBound = *g;
 			return true;
@@ -222,11 +241,16 @@ bool Player::DetectWall(std::unordered_set<Wall*> walls)
 void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 {
 	if (this->isOnWall) return;
-
+	//if (this->isOnWater && this->vy < 0) {
+	//	this->posY = groundBound.rect.y - (this->height >> 1);
+	//	this->ChangeState(new PlayerOnWaterState());
+	//	return;
+	//}
 	// Trên không
 	if (this->vy)
 	{
 		this->isOnGround = false;
+		this->isOnWater = false;
 	}
 
 	// Tìm được vùng đất va chạm
@@ -234,15 +258,29 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 	{
 		if (this->vy < 0)
 		{
-			this->isOnGround = true;
-			this->vy = this->dy = 0;
-			this->posY = groundBound.rect.y + (this->height >> 1);
-			/*if (groundBound.type == 3) {
-				this->posX += groundBound.vx;
-				this->posY += groundBound.vy;
-			}*/
-			if (stateName == ATTACKING_STAND)
-				this->_allow[RUNNING] = false;
+			if (groundBound.type != 2) {
+				this->isOnGround = true;
+				this->vy = this->dy = 0;
+				this->posY = groundBound.rect.y + (this->height >> 1);
+				/*if (groundBound.type == 3) {
+					this->posX += groundBound.vx;
+					this->posY += groundBound.vy;
+				}*/
+				if (stateName == ATTACKING_STAND)
+					this->_allow[RUNNING] = false;
+			}
+			else if (groundBound.type == 2) {
+				this->vy = this->dy = 0;
+				if (stateName != SHIELD_DOWN) {
+					this->isOnWater = true;
+					this->posY = groundBound.rect.y;
+					this->ChangeState(new PlayerOnWaterState());
+				}
+				else {
+					this->isOnGround = true;
+					this->posY = groundBound.rect.y + (this->height >> 1);
+				}
+			}
 		}
 	}
 
@@ -251,6 +289,7 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 	{
 		this->ChangeState(new PlayerFallingState());
 	}
+	
 }
 
 // Kiểm tra va chạm tường
@@ -324,7 +363,7 @@ void Player::OnKeyDown(int keyCode)
 			this->isAttacking = true;
 			}
 		break;
-	case DIK_SPACE:
+	case DIK_X:
 
 		if (_allow[JUMPING])
 		{

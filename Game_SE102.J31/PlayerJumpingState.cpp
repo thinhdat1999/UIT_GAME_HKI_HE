@@ -9,10 +9,10 @@ PlayerJumpingState::PlayerJumpingState()
 	player->_allow[CLINGING] = true;
 	player->_allow[THROWING] = false;
 	player->_allow[SHIELD_UP] = false;
+	player->_allow[JUMPING] = false;
 	holdingTime = 0;
-	State prevState = player->state->StateName;
-
-	if (prevState == RUNNING || prevState == STANDING || prevState == CLINGING || prevState == SITTING || prevState == SHIELD_DOWN) {
+	prevState = player->state->StateName;
+	if (prevState == RUNNING || prevState == STANDING || prevState == CLINGING || prevState == SITTING || prevState == SHIELD_DOWN || prevState == ONWATER || prevState == WATER_FALLING) {
 		player->height = PLAYER_STANDING_HEIGHT;
 		player->vy = PLAYER_JUMPING_SPEED;
 	}
@@ -50,12 +50,14 @@ void PlayerJumpingState::HandleKeyboard()
 		player->isReverse = true;
 		player->vx = _reverse ? PLAYER_RUNNING_SPEED : PLAYER_RUNNING_SPEED;
 	}
-	if (keyCode[DIK_SPACE]) {
+	if (keyCode[DIK_X]) {
 		if (holdingTime < 200) {
-			player->vy += 0.02f;
+			if(!player->groundBound.type != 2 || prevState == SHIELD_DOWN)
+				player->vy += 0.02f;
 		}
 		else {
-   			player->ChangeState(new PlayerSpinningState());
+			if (player->groundBound.type != 2 || (prevState == SHIELD_DOWN))
+   				player->ChangeState(new PlayerSpinningState());
 		}
 	}
 }

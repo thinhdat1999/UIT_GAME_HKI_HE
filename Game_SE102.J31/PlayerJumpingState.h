@@ -8,6 +8,7 @@ class PlayerJumpingState : public PlayerState
 private:
 	bool _reverse;
 	int holdingTime;
+	State prevState;
 public:
 	PlayerJumpingState();
 	void Update(float dt);

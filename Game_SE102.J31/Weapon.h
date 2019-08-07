@@ -31,6 +31,7 @@ public:
 		curAnimation->isReverse = player->isReverse;
 
 		if (!isOut) {
+			this->dx  = 0;
 			this->posX = player->posX;
 			this->posY = player->posY;
 			switch (player->stateName) {
@@ -38,6 +39,8 @@ public:
 				stateName = SHIELD_UP;
 				this->posY += 16;
 				this->posX += (player->isReverse ? 2 : -2);
+				this->width = WEAPON_SHIELD_UP_WIDTH;
+				this->height = WEAPON_SHIELD_UP_HEIGHT;
 				isRender = true;
 				break;
 			case SHIELD_DOWN:
@@ -70,11 +73,16 @@ public:
 				stateName = STANDING;
 				this->posY += (player->stateName != SITTING) ? 6 : -4;
 				this->posX += (player->isReverse ? 9 : -9);
+				this->width = WEAPON_STANDING_SHIELD_WIDTH;
+				this->height = WEAPON_STANDING_SHIELD_HEIGHT;
 				isRender = true;
 				break;
 			}
 		}
 		curAnimation->Update(dt);
+		if (player->isOnWater) {
+			isRender = false;
+		}
 	}			// Update thông số của Object sau khoảng thời gian delta-time
 
 	virtual void Render(float cameraX = 0, float cameraY = 0)
@@ -99,94 +107,104 @@ public:
 		UpdateDistance(dt);
 		if (isOut)
 		{
+	
 			stateName = SHIELD_UP;
 			this->posX += dx;
 			if (isBack) this->posY += dy;
-		}
-		//else {
-		//	this->posX = player->posX;
-		//	this->posY = player->posY;
-		//	switch (player->stateName) {
-		//	case SHIELD_UP:
-		//		stateName = SHIELD_UP;
-		//		this->posY += 16;
-		//		this->posX += (player->isReverse ? 2 : -2);
-		//		break;
-		//	case SHIELD_DOWN:
-		//		stateName = SHIELD_DOWN;
-		//		break;
-		//		// player->isOnGround == false -> JUMPING
-		//	case JUMPING: case FALLING:
-		//		stateName = JUMPING;
-		//		this->posY = player->posY + 10;
-		//		this->posX += (player->isReverse ? -5 : 5);
-		//		break;
-		//	default:
-		//		stateName = STANDING;
-		//		this->posY += (player->stateName != SITTING) ? 6 : -3;
-		//		this->posX += (player->isReverse ? 11 : -11);
-		//		break;
-		//	}
-		//}
-	
-		
-		curAnimation = animations[stateName];
-		curAnimation->isReverse = player->isReverse;
-		curAnimation->Update(dt);
-		
-		auto rect = this->GetRect();
-		for (auto obj : ColliableObjects)
-		{
-			if (rect.isContain(obj->GetRect()))
+
+			curAnimation = animations[stateName];
+			curAnimation->isReverse = player->isReverse;
+			curAnimation->Update(dt);
+
+			auto rect = this->GetRect();
+			for (auto obj : ColliableObjects)
 			{
-				switch (obj->tag)
+				if (rect.isContain(obj->GetRect()))
 				{
-				case ENEMY:
-				{
-					switch (obj->type) {
-					case BOSS1:
+					switch (obj->tag)
 					{
-						auto e = (EnemyWizard*)obj;
-						e->SubtractHealth();
-						break;
-					}
-					case BOSS2:
+					case ENEMY:
 					{
-						auto e = (EnemyMiniBoss*)obj;
-						if(e->GetHealth() <=3)
+						switch (obj->type) {
+						case BOSS1:
+						{
+							auto e = (EnemyWizard*)obj;
 							e->SubtractHealth();
+							break;
+						}
+						case BOSS2:
+						{
+							auto e = (EnemyMiniBoss*)obj;
+							if (e->GetHealth() <= 3)
+								e->SubtractHealth();
+							break;
+						}
+						default:
+						{
+							auto e = (Enemy*)obj;
+							e->ChangeState(DEAD);
+							break;
+						}
+						}
 						break;
 					}
-					default:
+					case BULLET:
 					{
-						auto e = (Enemy*)obj;
-						e->ChangeState(DEAD);
+						switch (obj->type) {
+						case BOSS2:
+						{
+							auto b = (BulletMiniBoss*)obj;
+							if (b->bulletType == 0)
+								b->ChangeState(DEAD);
+							break;
+						}
+						}
 						break;
 					}
-					}
-					break;
-				}
-				case BULLET: 
-				{
-					switch (obj->type) {
-					case BOSS2:
+					case HOLDER:
 					{
-						auto b = (BulletMiniBoss*)obj;
-						if(b->bulletType == 0) 
-							b->ChangeState(DEAD);
+						auto h = (Holder*)obj;
+						h->isAttacked = true;
 						break;
 					}
 					}
-					break;
-				}
-				case HOLDER:
-				{
-					auto h = (Holder*)obj;
-					h->isAttacked = true;
-					break;
-				}
 				}
 			}
+		}
+		else if (player->isHoldingShield) {
+			Update(dt);
+			auto rect = this->GetRect();
+			for (auto obj : ColliableObjects)
+			{
+				if (rect.isContain(obj->GetRect()))
+				{
+					switch (obj->tag)
+					{
+					case BULLET:
+						switch (obj->type) {
+						case BLUESOLDIER:
+							auto b = (BulletBlueSoldier*)obj;
+							if (!b->isStopped) {
+								if (b->vy == 0)
+								{
+									b->vx = b->dx = 0;
+									b->vy = b->dy = 2.0f;
+									b->isStopped = true;
+									break;
+								}
+								else {
+									b->vx = b->dx = 2.0f;
+									b->vy = b->dy = 0;
+									b->isStopped = true;
+									break;
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+
 		}
 	}
 };
