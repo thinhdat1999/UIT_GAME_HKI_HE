@@ -122,6 +122,8 @@ Grid::Grid(int mapWidth, int mapHeight)
 	e4->typeAI = 1;
 	e4->DetectSpawnY(this->GetColliableGrounds(e4));
 	AddObject(e4);
+	auto soldier = (EnemyBlueSoldier*)e4;
+	soldier->activeDistance = -120;
 
 
 	auto *e5 = EnemyManager::CreateEnemy(3);

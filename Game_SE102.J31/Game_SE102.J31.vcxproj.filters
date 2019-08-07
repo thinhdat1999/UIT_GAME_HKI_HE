@@ -224,6 +224,9 @@
     <ClInclude Include="PlayerOnWaterState.h">
       <Filter>Framework\Game Entity\PlayerState</Filter>
     </ClInclude>
+    <ClInclude Include="ScoreBoard.h">
+      <Filter>Framework\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameGlobal.cpp">
@@ -333,6 +336,9 @@
     </ClCompile>
     <ClCompile Include="PlayerOnWaterState.cpp">
       <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreBoard.cpp">
+      <Filter>Framework\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -69,6 +69,11 @@ public:
 			case SPINNING:
 				isRender = false;
 				break;
+			case INJURED: {
+				stateName = JUMPING;
+				isRender = false;
+				break;
+			}
 			default:
 				stateName = STANDING;
 				this->posY += (player->stateName != SITTING) ? 6 : -4;

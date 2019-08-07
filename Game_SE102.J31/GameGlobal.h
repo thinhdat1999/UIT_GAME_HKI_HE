@@ -23,6 +23,7 @@ extern std::unordered_map<int, bool> keyCode;
 
 #define mCamera Camera::GetInstance()
 #define player Player::GetInstance()
+#define scoreboard ScoreBoard::GetInstance()
 
 // ===== CÁC THÔNG SỐ CHO HOLDERS & ITEM ====
 #define HOLDER_WIDTH 16
@@ -132,6 +133,7 @@ extern enum State
 	WATER_DIVING,
 	WATER_FALLING,
 	INWATER,
+	SCOREBOARD,
 	//MINITANK
 	TOP,TOPLEFT,LEFT,BOTLEFT,BOT,BOTRIGHT,RIGHT,TOPRIGHT,
 	SPINNING_LEFT, SPINNING_RIGHT,

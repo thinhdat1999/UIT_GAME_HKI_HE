@@ -4,11 +4,11 @@
 PlayerSittingState::PlayerSittingState()
 {
 	player->_allow[JUMPING] = true;
-	player->_allow[RUNNING] = true;
 	player->_allow[THROWING] = false;
 	player->_allow[ATTACKING] = true;
 	player->_allow[SHIELD_UP] = false;
 	player->_allow[SHIELD_DOWN] = false;
+	player->_allow[RUNNING] = true;
 	player->vx = 0;
 	player->vy = 0;
 	player->posY -= 8;
@@ -25,18 +25,18 @@ void PlayerSittingState::Update(float dt)
 void PlayerSittingState::HandleKeyboard()
 {
 	//check có thả nút Down ra không
-	if (!keyCode[DIK_DOWN])
-	{
-		player->height = PLAYER_STANDING_HEIGHT;
-		player->posY += 8;
-		player->ChangeState(new PlayerStandingState());
-	}
-
 	if (keyCode[DIK_LEFT] || keyCode[DIK_RIGHT])
 	{
 		player->height = PLAYER_STANDING_HEIGHT;
 		player->posY += 8;
 		player->ChangeState(new PlayerRunningState());
+	}
+
+	else if (!keyCode[DIK_DOWN])
+	{
+		player->height = PLAYER_STANDING_HEIGHT;
+		player->posY += 8;
+		player->ChangeState(new PlayerStandingState());
 	}
 	
 }

@@ -72,8 +72,8 @@ void EnemyBlueSoldier::UpdateDistance(float dt)
 	{
 		if (!this->isOnGround) this->vy -= GRAVITY_SPEED;
 
-		if (this->isOnGround && ((this->vx < 0 && this->posX - 20 < curGroundBound.rect.x)
-			|| (this->vx > 0 && this->posX + 20 > curGroundBound.rect.x + curGroundBound.rect.width)))
+		if (this->isOnGround && ((this->vx < 0 && this->posX - 30 < curGroundBound.rect.x)
+			|| (this->vx > 0 && this->posX + 30 > curGroundBound.rect.x + curGroundBound.rect.width)))
 		{
 			this->isOnGround = false;
 			this->vy = 0.26f;
@@ -143,22 +143,26 @@ void EnemyBlueSoldier::ChangeState(State StateName)
 		break;
 	}
 	case RUNNING: {
-		this->isActive = true;
-		auto distance = player->posX - this->spawnX;
+		if (activeDistance) {
+			auto distance = player->posX - this->spawnX;
 
-		if (activeDistance * distance > 0 && distance >= this->activeDistance)
-		{
-			this->curGroundBound = groundBound;
-			this->isOnGround = true;
-			this->vy = 0;
-			this->isActive = true;
+			if (activeDistance * distance > 0 && distance >= this->activeDistance)
+			{
+				this->curGroundBound = groundBound;
+				this->isOnGround = true;
+				this->vy = 0;
+				this->isActive = true;
+			}
+		}
+		else {
+			isActive = true;
 		}
 		break;
 	}
 	case DEAD:
 	{
 		this->vx = this->dx = 0;
-		this->vy = this->dy = 0;
+		this->dy = 0;
 		this->posY = this->groundBound.rect.y + (this->width >> 1);
 		break;
 	}

@@ -7,7 +7,6 @@ PlayScene::PlayScene()
 	LoadMap("Resource/CharlestonMap.txt");
 	MapWidth = 2048; MapHeight = 480;
 	grid = new Grid(MapWidth, MapHeight);
-
 	p = player;
 
 	p->posX = p->spawnX = 50;
@@ -43,7 +42,7 @@ void PlayScene::Update(float dt)
 	mMap->Update(dt);
 	grid->Update();
 
-	//scoreboard->Update(dt);
+	scoreboard->Update(dt);
 
 	UpdateObjects(dt);
 	UpdatePlayer(dt);
@@ -302,7 +301,7 @@ void PlayScene::UpdatePlayer(float dt)
 void PlayScene::Render()
 {
 	mMap->Render();
-	//scoreboard->Render();
+	scoreboard->Render();
 	for (auto o : visibleObjects)
 		o->Render(mCamera->x, mCamera->y);
 	player->Render(mCamera->x, mCamera->y);

@@ -25,6 +25,7 @@ Player::Player()
 	tag = PLAYER;
 	width = PLAYER_WIDTH;
 	height = PLAYER_STANDING_HEIGHT;
+	health = 10;
 }
 
 // Destructor
@@ -132,19 +133,36 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 					{
 					case BOSS1:
 						//set máu
+						this->SetHealth(health - 3);
 						break;
 					case ROCKETSOLDIER:
 						if (!flashingTime && o->tag == BULLET) {
 							auto b = (BulletRocketSoldier*)o;
 							b->ChangeState(DEAD);
+							
 						}
+						this->SetHealth(health - 2);
 						break;
 
 					default:
-						/*this->SetHealth(health - 1);*/
+						this->SetHealth(health - 1);
 						break;
 					}
 					result = r;
+					break;
+				}
+			}
+			break;
+		}
+		case ITEM: {
+			if (this->GetRect().isContain(o->GetRect()))
+			{
+				o->isDead = true;
+
+				switch (o->type) {
+				case KEY: 
+					this->isHasKey = true;
+					this->SetKey();
 					break;
 				}
 			}
@@ -401,3 +419,27 @@ void Player::OnKeyUp(int keyCode)
 	}
 }
 
+void Player::SetHealth(int health)
+{
+	this->health = health;
+	scoreboard->playerHealth = health;
+
+	if (this->health <= 0)
+	{
+		scoreboard->playerHealth = 0;
+		this->health = 0;
+		this->isDead = true;
+	}
+}
+
+
+void Player::SetPower(int power)
+{
+	this->power = power;
+	scoreboard->playerPower = power;
+}
+
+void Player::SetKey()
+{
+	scoreboard->isHasKey = true;
+}

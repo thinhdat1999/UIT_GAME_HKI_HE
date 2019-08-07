@@ -48,7 +48,8 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new PlayerSprite(INWATER, 206, 236, 226, 252));			//32
 	sprites->AddSprite(new PlayerSprite(INWATER, 230, 236, 250, 252));			//33
 
-
+	sprites->AddSprite(new PlayerSprite(SCOREBOARD, 215, 307, 225, 317));		//34 HEALTH
+	sprites->AddSprite(new PlayerSprite(SCOREBOARD, 279, 302, 310, 322));		//35 EXIT
 
 
 	//Load Weapon

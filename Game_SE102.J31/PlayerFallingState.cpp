@@ -9,6 +9,7 @@ PlayerFallingState::PlayerFallingState()
 	player->_allow[THROWING] = false;
 	player->_allow[SHIELD_UP] = false;
 	player->vy = -PLAYER_FALLING_SPEED;
+	player->height = PLAYER_STANDING_HEIGHT;
 	StateName = FALLING;
 }
 
@@ -17,7 +18,7 @@ void PlayerFallingState::Update(float dt)
 {
 	if (player->vy == 0 )
 	{
-		player->ChangeState(new PlayerStandingState());
+		player->ChangeState(new PlayerSittingState());
 		return;
 	}
 	this->HandleKeyboard();
@@ -25,22 +26,25 @@ void PlayerFallingState::Update(float dt)
 
 void PlayerFallingState::HandleKeyboard()
 {
-	if (keyCode[DIK_LEFT])
-	{
-		player->vx = _reverse ? -PLAYER_RUNNING_SPEED : -PLAYER_RUNNING_SPEED / 2;
-		player->isReverse = false;
+	if (!player->isOnGround) {
+		if (keyCode[DIK_LEFT])
+		{
+			player->vx = _reverse ? -PLAYER_RUNNING_SPEED : -PLAYER_RUNNING_SPEED / 2;
+			player->isReverse = false;
+		}
+
+		else if (keyCode[DIK_RIGHT])
+		{
+			player->vx = _reverse ? PLAYER_RUNNING_SPEED / 2 : PLAYER_RUNNING_SPEED;
+			player->isReverse = true;
+		}
+		else
+		{
+			player->vx = 0;
+		}
+		if (keyCode[DIK_DOWN] && player->_allow[SHIELD_DOWN]) {
+			player->ChangeState(new PlayerShieldDownState());
+		}
 	}
 
-	else if (keyCode[DIK_RIGHT])
-	{
-		player->vx = _reverse ? PLAYER_RUNNING_SPEED / 2 : PLAYER_RUNNING_SPEED;
-		player->isReverse = true;
-	}
-	else
-	{
-		player->vx = 0;
-	}
-	if (keyCode[DIK_DOWN] && player->_allow[SHIELD_DOWN]) {
-		player->ChangeState(new PlayerShieldDownState());
-	}
 }

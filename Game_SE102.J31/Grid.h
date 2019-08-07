@@ -8,6 +8,7 @@
 #include "ItemManager.h"
 #include "EnemyManager.h"
 #include "BulletManager.h"
+#include "ScoreBoard.h"
 #include <fstream>
 
 class Grid

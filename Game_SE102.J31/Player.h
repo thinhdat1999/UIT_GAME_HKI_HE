@@ -10,6 +10,7 @@
 #include "PlayerOnWaterState.h"
 #include "Holder.h"
 #include "BulletManager.h"
+#include "ScoreBoard.h"
 class Player : public Object
 {
 private:
@@ -22,6 +23,10 @@ public:
 	~Player();
 
 	static Player* GetInstance();
+
+	int health;
+	int power;
+
 	LPDIRECT3DTEXTURE9 curTexture;
 	LPDIRECT3DTEXTURE9 originalTexture = TextureManager::GetInstance()->GetTexture(PLAYER);
 	LPDIRECT3DTEXTURE9 flashTexture = TextureManager::GetInstance()->GetTexture(PLAYERFLASHING);
@@ -31,6 +36,7 @@ public:
 	State stateName;
 	Animation* curAnimation;								// Animation hiện tại
 	Type weaponType;
+	bool isHasKey;
 	unordered_map<State, bool> _allow;
 	bool isThrowing, isAttacking, isHoldingShield;
 	bool isOnGround, isOnWall, isOnWater;
@@ -49,4 +55,8 @@ public:
 	void Render(float cameraX = 0, float cameraY = 0);
 	void OnKeyDown(int keyCode);
 	void OnKeyUp(int keyCode);
+
+	void SetHealth(int health);
+	void SetPower(int Power);
+	void SetKey();
 };

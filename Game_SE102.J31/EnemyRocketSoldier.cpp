@@ -185,7 +185,7 @@ void EnemyRocketSoldier::ChangeState(State StateName)
 	case DEAD:
 	{
 		this->vx = this->dx = 0;
-		this->vy = this->dy = 0;
+		this->dy = 0;
 		this->posY = this->groundBound.rect.y + (this->width >> 1);
 		break;
 	}
