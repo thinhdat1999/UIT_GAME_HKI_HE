@@ -3,7 +3,7 @@
 #include "BulletBlueSoldier.h"
 #include "BulletRocketSoldier.h"
 #include "BulletMiniBoss.h"
-#include "BulletMovingPlatform.h"
+#include "BulletFlyingRocket.h"
 class BulletManager
 {
 public:
@@ -15,6 +15,8 @@ public:
 		case BLUESOLDIER: return new BulletBlueSoldier();
 		case ROCKETSOLDIER: return new BulletRocketSoldier();
 		case BOSS2: return new BulletMiniBoss();
+		case MINITANK: return new BulletBlueSoldier();
+		case FLYINGROCKET:return new BulletFlyingRocket();
 		}
 	}
 };

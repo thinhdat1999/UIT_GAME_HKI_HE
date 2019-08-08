@@ -1,70 +1,134 @@
 #include "EnemyTank.h"
 
-EnemyTank::EnemyTank(float spawnX, float spawnY)
+EnemyTank::EnemyTank()
 {
-	this->stateName = SPINNING_LEFT;
+	tag = ENEMY;
+	type = MINITANK;
 
-	animations[SPINNING_LEFT] = new Animation(ENEMY, 63, 65, 1);
-	animations[SPINNING_RIGHT] = new Animation(ENEMY, 69, 69, 1);
-	animations[TOP] = new Animation(ENEMY, 63);
-	//Reverse false
-	animations[TOPLEFT] = new Animation(ENEMY, 66);
-	animations[LEFT] = new Animation(ENEMY, 64);
-	animations[BOTLEFT] = new Animation(ENEMY, 67);
-	animations[BOT] = new Animation(ENEMY, 65);
+	animations[RUNNING] = new Animation(ENEMY, 46, 48);
+	animations[SPINNING_LEFT] = new Animation(ENEMY, 49);
+	animations[DEAD] = new Animation(ENEMY, 46, 48);
+
+	animations[TOP] = new Animation(ENEMY, 46);
+
 	//Reverse true
-	animations[BOTRIGHT] = new Animation(ENEMY, 68);
-	animations[RIGHT] = new Animation(ENEMY, 69);
-	animations[TOPRIGHT] = new Animation(ENEMY, 70);
+	animations[TOPLEFT] = new Animation(ENEMY, 50);
+	animations[LEFT] = new Animation(ENEMY, 47);
+	animations[BOTLEFT] = new Animation(ENEMY, 51);
+	animations[BOT] = new Animation(ENEMY, 48);
 
-	this->spawnX = this->posX = spawnX;
-	this->spawnY = this->posY = spawnY;
+	//Reverse false
+	animations[BOTRIGHT] = new Animation(ENEMY, 51);
+	animations[RIGHT] = new Animation(ENEMY, 47);
+	animations[TOPRIGHT] = new Animation(ENEMY, 50);
 
-	this->isActive = true;
-	this->bulletCount = 0;
-	this->bullets = 1;
-	this->isReverse = false;
-	this->hitcount = 1;
-	this->curAnimation = animations[SPINNING_LEFT];
+	animations[ATTACKING] = new Animation(ENEMY, 46);
+
+	height = 14;
+	width = 14;
+	hitcount = 2;
+	bullets = bulletCount = 1;
+	delayTime = 3000;
+	hitdelay = 1500;
+	typeAI = 0;
+	isActive = true;
+	curAnimation = animations[LEFT];
+	//isSpinning = false;
 }
 
-void EnemyTank::UpdatePosition(float dt)
+void EnemyTank::UpdateAttackingState(int hitcount)
 {
-	this->dx = vx * dt;
-	this->dy = vy * dt;
+	switch (hitcount)
+	{
+	case 0:
+		animations[ATTACKING] = animations[TOP];
+		break;
+	case 1:
+		animations[ATTACKING] = animations[TOPLEFT];
+		isReverse = true;
+		break;
+	case 2:
+		animations[ATTACKING] = animations[LEFT];
+		isReverse = true;
+		break;
+	case 3:
+		animations[ATTACKING] = animations[BOTLEFT];
+		isReverse = true;
+		break;
+	case 4:
+		animations[ATTACKING] = animations[BOT];
+		break;
+	case 5:
+		animations[ATTACKING] = animations[BOTRIGHT];
+		isReverse = false;
+		break;
+	case 6:
+		animations[ATTACKING] = animations[RIGHT];
+		isReverse = false;
+		break;
+	case 7:
+		animations[ATTACKING] = animations[TOPRIGHT];
+		isReverse = false;
+		break;
+	}
 }
 
 void EnemyTank::Update(float dt)
 {
 	Enemy::Update(dt);
-	/*if (abs(player->posX - this->posY) <= 50)
+	lastReverse = isReverse;
+	UpdateAttackingState(hitcount);
+	if (stateName == RUNNING)
 	{
-		isActive = true;
-		if (isActive == true && isAttacked == false)
-		{
-			ChangeState(SPINNING_LEFT);
-			this->vx = 0;
-		}
-		else if (isAttacked == true)
-			ChangeState(EXPLODE);
-	}*/
-
-	if (stateName == SPINNING_LEFT)
-	{
-		this->isReverse = false;
 		if (curAnimation->isLastFrame)
 		{
-			ChangeState(SPINNING_RIGHT);
-			this->isReverse = true;
+			ChangeState(RIGHT);
 		}
 	}
-	else if (stateName == SPINNING_RIGHT)
+	else
+		ChangeState(ATTACKING);
+}
+
+void EnemyTank::UpdateDistance(float dt)
+{
+	delayTime -= dt;
+	hitdelay -= dt;
+	this->dx = vx * dt;
+	this->dy = vy * dt;
+}
+
+void EnemyTank::ChangeState(State stateName)
+{
+	this->stateName = stateName;
+	this->curAnimation = animations[stateName];
+	if (stateName == RUNNING)
 	{
-		this->isReverse == true;
-		if (curAnimation->isLastFrame)
+		switch (hitcount)
 		{
-			ChangeState(SPINNING_LEFT);
-			this->isReverse = false;
+		case 0:
+			hitcount = 1;
+			break;
+		case 1:
+			hitcount = 2;
+			break;
+		case 2:
+			hitcount = 3;
+			break;
+		case 3:
+			hitcount = 4;
+			break;
+		case 4:
+			hitcount = 5;
+			break;
+		case 5:
+			hitcount = 6;
+			break;
+		case 6:
+			hitcount = 7;
+			break;
+		case 7:
+			hitcount = 0;
+			break;
 		}
 	}
 }

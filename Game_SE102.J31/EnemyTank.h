@@ -3,12 +3,19 @@
 
 class EnemyTank : public Enemy
 {
-private:
-	int hitcount;
+
 public:
-	EnemyTank(float spawnX, float spawnY);
+	EnemyTank();
 	~EnemyTank() {};
 
-	void UpdatePosition(float dt);
-	virtual void Update(float dt);
+	int hitcount;
+	bool lastReverse;
+	float delayTime, hitdelay;
+	float activeDistance;
+	//bool isSpinning;
+
+	void UpdateAttackingState(int hitcount);
+	void Update(float dt);
+	void UpdateDistance(float dt);
+	void ChangeState(State StateName);
 };

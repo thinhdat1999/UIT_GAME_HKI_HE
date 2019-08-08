@@ -116,9 +116,6 @@
     <ClInclude Include="Cell.h">
       <Filter>Framework\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Grid.h">
-      <Filter>Framework\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Weapon.h">
       <Filter>Framework\Game Entity\Weapon</Filter>
     </ClInclude>
@@ -215,9 +212,6 @@
     <ClInclude Include="EnemyMiniBoss.h">
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyElectricBat.h">
-      <Filter>Framework\Game Entity\Enemies</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyTank.h">
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClInclude>
@@ -250,6 +244,21 @@
     </ClInclude>
     <ClInclude Include="LightControl.h">
       <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyElectricBat1.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyElectricBat2.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyFlyingRocket.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletFlyingRocket.h">
+      <Filter>Framework\Game Entity\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Framework\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -352,9 +361,6 @@
     <ClCompile Include="EnemyMiniBoss.cpp">
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyElectricBat.cpp">
-      <Filter>Framework\Game Entity\Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyTank.cpp">
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
@@ -380,6 +386,15 @@
       <Filter>Framework\Game</Filter>
     </ClCompile>
     <ClCompile Include="SpawnerWaveEnemies.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyElectricBat1.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyElectricBat2.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyFlyingRocket.cpp">
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
   </ItemGroup>

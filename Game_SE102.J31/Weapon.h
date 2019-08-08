@@ -157,6 +157,16 @@ public:
 								e->SubtractHealth();
 							break;
 						}
+						case MINITANK:
+						{
+							auto e = (EnemyTank*)obj;
+							if (e->hitdelay < 200)
+							{
+								e->ChangeState(RUNNING);
+								e->hitdelay = 1500;
+							}
+							break;
+						}
 						case SPLITTING_PLATFORM: case MOVING_PLATFORM:
 						{
 							break;
