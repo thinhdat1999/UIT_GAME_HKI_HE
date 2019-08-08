@@ -12,6 +12,8 @@ void TextureManager::StartUp()
 	textures->AddTexture(MINIBOSS, "Resource/Textures/MiniBossTest.png", D3DCOLOR_XRGB(0, 91, 127));
 	textures->AddTexture(WIZARD, "Resource/Textures/Wizard.png", D3DCOLOR_XRGB(0, 166, 81));
 	textures->AddTexture(MAP4, "Resource/Textures/Map4Tiles.png", D3DCOLOR_XRGB(0, 166, 81));
+	textures->AddTexture(MAP5, "Resource/Textures/Map5Tiles.png", D3DCOLOR_XRGB(0, 166, 81));
+	textures->AddTexture(MAP6, "Resource/Textures/Map6Tiles.png", D3DCOLOR_XRGB(0, 166, 81));
 }
 
 void TextureManager::AddTexture(Tag tag, LPCSTR filePath, D3DCOLOR transparentColor)

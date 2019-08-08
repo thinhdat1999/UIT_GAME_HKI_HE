@@ -263,8 +263,8 @@ bool Player::DetectGround(std::unordered_set<Platform*> grounds)
 		//Nếu type platform bằng 1 thì nhảy đụng và rớt xuống
 		if (rbp.isContain(g->rect) && g->type == 1 && this->vy > 0 && (g->rect.y - g->rect.height) > this->posY) {
 			this->ChangeState(new PlayerFallingState());
-
 		}
+
 		else if (rbp.isContain(g->rect) && g->type == 2 && this->vy <= 0 && player->stateName != SHIELD_DOWN) {
 			player->height = PLAYER_SITTING_HEIGHT;
 			groundBound = *g;

@@ -14,7 +14,7 @@
 #define KEYBOARD_BUFFER_SIZE 1024
 #define DEFAULT_TPF 120
 #define TILE_SIZE 16
-#define NUMBER_MAP_LEVEL 4
+#define NUMBER_MAP_LEVEL 6
 #define BACK_COLOR D3DCOLOR_XRGB(0, 0, 0)
 
 extern LPD3DXSPRITE spriteHandler; 

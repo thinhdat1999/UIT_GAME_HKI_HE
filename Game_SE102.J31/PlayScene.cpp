@@ -10,8 +10,26 @@ PlayScene::PlayScene(int level)
 	gameLevel = level;
 
 	p = player;
-	p->posX = p->spawnX = 50;
-	p->posY = p->spawnY = 70;
+	switch (level) {
+	case 1: 
+		p->posX = p->spawnX = 50;
+		p->posY = p->spawnY = 70;
+		break;
+	case 2: case 3:
+		p->posX = p->spawnX = 20;
+		p->posY = p->spawnY = 70;
+		break;
+	case 4: case 5:
+		p->posX = p->spawnX = 15;
+		p->posY = p->spawnY = 802;
+		break;
+	case 6:
+		p->posX = p->spawnX = 20;
+		p->posY = p->spawnY = 70;
+		break;
+	}
+	p->posX = p->spawnX = 15;
+	p->posY = p->spawnY = 802;
 	p->DetectSpawnY(grid->GetColliableGrounds(p));
 	p->Respawn();
 	p->SetHealth(p->health);
@@ -78,13 +96,13 @@ void PlayScene::Update(float dt)
 	if (p->GetRect().isContain(endRect))
 	{
 		delayEnd = SCENE_DELAY_END;
-		char soundFileName[10];
-		sprintf_s(soundFileName, "Theme", gameLevel);
-		Sound::getInstance()->stop(soundFileName);
 		/*Sound::getInstance()->play("win");*/
 
 		if (gameLevel < NUMBER_MAP_LEVEL && player->isHasKey)
 		{
+			char soundFileName[10];
+			sprintf_s(soundFileName, "Theme", gameLevel);
+			Sound::getInstance()->stop(soundFileName);
 			SceneManager::GetInstance()->ReplaceScene(new PlayScene(gameLevel + 1));
 			return;
 		}
@@ -409,7 +427,7 @@ void PlayScene::UpdatePlayer(float dt)
 		player->posX = mCamera->x + (player->width >> 1);
 	}
 	if (player->posX > mCamera->GetRect().x + mCamera->GetRect().width) {
-		player->posX = mCamera->GetRect().x + mCamera->GetRect().width - (player->width >> 1);
+		player->posX = mCamera->GetRect().x + mCamera->GetRect().width - (player->width * 2);
 	}
 	if (p->isAttacking) {
 		p->isAttacking = false;
