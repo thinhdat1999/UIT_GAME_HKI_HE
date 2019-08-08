@@ -4,6 +4,8 @@
 class MovingPlatform : public Enemy {
 
 public:
+	int maxDistanceX;
+	int maxDistanceY;
 	float delayTime;
 	float oldPosY;
 	Platform *platform;

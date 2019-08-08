@@ -10,6 +10,7 @@
 #include "PlayerOnWaterState.h"
 #include "Holder.h"
 #include "BulletManager.h"
+#include "Sound.h"
 
 #include "ScoreBoard.h"
 class Player : public Object

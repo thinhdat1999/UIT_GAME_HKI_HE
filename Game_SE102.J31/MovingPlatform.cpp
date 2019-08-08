@@ -35,10 +35,10 @@ void MovingPlatform::UpdateDistance(float dt)
 	case RUNNING:
 	{
 		oldPosY = posY;
-		if (((this->vx < 0) && (this->posX - this->spawnX < -30 )) 
-			|| ((this->vx > 0) && (this->posX - this->spawnX > 30))
-			|| ((this->vy > 0) && (this->posY - this->spawnY > 60))
-			|| ((this->vy < 0) && (this->posY - this->spawnY < -30)))
+		if (((this->vx < 0) && (this->posX - this->spawnX < -maxDistanceX )) 
+			|| ((this->vx > 0) && (this->posX - this->spawnX > maxDistanceX))
+			|| ((this->vy > 0) && (this->posY - this->spawnY > maxDistanceY))
+			|| ((this->vy < 0) && (this->posY - this->spawnY < -maxDistanceY)))
 		{
 			this->vx = -this->vx;
 			this->vy = -this->vy;

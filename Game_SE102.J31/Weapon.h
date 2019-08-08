@@ -165,6 +165,7 @@ public:
 						{
 							auto e = (Enemy*)obj;
 							e->ChangeState(DEAD);
+							Sound::getInstance()->play("exploded");
 							break;
 						}
 						}

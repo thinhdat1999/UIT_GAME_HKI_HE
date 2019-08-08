@@ -183,7 +183,7 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 			if (this->GetRect().isContain(o->GetRect()))
 			{
 				o->isDead = true;
-
+				Sound::getInstance()->play("item");
 				switch (o->type) {
 				case KEY: 
 					this->isHasKey = true;

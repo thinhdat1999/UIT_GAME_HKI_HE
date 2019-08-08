@@ -28,8 +28,6 @@ PlayScene::PlayScene(int level)
 		p->posY = p->spawnY = 70;
 		break;
 	}
-	p->posX = p->spawnX = 15;
-	p->posY = p->spawnY = 802;
 	p->DetectSpawnY(grid->GetColliableGrounds(p));
 	p->Respawn();
 	p->SetHealth(p->health);
@@ -55,15 +53,14 @@ PlayScene::PlayScene(int level)
 		endRect = Rect(2000, 128, 30, 352);
 		break;
 
-	case 2:
+	case 2: case 3: case 6:
 		endRect = Rect(0, 0, 0, 0);
 		//auto button = new Rect(80, 416, 16, 16);
 		//auto button2 = new Rect(16, 352, 16, 16);
 		//auto button3 = new Rect(176, 384, 16, 16);
 		break;
-
-	case 3:
-		endRect = Rect(0, 0, 0, 0);
+	case 4: case 5:
+		endRect = Rect(958, 95, 32, 64);
 		break;
 	}
 }
@@ -89,21 +86,29 @@ void PlayScene::Update(float dt)
 	UpdateScene();
 
 	scoreboard->Update(dt);
-
+	/*endRect = p->GetRect();*/
 	UpdateObjects(dt);
 	UpdatePlayer(dt);
 
-	if (p->GetRect().isContain(endRect))
+	if (p->GetRect().isContain(endRect) || isChangeMap)
 	{
 		delayEnd = SCENE_DELAY_END;
 		/*Sound::getInstance()->play("win");*/
 
-		if (gameLevel < NUMBER_MAP_LEVEL && player->isHasKey)
+		if (gameLevel < NUMBER_MAP_LEVEL && (player->isHasKey || isChangeMap))
 		{
 			char soundFileName[10];
 			sprintf_s(soundFileName, "Theme", gameLevel);
 			Sound::getInstance()->stop(soundFileName);
-			SceneManager::GetInstance()->ReplaceScene(new PlayScene(gameLevel + 1));
+			player->isHasKey = false;
+			scoreboard->isHasKey = false;
+			isChangeMap = false;
+			if (gameLevel == 2 || gameLevel == 3) {
+				Sound::getInstance()->stop("bossmap");
+				SceneManager::GetInstance()->ReplaceScene(new PlayScene(4));
+			}
+			else if(gameLevel == 4 || gameLevel == 5)
+				SceneManager::GetInstance()->ReplaceScene(new PlayScene(6));
 			return;
 		}
 	}
@@ -183,6 +188,10 @@ void PlayScene::UpdateObjects(float dt)
 							b->ChangeState(DEAD);
 						}
 					}
+				}
+				if (boss->isDead) {
+					nextLevel = 4;
+					isChangeMap = true;
 				}
 				break;
 			}

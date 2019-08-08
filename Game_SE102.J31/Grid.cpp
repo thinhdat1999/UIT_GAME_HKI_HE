@@ -106,9 +106,9 @@ void Grid::CreateGridFile(int level)
 					}
 					break;
 				}
-				//Moving platform có vx, vy
+				//Moving platform có vx, vy, distanceX, distanceY
 				case MOVING_PLATFORM: {
-					for (int i = 0; i < 2; ++i) {
+					for (int i = 0; i < 4; ++i) {
 						ifile >> value;
 						obj->value.push_back(value);
 					}
@@ -298,9 +298,13 @@ Grid::Grid(int level)
 			case MOVING_PLATFORM: {
 				auto platform = (MovingPlatform*)enemy;
 				ifile >> value;
-				platform->vx = value;
+				platform->speed = float(value) / 10;
 				ifile >> value;
-				platform->vy = value;
+				platform->vy = platform->dy = float(value);
+				ifile >> value;
+				platform->maxDistanceX = value;
+				ifile >> value;
+				platform->maxDistanceY = value;
 				break;
 			}
 			}

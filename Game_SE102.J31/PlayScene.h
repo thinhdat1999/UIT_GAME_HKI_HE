@@ -27,7 +27,8 @@ public:
 	// Load các resources cần thiết để khởi tạo Scene
 	PlayScene(int level);
 	~PlayScene();
-
+	int nextLevel;
+	bool isChangeMap;
 	void Update(float dt);	// Update các thông số các đối tượng trong Scene
 	void UpdateObjects(float dt);
 	void UpdateVisibleObjects();

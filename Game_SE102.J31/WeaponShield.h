@@ -18,6 +18,7 @@ public:
 		height = WEAPON_STANDING_SHIELD_HEIGHT;
 		isOut = false;
 		isBack = false;
+		curAnimation = animations[STANDING];
 	}
 	void UpdateDistance(float dt) {
 		this->dx = vx * dt;

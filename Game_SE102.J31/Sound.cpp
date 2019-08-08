@@ -68,7 +68,10 @@ void Sound::LoadResources()
 {
 	this->loadSound((char*)"Resource/Sounds/CaptainTheme.wav", "Theme");
 	this->loadSound((char*)"Resource/Sounds/BossFight.wav", "bossmap");
+	this->loadSound((char*)"Resource/Sounds/RedAlert.wav", "boss2map");
 	this->loadSound((char*)"Resource/Sounds/PlayerDead.wav", "playerdead");
+	this->loadSound((char*)"Resource/Sounds/item.wav", "item");
+	this->loadSound((char*)"Resource/Sounds/exploded.wav", "exploded");
 	//this->loadSound((char*)"Resource/Sounds/bossdie.wav", "bossdie");
 	//this->loadSound((char*)"Resource/Sounds/enemydie.wav", "enemydie");
 	//this->loadSound((char*)"Resource/Sounds/glasshour.wav", "glasshour");
