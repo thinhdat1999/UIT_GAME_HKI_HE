@@ -761,8 +761,17 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 					auto e = (Enemy*)o;
 					if (e->isDead)
 					{
-						it = c->objects.erase(it);
-						respawnObjects.insert(e);
+						if (e->type != MINITANK)
+						{
+							it = c->objects.erase(it);
+							respawnObjects.insert(e);
+						}
+						else if (e->type = MINITANK)
+						{
+							//e->isDead = false;
+							respawnObjects.insert(e);
+							setObjects.insert(e);
+						}
 						continue;
 					}
 					else if (!(e->isActive || e->isOutScreen))
@@ -770,6 +779,10 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 						if (e->type == BLUESOLDIER && e->typeAI == 0)
 						{
 							e->ChangeState(SITTING);
+						}
+						else if (e->type == ELECTRICBAT)
+						{
+							e->ChangeState(ACTIVE);
 						}
 						else if (e->type == SPLITTING_PLATFORM || e->type == MOVING_PLATFORM) {
 							e->ChangeState(STANDING);

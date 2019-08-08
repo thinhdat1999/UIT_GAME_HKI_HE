@@ -125,6 +125,93 @@ void PlayScene::UpdateObjects(float dt)
 
 			switch (e->type)
 			{
+			case FLYINGROCKET:
+			{
+				auto flying = (EnemyFlyingRocket*)e;
+				if (flying->bulletCount > 0)
+				{
+					auto b = BulletManager::CreateBullet(e->type);
+					b->isReverse = e->isReverse;
+					if (!b->isReverse)
+						b->vx = -b->vx;
+					b->posX = e->posX + (e->isReverse ? 10 : -10);
+					b->posY = e->posY + 5;
+					b->ChangeState(ACTIVE);
+					grid->AddObject(b);
+					flying->bulletCount--;
+
+				}
+				else if (flying->bulletCount == 0 && flying->delayTime < 1000)
+				{
+					flying->bulletCount = flying->bullets;
+					if (flying->typeAI == 0) {
+						flying->ChangeState(ATTACKING);
+						flying->delayTime = 5000;
+					}
+					else
+						flying->ChangeState(RUNNING);
+				}
+				break;
+			}
+			case MINITANK:
+			{
+				auto minitank = (EnemyTank*)e;
+				if (minitank->bulletCount > 0)
+				{
+					auto b = BulletManager::CreateBullet(e->type);
+					b->isReverse = e->isReverse;
+					if (b->isReverse)
+						b->vx = -b->vx;
+					switch (minitank->hitcount)
+					{
+					case 0:
+						b->vx = 0;
+						b->vy = 0.2f;
+						break;
+					case 1:
+						b->vx = -0.2f;
+						b->vy = 0.2f;
+						break;
+					case 2:
+						b->vx = -0.2f;
+						b->vy = 0;
+						break;
+					case 3:
+						b->vx = -0.2f;
+						b->vy = -0.2f;
+						break;
+					case 4:
+						b->vx = 0;
+						b->vy = -0.2f;
+						break;
+					case 5:
+						b->vx = 0.2f;
+						b->vy = -0.2f;
+						break;
+					case 6:
+						b->vx = 0.2f;
+						b->vy = 0;
+						break;
+					case 7:
+						b->vx = 0.2f;
+						b->vy = 0.2f;
+						break;
+					default:
+						break;
+					}
+					b->posX = e->posX;
+					b->posY = e->posY;
+					b->ChangeState(ACTIVE);
+					grid->AddObject(b);
+					minitank->bulletCount--;
+				}
+				else if (minitank->bulletCount == 0 && minitank->delayTime < 1000)
+				{
+					minitank->bulletCount = minitank->bullets;
+					minitank->delayTime = 3000;
+				}
+				break;
+			}
 			case BOSS1:
 			{
 
