@@ -3,14 +3,15 @@ TextureManager * TextureManager::_instance = NULL;
 void TextureManager::StartUp()
 {
 	TextureManager * textures = TextureManager::GetInstance();
-	textures->AddTexture(PLAYER, "Resource/Captain.png", D3DCOLOR_XRGB(0, 166, 81));
-	textures->AddTexture(PLAYERFLASHING, "Resource/CaptainFlashing.png", D3DCOLOR_XRGB(0, 166, 81));
-	textures->AddTexture(MAP1, "Resource/CharlestonTiles.png", D3DCOLOR_XRGB(0, 0, 0));
-	textures->AddTexture(MAP2, "Resource/BossRoomTiles.png", D3DCOLOR_XRGB(0, 0, 0));
-	textures->AddTexture(MAP2_2, "Resource/BossRoomv2Tiles.png", D3DCOLOR_XRGB(0, 0, 0));
-	textures->AddTexture(ENEMY, "Resource/Enemies.png", D3DCOLOR_XRGB(0, 91, 127));
-	textures->AddTexture(MINIBOSS, "Resource/MiniBossTest.png", D3DCOLOR_XRGB(0, 91, 127));
-	textures->AddTexture(WIZARD, "Resource/Wizard.png", D3DCOLOR_XRGB(0, 166, 81));
+	textures->AddTexture(PLAYER, "Resource/Textures/Captain.png", D3DCOLOR_XRGB(0, 166, 81));
+	textures->AddTexture(PLAYERFLASHING, "Resource/Textures/CaptainFlashing.png", D3DCOLOR_XRGB(0, 166, 81));
+	textures->AddTexture(MAP1, "Resource/Textures/CharlestonTiles.png", D3DCOLOR_XRGB(0, 0, 0));
+	textures->AddTexture(MAP2, "Resource/Textures/BossRoomTiles.png", D3DCOLOR_XRGB(0, 0, 0));
+	textures->AddTexture(MAP3, "Resource/Textures/BossRoomv2Tiles.png", D3DCOLOR_XRGB(0, 0, 0));
+	textures->AddTexture(ENEMY, "Resource/Textures/Enemies.png", D3DCOLOR_XRGB(0, 91, 127));
+	textures->AddTexture(MINIBOSS, "Resource/Textures/MiniBossTest.png", D3DCOLOR_XRGB(0, 91, 127));
+	textures->AddTexture(WIZARD, "Resource/Textures/Wizard.png", D3DCOLOR_XRGB(0, 166, 81));
+	textures->AddTexture(MAP4, "Resource/Textures/Map4Tiles.png", D3DCOLOR_XRGB(0, 166, 81));
 }
 
 void TextureManager::AddTexture(Tag tag, LPCSTR filePath, D3DCOLOR transparentColor)

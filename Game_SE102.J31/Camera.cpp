@@ -20,6 +20,21 @@ Rect Camera::GetRect()
 	return Rect(x, y, width, height);
 }
 
+bool Camera::isLocked()
+{
+	return isLock ? true : false;
+}
+
+void Camera::LockCamera()
+{
+	isLock = true;
+}
+
+void Camera::Unlock()
+{
+	isLock = false;
+}
+
 void Camera::Update(Rect mapRect)
 {
 	// Camera về phần trái của map
@@ -47,5 +62,4 @@ void Camera::Update(Rect mapRect)
 	else {
 		this->worldY = mapRect.height - this->y;
 	}
-
 }

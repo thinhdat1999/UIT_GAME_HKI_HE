@@ -50,6 +50,8 @@ void SpriteManager::StartUp()
 
 	sprites->AddSprite(new PlayerSprite(SCOREBOARD, 215, 307, 225, 317));		//34 HEALTH
 	sprites->AddSprite(new PlayerSprite(SCOREBOARD, 279, 302, 310, 322));		//35 EXIT
+	sprites->AddSprite(new PlayerSprite(DEAD, 240, 186, 274, 233));
+	sprites->AddSprite(new PlayerSprite(DEAD, 282, 186, 326, 233));
 
 
 	//Load Weapon
@@ -134,28 +136,28 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new EnemySprite(ROCKETSOLDIER, 168, 80, 192, 112));			//38 SITTING
 	sprites->AddSprite(new EnemySprite(ROCKETSOLDIER, 200, 66, 224, 112));			//39 INJURED
 	//Bullet
-	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 231, 71, 248, 82));
-	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 254, 71, 270, 82));
-	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 233, 94, 249, 110));
-	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 258, 94, 274, 110));
+	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 231, 71, 248, 82));			//6
+	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 254, 71, 270, 82));			//7
+	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 233, 94, 249, 110));			//8
+	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 258, 94, 274, 110));			//9
 
 	//FLyingOrangeSoldier
-	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 35, 129, 61, 168));		
-	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 291, 129, 321, 168));			
-	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 67, 129, 93, 168));
-	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 331, 129, 361, 168));
-	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 99, 129, 125, 168));
-	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 371, 129, 401, 168));
+	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 35, 129, 61, 168));			//40
+	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 291, 129, 321, 168));			//41
+	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 67, 129, 93, 168));			//42
+	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 331, 129, 361, 168));			//43
+	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 99, 129, 125, 168));			//44
+	sprites->AddSprite(new EnemySprite(FLYINGROCKET, 371, 129, 401, 168));			//45
 
 	//MiniTank
-	sprites->AddSprite(new EnemySprite(MINITANK, 236, 343, 252, 360));			//63
-	sprites->AddSprite(new EnemySprite(MINITANK, 284, 343, 300, 360));			//65
-	sprites->AddSprite(new EnemySprite(MINITANK, 332, 343, 348, 360));			//67
-	sprites->AddSprite(new EnemySprite(MINITANK, 260, 343, 276, 360));			//64
-	sprites->AddSprite(new EnemySprite(MINITANK, 308, 343, 324, 360));			//66
-	sprites->AddSprite(new EnemySprite(MINITANK, 308, 343, 324, 360));			//68
-	sprites->AddSprite(new EnemySprite(MINITANK, 284, 343, 300, 360));			//69
-	sprites->AddSprite(new EnemySprite(MINITANK, 260, 343, 276, 360));			//70
+	sprites->AddSprite(new EnemySprite(MINITANK, 236, 343, 252, 360));			//46
+	sprites->AddSprite(new EnemySprite(MINITANK, 284, 343, 300, 360));			//47
+	sprites->AddSprite(new EnemySprite(MINITANK, 332, 343, 348, 360));			//48
+	sprites->AddSprite(new EnemySprite(MINITANK, 260, 343, 276, 360));			//49
+	sprites->AddSprite(new EnemySprite(MINITANK, 308, 343, 324, 360));			//50
+	sprites->AddSprite(new EnemySprite(MINITANK, 308, 343, 324, 360));			//51
+	sprites->AddSprite(new EnemySprite(MINITANK, 284, 343, 300, 360));			//52
+	sprites->AddSprite(new EnemySprite(MINITANK, 260, 343, 276, 360));			//53
 	////ElectricBat
 	////Idle1
 	//sprites->AddSprite(new EnemySprite(IDLE, 114, 222, 126, 241));
@@ -171,6 +173,15 @@ void SpriteManager::StartUp()
 	//sprites->AddSprite(new EnemySprite(ATTACKING, 195, 222, 211, 243));
 	//sprites->AddSprite(new EnemySprite(ATTACKING, 226, 222, 252, 243));
 	//sprites->AddSprite(new EnemySprite(ATTACKING, 260, 222, 300, 243));
+
+	//Splitting Platform
+	sprites->AddSprite(new EnemySprite(SPLITTING_PLATFORM, 256, 368, 288, 384));	//IDLE		54
+	sprites->AddSprite(new EnemySprite(SPLITTING_PLATFORM, 232, 368, 248, 384));	//ACTIVE	55
+
+	sprites->AddSprite(new EnemySprite(MOVING_PLATFORM, 296, 368, 328, 384));		//IDLE		56
+	//Nitro
+	sprites->AddSprite(new BulletSprite(MOVING_PLATFORM, 336, 367, 344, 379));		//Nitro vertical	10 
+	sprites->AddSprite(new BulletSprite(MOVING_PLATFORM, 351, 371, 361, 381));		//Nitro horizontal	11
 }
 
 

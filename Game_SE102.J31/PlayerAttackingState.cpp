@@ -11,6 +11,9 @@ PlayerAttackingState::PlayerAttackingState()
 		break;
 	case JUMPING: case FALLING: case SPINNING:
 		StateName = ATTACKING_JUMP;
+		if (player->isOnMovingPlatform) {
+			StateName = ATTACKING_STAND;
+		}
 		break;
 	case STANDING: case RUNNING: case SHIELD_UP: case DASHING:
 		if (player->isThrowing)

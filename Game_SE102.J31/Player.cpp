@@ -17,6 +17,7 @@ Player::Player()
 	animations[DASHING] = new Animation(PLAYER, 17, 18, DEFAULT_TPF);
 	animations[SHIELD_DOWN] = new Animation(PLAYER, 19);
 	animations[INJURED] = new Animation(PLAYER, 23);
+	animations[DEAD] = new Animation(PLAYER, 36, 37, DEFAULT_TPF << 1);
 	animations[ONWATER] = new Animation(PLAYER, 24);
 	animations[WATER_RUNNING] = new Animation(PLAYER, 24, 25);
 	animations[WATER_FALLING] = new Animation(PLAYER, 26, 28);
@@ -25,7 +26,8 @@ Player::Player()
 	tag = PLAYER;
 	width = PLAYER_WIDTH;
 	height = PLAYER_STANDING_HEIGHT;
-	health = 10;
+	health = 20;
+	MaxHealth = 20;
 }
 
 // Destructor
@@ -58,8 +60,8 @@ void Player::Respawn()
 	this->isAttacking = false;
 	this->isThrowing = false;
 	this->vx = this->vy = this->dx = this->dy = 0;
-	this->posX = this->spawnX;
-	this->posY = this->spawnY;
+	player->posX = player->spawnX;
+	player->posY = player->spawnY;
 	this->isDead = false;
 	this->isReverse = true;
 	this->weaponType = SHIELD;
@@ -98,10 +100,6 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 	else flashingTime = 0;
 	curAnimation->Update(dt);
 	state->Update(dt);
-	if (player->posX < 0)
-		player->posX = 0;
-	if (player->posY < 0)
-		player->posY = 0;
 	CollisionResult result;
 	result.isCollide = false;
 	result.nx = result.ny = 0;
@@ -129,31 +127,54 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 				auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), o->GetBoundingBox());
 				if (r.isCollide)
 				{
-					switch (o->type)
-					{
-					case BOSS1:
-						//set máu
-						this->SetHealth(health - 3);
+					switch (this->stateName) {
+					case DASHING: 
+						r.isCollide = false;
 						break;
-					case ROCKETSOLDIER:
-						if (!flashingTime && o->tag == BULLET) {
-							auto b = (BulletRocketSoldier*)o;
-							b->ChangeState(DEAD);
-							
-						}
-						this->SetHealth(health - 2);
+					case SHIELD_DOWN:
+						if (r.ny == -1)
+							r.isCollide = false;
 						break;
-
 					default:
-						this->SetHealth(health - 1);
-						if (o->tag == BULLET) {
-							auto b = (Bullet*)o;
-							b->isDead = true;
+					{
+						switch (o->type)
+						{
+						case LIGHTCONTROL: {
+							r.isCollide = false;
+							break;
 						}
-						break;
+						case BOSS2: {
+							this->SetHealth(health - 3);
+							break;
+						}
+						case BOSS1:
+							//set máu
+							this->SetHealth(health - 3);
+							break;
+						case ROCKETSOLDIER:
+							if (!flashingTime && o->tag == BULLET) {
+								auto b = (BulletRocketSoldier*)o;
+								b->ChangeState(DEAD);
+
+							}
+							this->SetHealth(health - 2);
+							break;
+						case SPLITTING_PLATFORM: case MOVING_PLATFORM:
+
+							r.isCollide = false;
+							break;
+						default:
+							this->SetHealth(health - 1);
+							if (o->tag == BULLET) {
+								auto b = (Bullet*)o;
+								b->isDead = true;
+							}
+							break;
+						}
 					}
 					result = r;
 					break;
+					}
 				}
 			}
 			break;
@@ -168,7 +189,34 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 					this->isHasKey = true;
 					this->SetKey();
 					break;
+				case ENERGY:
+					if(health < MaxHealth)
+						this->SetHealth(health + 2);
+					break;
+				case ENERGYX10:
+					if (health < MaxHealth)
+						this->SetHealth(health + 2);
+					break;
+				case POWERSTONE:
+					if (power < 100) {
+						power += 1;
+					}
+					else if (power == 100){
+						power = 0;
+						MaxHealth += 2;
+					}
+					break;
+				case POWERSTONEX10:
+					if (power < 100) {
+						power += 10;
+					}
+					else if (power == 100) {
+						power = 0;
+						MaxHealth += 2;
+					}
+					break;
 				}
+			
 			}
 			break;
 		}
@@ -274,20 +322,27 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 		this->isOnGround = false;
 		this->isOnWater = false;
 	}
-
+	if (this->groundBound.dy < 0 && this->groundBound.type == 3 && this->isOnMovingPlatform) {
+		this->isOnGround = true;
+		this->posY += groundBound.dy;
+		if(this->vy < 0)
+			this->vy = this->dy = 0;
+		return;
+	}
 	// Tìm được vùng đất va chạm
 	if (DetectGround(grounds))
 	{
-		if (this->vy < 0)
+		if (this->vy <= 0)
 		{
 			if (groundBound.type != 2) {
 				this->isOnGround = true;
 				this->vy = this->dy = 0;
 				this->posY = groundBound.rect.y + (this->height >> 1);
-				/*if (groundBound.type == 3) {
-					this->posX += groundBound.vx;
-					this->posY += groundBound.vy;
-				}*/
+				// Nếu là moving platform
+				//if (groundBound.type == 3) {
+				//	this->posX += groundBound.dx;
+				//	this->posY = groundBound.rect.y + (this->height >> 1);
+				//}
 				if (stateName == ATTACKING_STAND)
 					this->_allow[RUNNING] = false;
 			}
@@ -392,6 +447,7 @@ void Player::OnKeyDown(int keyCode)
 			_allow[JUMPING] = false;
     			if (stateName == SITTING && groundBound.type == 0) {
 				player->height = PLAYER_STANDING_HEIGHT;
+				this->groundBound = Platform();
 				ChangeState(new PlayerFallingState());
 			}
 			else 
@@ -445,5 +501,6 @@ void Player::SetPower(int power)
 
 void Player::SetKey()
 {
+	player->isHasKey = true;
 	scoreboard->isHasKey = true;
 }

@@ -10,6 +10,7 @@
 #include "PlayerOnWaterState.h"
 #include "Holder.h"
 #include "BulletManager.h"
+
 #include "ScoreBoard.h"
 class Player : public Object
 {
@@ -24,7 +25,7 @@ public:
 
 	static Player* GetInstance();
 
-	int health;
+	int health, MaxHealth;
 	int power;
 
 	LPDIRECT3DTEXTURE9 curTexture;
@@ -38,8 +39,9 @@ public:
 	Type weaponType;
 	bool isHasKey;
 	unordered_map<State, bool> _allow;
+
 	bool isThrowing, isAttacking, isHoldingShield;
-	bool isOnGround, isOnWall, isOnWater;
+	bool isOnGround, isOnWall, isOnWater, isOnMovingPlatform;
 	int timeOfFirstButton, dashingTime;
 	bool buttonPressed = false;
 	int FirstButton;

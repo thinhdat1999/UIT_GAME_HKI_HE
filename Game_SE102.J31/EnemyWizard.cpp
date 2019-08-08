@@ -16,11 +16,14 @@ EnemyWizard::EnemyWizard()
 	width = ENEMY_BOSS_WIDTH;
 	height = ENEMY_BOSS_HEIGHT;
 	bullets = bulletCount = 3;
+	bulletCountdown = 3;
+	delayHit = 3000;
 	delayDead = ENEMY_BOSS_DELAY_DEATH;
-	speed = delayJump = 0;
-	firstJump = true;
+	speed = 0;
+	firstJump = false;
 	bulletType = 0;
 	curColor = originalColor;
+
 }
 
 void EnemyWizard::UpdateDistance(float dt)
@@ -123,7 +126,21 @@ void EnemyWizard::UpdateState(float dt)
 		break;
 	}
 	case FALLING: {
-		if (this->vy == 0)
+		//if (bulletCountdown > 0) {
+		//	if (delayHit < 0) {
+		//		delayHit = 1500;
+		//	}
+		//	else {
+		//		delayHit -= dt;
+		//	}
+		//}
+		//if (bulletCountdown == 0) {
+		//	firstJump = true;
+		//	isActive = true;
+		//	this->posX = this->spawnX;
+		//	this->posY = this->spawnY;
+		//}
+		if (this->vy == 0 /*&& firstJump*/)
 			this->ChangeState(STANDING);
 		break;
 	}
@@ -160,15 +177,14 @@ void EnemyWizard::UpdateState(float dt)
 
 void EnemyWizard::Update(float dt)
 {
-	//if (isFrozenEnemies)
-	//{
-	//	this->dx = this->dy = 0;
-	//}
-	//else
-	//{
-	//	this->UpdateDistance(dt);
-	//	curAnimation->Update(dt);
-	//}
+	if (gameLevel == 3) {
+		originalColor = D3DCOLOR_XRGB(0, 0, 0);
+		flashColor = D3DCOLOR_XRGB(0, 0, 0, 0);
+	}
+	else {
+		originalColor = D3DCOLOR_XRGB(255, 255, 255);
+		flashColor = D3DCOLOR_ARGB(0, 255, 255, 255);
+	}
 	if (flashingTime > 0) {
 		flashingTime -= dt;
 	}
@@ -205,7 +221,6 @@ void EnemyWizard::ChangeState(State StateName)
 		this->isReverse = !(player->posX < this->posX);
 		this->vx = this->dx = 0;
 		this->vy = this->dy = 0;
-		firstJump = false;
 		break;
 	}
 
@@ -225,9 +240,12 @@ void EnemyWizard::ChangeState(State StateName)
 	}
 	case FALLING:
 	{
-		this->isActive = true;
-		this->vy = -0.2f;
-		this->vx = 0;
+		/*if (firstJump)
+		{*/
+			this->isActive = true;
+			this->vy = -0.2f;
+			this->vx = 0;
+		//}
 		break;
 	}
 	case ATTACKING_JUMP:

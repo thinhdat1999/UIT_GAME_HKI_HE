@@ -227,6 +227,30 @@
     <ClInclude Include="ScoreBoard.h">
       <Filter>Framework\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="SplittingPlatform.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingPlatform.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletMovingPlatform.h">
+      <Filter>Framework\Game Entity\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Framework\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Framework\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MapManager.h">
+      <Filter>Framework\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnerWaveEnemies.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="LightControl.h">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameGlobal.cpp">
@@ -339,6 +363,24 @@
     </ClCompile>
     <ClCompile Include="ScoreBoard.cpp">
       <Filter>Framework\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="SplittingPlatform.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingPlatform.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Framework\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Framework\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="MapManager.cpp">
+      <Filter>Framework\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnerWaveEnemies.cpp">
+      <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,32 +6,38 @@
 #include "GameMap.h"
 #include "Grid.h"
 #include "BulletManager.h"
+#include "Sound.h"
+#include "MapManager.h"
 
 class PlayScene : public Scene
 {
 private:
 	Grid *grid;
-	GameMap *mMap;
 	Player *p;
 	Weapon *weapon;
-	
-	
-
-	float _timeCounter;	
-	int MapWidth, MapHeight;
+	Map *map;
+	int level;
+	Rect endRect;
+	float delayRestart;
 	std::unordered_set<Object*> visibleObjects;
+	vector<Rect> lightbuttons;
 	// Counter nhằm Update Scene sau một khoảng thời gian
 public:
 
-	PlayScene();		// Load các resources cần thiết để khởi tạo Scene
+	// Load các resources cần thiết để khởi tạo Scene
+	PlayScene(int level);
 	~PlayScene();
 
-	void LoadMap(const char *filePath);
 	void Update(float dt);	// Update các thông số các đối tượng trong Scene
 	void UpdateObjects(float dt);
+	void UpdateVisibleObjects();
 	void UpdatePlayer(float dt);
 	void Render();									// Tải Scene lên màn hình
-	void UpdateVisibleObjects();
+	void UpdateScene();
+
+	void SetRestartScene();
+
+	void RestartScene();
 	void OnKeyDown(int key);
 	void OnKeyUp(int key);
 };

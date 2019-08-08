@@ -22,6 +22,7 @@ void Animation::AlphaRender(float x, float y, D3DCOLOR color, LPDIRECT3DTEXTURE9
 // Update Animation sau thời gian delta-time
 void Animation::Update(float dt)
 {
+
 	// Nếu quá thời gian tồn tại của 1 Frame -> chuyển Frame kế
 	if (curFrameTime > timePerFrame)
 	{

@@ -1,7 +1,7 @@
 #pragma once
 #include "Object.h"
 #include "Camera.h"
-
+#include "ScoreBoard.h"
 class Holder : public Object
 {
 protected:
@@ -53,6 +53,9 @@ public:
 		}
 		if (this->isAttacked) {
 			isActive = true;
+		}
+		if (itemID == 6 && !scoreboard->isHasKey && maxItem == 0) {
+			maxItem++;
 		}
 	}
 };

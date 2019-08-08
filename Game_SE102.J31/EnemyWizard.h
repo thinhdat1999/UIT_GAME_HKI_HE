@@ -3,13 +3,12 @@
 class EnemyWizard : public Enemy
 {
 private:
-	bool firstJump;
 	int health;
-	float delayJump;
 	float delayDead;
-
 public:
+	bool firstJump;
 	bool isOnGround;
+	float delayHit;
 	int bulletCountdown;
 	int bulletType;
 	EnemyWizard();

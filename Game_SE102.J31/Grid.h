@@ -17,8 +17,17 @@ private:
 	int rows;
 	int columns;
 
+	struct GameObject
+	{
+		int topCell, bottomCell, leftCell, rightCell;
+		char type;
+		std::vector<int> value;
+	};
+
 public:
 	Rect viewPort;
+	void CreateGridFile(int level);
+	Grid(int level);
 	Grid(int mapWidth, int mapHeight);
 	~Grid();
 	std::vector<std::vector<Cell*>> cells;

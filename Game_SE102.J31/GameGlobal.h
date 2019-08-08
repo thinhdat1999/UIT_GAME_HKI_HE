@@ -14,16 +14,27 @@
 #define KEYBOARD_BUFFER_SIZE 1024
 #define DEFAULT_TPF 120
 #define TILE_SIZE 16
+#define NUMBER_MAP_LEVEL 4
+#define BACK_COLOR D3DCOLOR_XRGB(0, 0, 0)
+
 extern LPD3DXSPRITE spriteHandler; 
 extern LPDIRECT3DDEVICE9 d3ddev;
 extern LPDIRECT3DSURFACE9 backBuffer; // Back buffer
 extern LPDIRECT3DSURFACE9 surface;
-extern bool isGameRunning;
+extern bool isGameRunning;;
+extern bool isEndGame;
+extern float delayEnd, delayStart;
+extern int gameLevel;
 extern std::unordered_map<int, bool> keyCode;
 
 #define mCamera Camera::GetInstance()
 #define player Player::GetInstance()
 #define scoreboard ScoreBoard::GetInstance()
+
+// ===== Các thông số cho Scene =====
+#define SCENE_DELAY_START 3000
+#define SCENE_DELAY_END 2000
+#define SCENE_DELAY_RESTART 4500
 
 // ===== CÁC THÔNG SỐ CHO HOLDERS & ITEM ====
 #define HOLDER_WIDTH 16
@@ -60,6 +71,9 @@ extern std::unordered_map<int, bool> keyCode;
 #define ENEMY_BOSS_RIGHT 230
 #define ENEMY_BOSS_JUMP_SPEED 0.2f
 #define ENEMY_BOSS_SPEED 0.175f
+// ====== Thông số cho Enemy ======
+#define ENEMY_FROZEN_TIME 3000
+#define ENEMY_FROZEN_TIME_COUNT 3
 
 // ====== ENUM của Object  ======
 extern enum Tag
@@ -71,8 +85,10 @@ extern enum Tag
 	GROUND,
 	MAP1,
 	MAP2,
-	MAP2_2,
 	MAP3,
+	MAP4,
+	MAP5,
+	MAP6,
 	FONT,
 	ENEMY,
 	WIZARD,
@@ -92,10 +108,13 @@ extern enum Type
 	SHIELD,
 	BOSS1,
 	BOSS2,
+	LIGHTCONTROL,
 	BLUESOLDIER,
 	FLYINGROCKET,
 	ROCKETSOLDIER,
 	MINITANK,
+	SPLITTING_PLATFORM,
+	MOVING_PLATFORM,
 	FIVEPOINT,
 	ENERGY,
 	ENERGYX10,
@@ -161,19 +180,21 @@ struct Rect {
 // 1: Không thể nhảy xuyên qua
 // 2: Nước
 // 3: Moving platform
+// 4: Split  platform
+// 5: Gai
 struct Platform {
 	Rect rect;
 	int type;
-	float vx, vy;
+	float dx, dy;
 	Platform() {}
-	Platform(float x, float y, float width, float height, int type, float vx = 0, float vy = 0) {
+	Platform(float x, float y, float width, float height, int type, float dx = 0, float dy = 0) {
 		this->rect.x = x;
 		this->rect.y = y;
 		this->rect.width = width;
 		this->rect.height = height;
 		this->type = type;
-		this->vx = vx;
-		this->vy = vy;
+		this->dx = dx;
+		this->dy = dy;
 	}
 };
 struct Wall

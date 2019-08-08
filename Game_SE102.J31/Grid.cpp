@@ -1,6 +1,328 @@
 ﻿#include "Grid.h"
 
 
+void Grid::CreateGridFile(int level)
+{
+	std::ifstream ifile;
+	char gridFileName[30];
+	sprintf_s(gridFileName, "Resource\\Texts\\grid%d.txt", level);
+
+	// Nếu không tìm thấy file grid -> Tạo file từ map objects trong level đó
+	ifile.open(gridFileName);
+	if (ifile.fail())
+	{
+		ifile.close();
+
+		// Đọc file matrix để lấy size map -> xác định số cell trong grid
+		char fileMapName[30];
+		sprintf_s(fileMapName, "Resource\\Texts\\matrix%d.txt", level);
+		ifile.open(fileMapName);
+
+		int numTiles, rowTiles, colTiles;
+		ifile >> rowTiles >> colTiles >> numTiles;
+		ifile.close();
+
+		int colCell = ceil((float)(colTiles * TILE_SIZE) / (SCREEN_WIDTH >> 1));
+		int rowCell = ceil((float)(rowTiles * TILE_SIZE) / (SCREEN_HEIGHT >> 1)) + 1;
+
+		// Đọc từng loại object và đẩy vào grid (mỗi loại có thông số cách tính Rect khác nhau)
+		char objectsFileName[30];
+		sprintf_s(objectsFileName, "Resource\\Texts\\objects%d.txt", level);
+		ifile.open(objectsFileName);
+
+		auto objs = std::vector<GameObject*>();
+
+		while (!ifile.eof())
+		{
+			auto obj = new GameObject();
+			Rect* rect = NULL;
+			char type;
+			int value;
+
+			ifile >> type;
+			obj->type = type;
+
+			switch (type)
+			{
+			case 'g': //ground: x, y, width, height, type
+			case 'w': //wall: x, y, width, height
+			{
+				int n = (type == 'g' ? 5 : 4);
+				for (int i = 0; i < n; ++i)
+				{
+					ifile >> value;
+					obj->value.push_back(value);
+				}
+
+				rect = new Rect(obj->value[0], obj->value[1], obj->value[2], obj->value[3]);
+				break;
+			}
+
+			case 'h': //holder: posX, posY, itemID
+			{
+				for (int i = 0; i < 3; ++i)
+				{
+					ifile >> value;
+					obj->value.push_back(value);
+				}
+
+				auto h = new Holder(obj->value[2]);
+				h->posX = obj->value[0];
+				h->posY = obj->value[1];
+				rect = new Rect(h->GetRect());
+				delete h;
+				break;
+			}
+
+			case 'e': //enemy: enemyID, posX, posY, typeAI, activeDistance
+			{
+				for (int i = 0; i < 3; ++i)
+				{
+					ifile >> value;
+					obj->value.push_back(value);
+				}
+
+				auto e = EnemyManager::CreateEnemy(obj->value[0]);
+				e->posX = obj->value[1];
+				e->posY = obj->value[2];
+
+				// đọc thêm typeAI nếu có
+				switch (e->type)
+				{
+				case ROCKETSOLDIER:
+				{
+					ifile >> value;
+					obj->value.push_back(value);
+					break;
+				}
+				case BLUESOLDIER:
+				{
+					ifile >> value;
+					obj->value.push_back(value);
+					e->typeAI = value;
+					if (e->typeAI == 1) {
+						ifile >> value;
+						obj->value.push_back(value);
+					}
+					break;
+				}
+				//Moving platform có vx, vy
+				case MOVING_PLATFORM: {
+					for (int i = 0; i < 2; ++i) {
+						ifile >> value;
+						obj->value.push_back(value);
+					}
+					break;
+				}
+				}
+				rect = new Rect(e->GetRect());
+				delete e;
+				break;
+			}
+			}
+
+			// Xác định cell object đó và đẩy vào
+			obj->leftCell = rect->x / Cell::width;
+			obj->rightCell = (rect->x + rect->width) / Cell::width;
+			obj->topCell = rect->y / Cell::height;
+			obj->bottomCell = (rect->y - rect->height) / Cell::height;
+			delete rect;
+			objs.push_back(obj);
+		}
+
+		// Viết ra file grid và xoá các object sau khi có thông số
+		std::ofstream ofile;
+		ofile.open(gridFileName);
+		ofile << colCell << " " << rowCell << " " << objs.size();
+
+		for (auto o : objs)
+		{
+			ofile << "\n" << o->type << "\n";
+			for (auto v : o->value)
+			{
+				ofile << v << " ";
+			}
+			ofile << "\n" << o->leftCell << " " << o->topCell << " " << o->rightCell << " " << o->bottomCell;
+			delete o;
+		}
+
+		ifile.close();
+		ofile.close();
+	}
+	else ifile.close();
+}
+
+Grid::Grid(int level)
+{
+	this->CreateGridFile(level);
+
+	std::ifstream ifile;
+	char gridFileName[30];
+	sprintf_s(gridFileName, "Resource\\Texts\\grid%d.txt", level);
+
+	int numObjects;
+	ifile.open(gridFileName);
+	ifile >> columns >> rows >> numObjects;
+
+	for (int y = 0; y < rows; ++y)
+	{
+		auto row = std::vector<Cell*>();
+		for (int x = 0; x < columns; ++x)
+		{
+			row.push_back(new Cell(x, y));
+		}
+		cells.push_back(row);
+	}
+
+	int value;
+	char type;
+	int top, left, right, bottom;
+	std::vector<int> values;
+	std::unordered_set<Rect*> grounds;
+
+	for (int i = 0; i < numObjects; ++i)
+	{
+		ifile >> type;
+		switch (type)
+		{
+		case 'g': // ground: x,y,width,height, type
+		{
+			for (int i = 0; i < 5; ++i)
+			{
+				ifile >> value;
+				values.push_back(value);
+			}
+			auto ground = new Platform(values[0], values[1], values[2], values[3], values[4]);
+
+			ifile >> left >> top >> right >> bottom;
+			for (int r = bottom; r <= top; ++r)
+			{
+				if (r < 0 || r >= rows) continue;
+				for (int c = left; c <= right; ++c)
+				{
+					if (c < 0 || c >= columns) continue;
+					cells[r][c]->grounds.push_back(ground);
+				}
+			}
+			break;
+		}
+
+		case 'w': // wall: x,y,width,height
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				ifile >> value;
+				values.push_back(value);
+			}
+			auto wall = new Wall(values[0], values[1], values[2], values[3]);
+
+			ifile >> left >> top >> right >> bottom;
+			for (int r = bottom; r <= top; ++r)
+			{
+				if (r < 0 || r >= rows) continue;
+				for (int c = left; c <= right; ++c)
+				{
+					if (c < 0 || c >= columns) continue;
+					cells[r][c]->walls.push_back(wall);
+				}
+			}
+			break;
+		}
+
+		case 'h': // holder: posX, posY, itemID
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				ifile >> value;
+				values.push_back(value);
+			}
+			auto holder = new Holder(values[2]);
+			holder->spawnX = holder->posX = values[0];
+			holder->spawnY = holder->posY = values[1];
+
+			ifile >> left >> top >> right >> bottom;
+			for (int r = bottom; r <= top; ++r)
+			{
+				if (r < 0 || r >= rows) continue;
+				for (int c = left; c <= right; ++c)
+				{
+					if (c < 0 || c >= columns) continue;
+					cells[r][c]->objects.insert(holder);
+				}
+			}
+			break;
+		}
+
+		case 'e': // enemy: typeID, posX, posY, typeAI, activeDistance
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				ifile >> value;
+				values.push_back(value);
+			}
+			auto enemy = EnemyManager::CreateEnemy(values[0]);
+			enemy->spawnX = enemy->posX = values[1];
+			enemy->spawnY = enemy->posY = values[2];
+			// Xác định ground xuất hiện cho các enemy ở đất
+			switch (enemy->type)
+			{
+			case BLUESOLDIER:
+			case ROCKETSOLDIER:
+				enemy->DetectSpawnY(this->GetColliableGrounds(enemy));
+				break;
+			}
+
+			// Xác định typeAI và activeDistance cho các Enemy 
+			switch (enemy->type)
+			{
+			case BLUESOLDIER:
+			{
+				auto soldier = (EnemyBlueSoldier*)enemy;
+				ifile >> value;
+				values.push_back(value);
+				soldier->typeAI = value;
+				if (soldier->typeAI == 1) {
+					ifile >> value;
+					values.push_back(value);
+					soldier->activeDistance = value;
+				}
+				break;
+			}
+			case ROCKETSOLDIER: {
+				ifile >> value;
+				values.push_back(value);
+				auto soldier = (EnemyRocketSoldier*)enemy;
+				soldier->typeAI = value;
+				break;
+			}
+			case MOVING_PLATFORM: {
+				auto platform = (MovingPlatform*)enemy;
+				ifile >> value;
+				platform->vx = value;
+				ifile >> value;
+				platform->vy = value;
+				break;
+			}
+			}
+
+			ifile >> left >> top >> right >> bottom;
+			for (int r = bottom; r <= top; ++r)
+			{
+				if (r < 0 || r >= rows) continue;
+				for (int c = left; c <= right; ++c)
+				{
+					if (c < 0 || c >= columns) continue;
+					cells[r][c]->objects.insert(enemy);
+				}
+			}
+			
+			break;
+		}
+		}
+		values.clear();
+	}
+	ifile.close();
+}
 Grid::Grid(int mapWidth, int mapHeight)
 {
 	//Khởi tạo mảng cells[][] theo rows và columns dựa trên độ lớn của map
@@ -17,141 +339,152 @@ Grid::Grid(int mapWidth, int mapHeight)
 
 	//Add Object, grounds, wall Stage 1
 	//BEGIN
-	auto *h = new Holder(4);
-	h->spawnX = h->posX = 72;
-	h->spawnY = h->posY = 200;
-	AddObject(h);
-	auto *h2 = new Holder(4);
-	h2->spawnX = h2->posX = 136;
-	h2->spawnY = h2->posY = 104;
-	AddObject(h2);
-	auto *h3 = new Holder(4);
-	h3->spawnX = h3->posX = 328;
-	h3->spawnY = h3->posY = 88;
-	AddObject(h3);
-	auto *h4 = new Holder(2);
-	h4->spawnX = h4->posX = 424;
-	h4->spawnY = h4->posY = 184;
-	AddObject(h4);
-	auto *h5 = new Holder(6);
-	h5->spawnX = h5->posX = 584;
-	h5->spawnY = h5->posY = 151;
-	h5->maxItem = 3;
-	AddObject(h5);
-	auto *h6 = new Holder(2);
-	h6->spawnX = h6->posX = 840;
-	h6->spawnY = h6->posY = 151;
-	AddObject(h6);
-	auto *h7 = new Holder(3);
-	h7->spawnX = h7->posX = 1096;
-	h7->spawnY = h7->posY = 88;
-	AddObject(h7);
-	auto *h8 = new Holder(5);
-	h8->spawnX = h8->posX = 1192;
-	h8->spawnY = h8->posY = 184;
-	AddObject(h8);
-	auto *h9 = new Holder(2);
-	h9->spawnX = h9->posX = 1416;
-	h9->spawnY = h9->posY = 104;
-	AddObject(h9);
-	auto *h10 = new Holder(5);
-	h10->spawnX = h10->posX = 1352;
-	h10->spawnY = h10->posY = 200;
-	AddObject(h10);
-	auto *h11 = new Holder(3);
-	h11->spawnX = h11->posX = 1608;
-	h11->spawnY = h11->posY = 88;
-	AddObject(h11);
-	auto *h12 = new Holder(6);
-	h12->spawnX = h12->posX = 1704;
-	h12->spawnY = h12->posY = 184;
-	AddObject(h12);
+	//auto *h = new Holder(4);
+	//h->spawnX = h->posX = 72;
+	//h->spawnY = h->posY = 200;
+	//AddObject(h);
+	//auto *h2 = new Holder(4);
+	//h2->spawnX = h2->posX = 136;
+	//h2->spawnY = h2->posY = 104;
+	//AddObject(h2);
+	//auto *h3 = new Holder(4);
+	//h3->spawnX = h3->posX = 328;
+	//h3->spawnY = h3->posY = 88;
+	//AddObject(h3);
+	//auto *h4 = new Holder(2);
+	//h4->spawnX = h4->posX = 424;
+	//h4->spawnY = h4->posY = 184;
+	//AddObject(h4);
+	//auto *h5 = new Holder(6);
+	//h5->spawnX = h5->posX = 584;
+	//h5->spawnY = h5->posY = 151;
+	//h5->maxItem = 3;
+	//AddObject(h5);
+	//auto *h6 = new Holder(2);
+	//h6->spawnX = h6->posX = 840;
+	//h6->spawnY = h6->posY = 151;
+	//AddObject(h6);
+	//auto *h7 = new Holder(3);
+	//h7->spawnX = h7->posX = 1096;
+	//h7->spawnY = h7->posY = 88;
+	//AddObject(h7);
+	//auto *h8 = new Holder(5);
+	//h8->spawnX = h8->posX = 1192;
+	//h8->spawnY = h8->posY = 184;
+	//AddObject(h8);
+	//auto *h9 = new Holder(2);
+	//h9->spawnX = h9->posX = 1416;
+	//h9->spawnY = h9->posY = 104;
+	//AddObject(h9);
+	//auto *h10 = new Holder(5);
+	//h10->spawnX = h10->posX = 1352;
+	//h10->spawnY = h10->posY = 200;
+	//AddObject(h10);
+	//auto *h11 = new Holder(3);
+	//h11->spawnX = h11->posX = 1608;
+	//h11->spawnY = h11->posY = 88;
+	//AddObject(h11);
+	//auto *h12 = new Holder(6);
+	//h12->spawnX = h12->posX = 1704;
+	//h12->spawnY = h12->posY = 184;
+	//AddObject(h12);
 
 
 
-	AddGround(new Platform(0, 47, 96, 16, 0));
-	AddGround(new Platform(160, 47, 1216, 16, 0));
-	AddGround(new Platform(1436, 47, 360, 16, 0));
-	AddGround(new Platform(1791, 64, 65, 32, 1));
-	AddGround(new Platform(1855, 49, 160, 49, 1));
-	AddGround(new Platform(1791, 180, 256, 50, 1));
-	AddGround(new Platform(48, 176, 48, 16, 0));
-	AddGround(new Platform(34, 288, 222, 16, 0));
-	AddGround(new Platform(290, 288, 222, 16, 0));
-	AddGround(new Platform(546, 288, 222, 16, 0));
-	AddGround(new Platform(802, 288, 222, 16, 0));
-	AddGround(new Platform(1058, 288, 222, 16, 0));
-	AddGround(new Platform(1314, 288, 222, 16, 0));
-	AddGround(new Platform(1568, 288, 224, 16, 0));
-	AddGround(new Platform(576, 128, 32, 16, 0));
-	AddGround(new Platform(624, 208, 32, 16, 0));
-	AddGround(new Platform(672, 128, 48, 16, 0));
-	AddGround(new Platform(928, 128, 48, 16, 0));
-	AddGround(new Platform(832, 128, 32, 16, 0));
-	AddGround(new Platform(880, 208, 32, 16, 0));
-	AddGround(new Platform(1328, 176, 48, 16, 0));
-	AddGround(new Platform(0, 32, 1790, 32, 2));
-	// WALL
-	AddWall(new Wall(1790, 60, 66, 63));
-	AddWall(new Wall(1766, 277, 28, 109));
-	AddWall(new Wall(2016, 173, 31, 173));
+	//AddGround(new Platform(0, 47, 96, 16, 0));
+	//AddGround(new Platform(160, 47, 1216, 16, 0));
+	//AddGround(new Platform(1436, 47, 360, 16, 0));
+	//AddGround(new Platform(1791, 64, 65, 32, 1));
+	//AddGround(new Platform(1855, 49, 160, 49, 1));
+	//AddGround(new Platform(1791, 180, 256, 50, 1));
+	//AddGround(new Platform(48, 176, 48, 16, 0));
+	//AddGround(new Platform(34, 288, 222, 16, 0));
+	//AddGround(new Platform(290, 288, 222, 16, 0));
+	//AddGround(new Platform(546, 288, 222, 16, 0));
+	//AddGround(new Platform(802, 288, 222, 16, 0));
+	//AddGround(new Platform(1058, 288, 222, 16, 0));
+	//AddGround(new Platform(1314, 288, 222, 16, 0));
+	//AddGround(new Platform(1568, 288, 224, 16, 0));
+	//AddGround(new Platform(576, 128, 32, 16, 0));
+	//AddGround(new Platform(624, 208, 32, 16, 0));
+	//AddGround(new Platform(672, 128, 48, 16, 0));
+	//AddGround(new Platform(928, 128, 48, 16, 0));
+	//AddGround(new Platform(832, 128, 32, 16, 0));
+	//AddGround(new Platform(880, 208, 32, 16, 0));
+	//AddGround(new Platform(1328, 176, 48, 16, 0));
+	//AddGround(new Platform(0, 32, 1790, 32, 2));
+	//// WALL
+	//AddWall(new Wall(1790, 60, 66, 63));
+	//AddWall(new Wall(1766, 277, 28, 109));
+	//AddWall(new Wall(2016, 173, 31, 173));
 
-	auto *e = EnemyManager::CreateEnemy(1);
-	e->posX = e->spawnX = 694;
-	e->posY = e->spawnY = 150;
-	e->typeAI = 0;
-	e->DetectSpawnY(this->GetColliableGrounds(e));
-	AddObject(e);
+	//auto *e = EnemyManager::CreateEnemy(1);
+	//e->posX = e->spawnX = 694;
+	//e->posY = e->spawnY = 150;
+	//e->typeAI = 0;
+	//e->DetectSpawnY(this->GetColliableGrounds(e));
+	//AddObject(e);
 
-	auto *e2 = EnemyManager::CreateEnemy(1);
-	e2->posX = e2->spawnX = 951;
-	e2->posY = e2->spawnY = 150;
-	e2->typeAI = 0;
-	e2->DetectSpawnY(this->GetColliableGrounds(e2));
-	AddObject(e2);
+	//auto *e2 = EnemyManager::CreateEnemy(1);
+	//e2->posX = e2->spawnX = 951;
+	//e2->posY = e2->spawnY = 150;
+	//e2->typeAI = 0;
+	//e2->DetectSpawnY(this->GetColliableGrounds(e2));
+	//AddObject(e2);
 
-	auto *e3 = EnemyManager::CreateEnemy(1);
-	e3->posX = e3->spawnX = 808;
-	e3->posY = e3->spawnY = 71;
-	e3->typeAI = 1;
-	e3->DetectSpawnY(this->GetColliableGrounds(e3));
-	AddObject(e3);
+	//auto *e3 = EnemyManager::CreateEnemy(1);
+	//e3->posX = e3->spawnX = 808;
+	//e3->posY = e3->spawnY = 71;
+	//e3->typeAI = 1;
+	//e3->DetectSpawnY(this->GetColliableGrounds(e3));
+	//AddObject(e3);
 
-	auto *e4 = EnemyManager::CreateEnemy(1);
-	e4->posX = e4->spawnX = 1114;
-	e4->posY = e4->spawnY = 318;
-	e4->typeAI = 1;
-	e4->DetectSpawnY(this->GetColliableGrounds(e4));
-	AddObject(e4);
-	auto soldier = (EnemyBlueSoldier*)e4;
-	soldier->activeDistance = -120;
+	//auto *e4 = EnemyManager::CreateEnemy(1);
+	//e4->posX = e4->spawnX = 1114;
+	//e4->posY = e4->spawnY = 318;
+	//e4->typeAI = 1;
+	//e4->DetectSpawnY(this->GetColliableGrounds(e4));
+	//AddObject(e4);
+	//auto soldier = (EnemyBlueSoldier*)e4;
+	//soldier->activeDistance = -120;
 
 
-	auto *e5 = EnemyManager::CreateEnemy(3);
-	e5->posX = e5->spawnX = 403;
-	e5->posY = e5->spawnY = 72;
-	e5->typeAI = 0;
-	e5->DetectSpawnY(this->GetColliableGrounds(e5));
-	AddObject(e5);
-	auto *e6 = EnemyManager::CreateEnemy(3);
-	e6->posX = e6->spawnX = 589;
-	e6->posY = e6->spawnY = 72;
-	e6->typeAI = 0;
-	e6->DetectSpawnY(this->GetColliableGrounds(e6));
-	AddObject(e6);
-	auto *e7 = EnemyManager::CreateEnemy(3);
-	e7->posX = e7->spawnX = 1623;
-	e7->posY = e7->spawnY = 77;
-	e7->typeAI = 0;
-	e7->DetectSpawnY(this->GetColliableGrounds(e7));
-	AddObject(e7);
+	//auto *e5 = EnemyManager::CreateEnemy(3);
+	//e5->posX = e5->spawnX = 403;
+	//e5->posY = e5->spawnY = 72;
+	//e5->typeAI = 0;
+	//e5->DetectSpawnY(this->GetColliableGrounds(e5));
+	//AddObject(e5);
+	//auto *e6 = EnemyManager::CreateEnemy(3);
+	//e6->posX = e6->spawnX = 589;
+	//e6->posY = e6->spawnY = 72;
+	//e6->typeAI = 0;
+	//e6->DetectSpawnY(this->GetColliableGrounds(e6));
+	//AddObject(e6);
+	//auto *e7 = EnemyManager::CreateEnemy(3);
+	//e7->posX = e7->spawnX = 1623;
+	//e7->posY = e7->spawnY = 77;
+	//e7->typeAI = 0;
+	//e7->DetectSpawnY(this->GetColliableGrounds(e7));
+	//AddObject(e7);
 	//END
 
 	//Add Ground & Boss Map2
 	//BEGIN
 
-	//AddGround(new Platform(0, 32, 255, 32, 1));
-	//AddGround(new Platform(48, 128, 48, 16, 0));
+	AddGround(new Platform(0, 32, 255, 32, 1));
+	AddGround(new Platform(48, 128, 48, 16, 0));
+	auto e = EnemyManager::CreateEnemy(5);
+	e->spawnX = e->posX = 120;
+	e->spawnY = e->posY = 150;
+	AddObject(e);
+
+	auto e1 = EnemyManager::CreateEnemy(6);
+	e1->spawnX = e1->posX = 160;
+	e1->spawnY = e1->posY = 80;
+	e1->speed = -0.1;
+	//e1->dy = e1->vy = 2.0f;
+	AddObject(e1);
 	//auto e = EnemyManager::CreateEnemy(4);
 	//e->spawnX = e->posX = 190;
 	//e->spawnY = e->posY = 220;
@@ -438,6 +771,27 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 						{
 							e->ChangeState(SITTING);
 						}
+						else if (e->type == SPLITTING_PLATFORM || e->type == MOVING_PLATFORM) {
+							e->ChangeState(STANDING);
+						}
+						else if (e->type == BOSS1) {
+							auto boss = (EnemyWizard*)e;
+							if (boss->bulletCountdown > 0 && !boss->firstJump) {
+								auto b = BulletManager::CreateBullet(BOSS1);
+								b->bulletType = 0;
+								b->ChangeType(b->bulletType);
+								b->isReverse = boss->isReverse;
+								boss->isReverse = !boss->isReverse;
+								if (!b->isReverse)
+									b->vx = -b->vx;
+								b->posX = b->isReverse ? SCREEN_WIDTH - 1 : 1;
+								b->posY = 54;
+								b->ChangeState(ACTIVE);
+								this->AddObject(b);
+								boss->bulletCountdown--;
+							}
+							e->ChangeState(FALLING);
+						}
 						else 
 						{
 							e->ChangeState(RUNNING);
@@ -445,6 +799,7 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 						/*e->DetectSpawnY(this->GetColliableGrounds(e));*/
 						e->isReverse = !(player->posX < e->posX);
 						e->vx = (e->isReverse ? e->speed : -e->speed);
+					
 					}
 
 					if (e->isActive)

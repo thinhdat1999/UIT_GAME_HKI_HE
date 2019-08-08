@@ -9,6 +9,7 @@ Game::Game()
 	gSceneManager = SceneManager::GetInstance();
 	gTextureManager = TextureManager::GetInstance();
 	gSpriteManager = SpriteManager::GetInstance();
+	
 }
 
 
@@ -89,6 +90,7 @@ void Game::GameInit(HINSTANCE hInstance, int cmdShow)
 	didv8->SetProperty(DIPROP_BUFFERSIZE, &dipwd.diph);
 	didv8->Acquire();
 
+	Sound::create(hWnd);
 }
 
 void Game::GameRun()
@@ -116,6 +118,7 @@ void Game::GameRun()
 		if (dt >= tickPerFrame)
 		{
 			frameStart = now;
+			Sound::getInstance()->setVolume(90.0f, "Theme");
 			ProcessKeyboard();
 			Update(dt);
 			Render();
@@ -139,6 +142,7 @@ void Game::Render()
 
 	if (d3ddev->BeginScene())
 	{
+		d3ddev->ColorFill(backBuffer, NULL, BACK_COLOR);
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 		scene->Render();
 		spriteHandler->End();
@@ -148,11 +152,14 @@ void Game::Render()
 }
 
 void Game::GameStartUp()
-{
+{	
 	gTextureManager->StartUp();
 	gSpriteManager->StartUp();
-	gSceneManager->ReplaceScene(new PlayScene());
+	MapManager::GetInstance()->LoadResources();
+	Sound::getInstance()->LoadResources();
+	gSceneManager->ReplaceScene(new PlayScene(1));
 	CurScene = gSceneManager->GetInstance()->GetCurScene();
+
 }
 
 LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -210,8 +217,8 @@ void Game::ProcessKeyboard()
 		int KeyCode = keyEvents[i].dwOfs;
 		int KeyState = keyEvents[i].dwData;
 		if ((KeyState & 0x80) > 0)
-			CurScene->OnKeyDown(KeyCode);
-		else CurScene->OnKeyUp(KeyCode);
+			gSceneManager->GetCurScene()->OnKeyDown(KeyCode);
+		else gSceneManager->GetCurScene()->OnKeyUp(KeyCode);
 	}
 }
 

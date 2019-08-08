@@ -3,6 +3,7 @@
 #include "BulletBlueSoldier.h"
 #include "BulletRocketSoldier.h"
 #include "BulletMiniBoss.h"
+#include "BulletMovingPlatform.h"
 class BulletManager
 {
 public:

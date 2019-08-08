@@ -5,6 +5,8 @@
 #include "TextureManager.h"
 #include "SpriteManager.h"
 #include "PlayScene.h"
+#include "MapManager.h"
+#include "Sound.h"
 
 class Game
 {

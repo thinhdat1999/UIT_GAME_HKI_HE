@@ -31,7 +31,7 @@ public:
 			}
 			this->vx -= WEAPON_SHIELD_REVERSE_ACCELERATEX;
 		}
-		else
+		else if(this->posX < player->posX)
 		{
 			if (this->vx < 0)
 			{
@@ -49,7 +49,7 @@ public:
 		}
 		else this->dy = max(3.5f, dy);
 		// Nếu player đang ném vũ khí:
-		if (this->GetRect().isContain(player->GetRect()) && !player->isHoldingShield)
+		if (!player->isHoldingShield)
 		{
 			if (!isOut)
 			{
@@ -60,7 +60,8 @@ public:
 				this->width = WEAPON_SHIELD_UP_WIDTH;
 				this->height = WEAPON_SHIELD_UP_HEIGHT;
 			}
-			else
+			//Nếu khiên quay lại đụng trúng player:
+			else if(this->GetRect().isContain(player->GetRect()))
 			{
 				this->isOut = false;
 				player->isHoldingShield = true;

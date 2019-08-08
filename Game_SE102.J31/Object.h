@@ -25,7 +25,7 @@ public:
 
 	Rect GetRect();
 	BoundingBox GetBoundingBox();
-
+	virtual void ChangeState(State stateName) {}
 	void Update(float dt);
 	bool IsCollide(Rect r);
 	virtual void Render(float cameraX, float cameraY) {}

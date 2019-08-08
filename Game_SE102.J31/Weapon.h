@@ -75,6 +75,12 @@ public:
 				isRender = false;
 				break;
 			}
+			case DASHING: {
+				stateName = STANDING;
+				this->posY += 6;
+				this->posX += (player->isReverse ? 16 : -16);
+				break;
+			}
 			default:
 				stateName = STANDING;
 				this->posY += (player->stateName != SITTING) ? 6 : -4;
@@ -86,7 +92,7 @@ public:
 			}
 		}
 		curAnimation->Update(dt);
-		if (player->isOnWater) {
+		if (player->isOnWater || player->isDead) {
 			isRender = false;
 		}
 	}			// Update thông số của Object sau khoảng thời gian delta-time
@@ -132,6 +138,12 @@ public:
 					case ENEMY:
 					{
 						switch (obj->type) {
+						case LIGHTCONTROL:
+						{
+							auto e = (LightControl*)obj;
+							e->isAttacked = true;
+							break;
+						}
 						case BOSS1:
 						{
 							auto e = (EnemyWizard*)obj;
@@ -143,6 +155,10 @@ public:
 							auto e = (EnemyMiniBoss*)obj;
 							if (e->GetHealth() <= 3)
 								e->SubtractHealth();
+							break;
+						}
+						case SPLITTING_PLATFORM: case MOVING_PLATFORM:
+						{
 							break;
 						}
 						default:
