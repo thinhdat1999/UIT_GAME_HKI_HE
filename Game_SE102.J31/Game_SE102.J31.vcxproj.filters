@@ -328,9 +328,6 @@
     <ClCompile Include="Cell.cpp">
       <Filter>Framework\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Grid.cpp">
-      <Filter>Framework\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
@@ -396,6 +393,9 @@
     </ClCompile>
     <ClCompile Include="EnemyFlyingRocket.cpp">
       <Filter>Framework\Game Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Framework\Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

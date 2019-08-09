@@ -2,9 +2,9 @@
 
 SplittingPlatform::SplittingPlatform()
 {
-	animations[STANDING] = new Animation(ENEMY, 54);
-	animations[RUNNING] = new Animation(ENEMY, 54);
-	animations[ACTIVE] = new Animation(ENEMY, 55);
+	animations[STANDING] = new Animation(ENEMY, 61);
+	animations[RUNNING] = new Animation(ENEMY, 61);
+	animations[ACTIVE] = new Animation(ENEMY, 62);
 	tag = ENEMY;
 	type = SPLITTING_PLATFORM;
 	width = 32;

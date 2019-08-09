@@ -1,5 +1,10 @@
 #include "SpawnerWaveEnemies.h"
 
+SpawnerWaveEnemies::SpawnerWaveEnemies()
+{
+
+}
+
 void SpawnerWaveEnemies::Update(float dt)
 {
 	if (isSpawning) {
@@ -16,5 +21,5 @@ void SpawnerWaveEnemies::Update(float dt)
 void SpawnerWaveEnemies::Spawn()
 {
 	spawnedCount++;
-
+	
 }

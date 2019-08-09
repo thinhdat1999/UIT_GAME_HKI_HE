@@ -8,6 +8,7 @@ private:
 	int numPerSpawn;
 	vector<Object*> spawnObjects;
 public:
+	float timeCounter;
 	int totalObjects;
 	bool waveSpawn;
 	bool isSpawning;

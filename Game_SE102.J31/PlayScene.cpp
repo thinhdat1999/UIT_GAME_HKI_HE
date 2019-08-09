@@ -16,6 +16,9 @@ PlayScene::PlayScene(int level)
 		p->posY = p->spawnY = 70;
 		break;
 	case 2: case 3:
+		totalObjects = 3;
+		ObjsCount = 0;
+		timeCounter = 0;
 		p->posX = p->spawnX = 20;
 		p->posY = p->spawnY = 70;
 		break;
@@ -24,8 +27,9 @@ PlayScene::PlayScene(int level)
 		p->posY = p->spawnY = 802;
 		break;
 	case 6:
-		p->posX = p->spawnX = 20;
-		p->posY = p->spawnY = 70;
+		p->posX = p->spawnX = 50;
+		p->posY = p->spawnY = 100;
+		mCamera->LockCamera();
 		break;
 	}
 	p->DetectSpawnY(grid->GetColliableGrounds(p));
@@ -82,7 +86,25 @@ void PlayScene::Update(float dt)
 		}
 		return;
 	}
-
+	if (gameLevel == 2) {
+ 		if (timeCounter <= 0) {
+			timeCounter += dt;
+		}
+		if (timeCounter > 1500 && ObjsCount < totalObjects) {
+			auto b = new BulletWizard();
+			b->bulletType = 0;
+			b->ChangeType(b->bulletType);
+			b->isReverse = (ObjsCount % 2 == 0) ? 0 : 1;
+			if (!b->isReverse)
+				b->vx = -b->vx;
+			b->posX = b->isReverse ? SCREEN_WIDTH - 1 : 1;
+			b->posY = 54;
+			b->ChangeState(ACTIVE);
+			grid->AddObject(b);
+			timeCounter = 0;
+			ObjsCount++;
+		}
+	}
 	UpdateScene();
 
 	scoreboard->Update(dt);
@@ -94,7 +116,7 @@ void PlayScene::Update(float dt)
 	{
 		delayEnd = SCENE_DELAY_END;
 		/*Sound::getInstance()->play("win");*/
-
+		if (gameLevel == 4) player->isHasKey = true;
 		if (gameLevel < NUMBER_MAP_LEVEL && (player->isHasKey || isChangeMap))
 		{
 			char soundFileName[10];
@@ -107,8 +129,13 @@ void PlayScene::Update(float dt)
 				Sound::getInstance()->stop("bossmap");
 				SceneManager::GetInstance()->ReplaceScene(new PlayScene(4));
 			}
-			else if(gameLevel == 4 || gameLevel == 5)
+			else if (gameLevel == 4 || gameLevel == 5) {
+				Sound::getInstance()->stop("boss2map");
 				SceneManager::GetInstance()->ReplaceScene(new PlayScene(6));
+			}
+			else {
+				SceneManager::GetInstance()->ReplaceScene(new PlayScene(gameLevel + 1));
+			}
 			return;
 		}
 	}

@@ -126,20 +126,6 @@ void EnemyWizard::UpdateState(float dt)
 		break;
 	}
 	case FALLING: {
-		//if (bulletCountdown > 0) {
-		//	if (delayHit < 0) {
-		//		delayHit = 1500;
-		//	}
-		//	else {
-		//		delayHit -= dt;
-		//	}
-		//}
-		//if (bulletCountdown == 0) {
-		//	firstJump = true;
-		//	isActive = true;
-		//	this->posX = this->spawnX;
-		//	this->posY = this->spawnY;
-		//}
 		if (this->vy == 0 /*&& firstJump*/)
 			this->ChangeState(STANDING);
 		break;

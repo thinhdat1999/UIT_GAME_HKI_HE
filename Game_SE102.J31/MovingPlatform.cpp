@@ -2,8 +2,8 @@
 
 MovingPlatform::MovingPlatform()
 {
-	animations[STANDING] = new Animation(ENEMY, 56);
-	animations[RUNNING] = new Animation(ENEMY, 56);
+	animations[STANDING] = new Animation(ENEMY, 63);
+	animations[RUNNING] = new Animation(ENEMY, 63);
 	tag = ENEMY;
 	type = MOVING_PLATFORM;
 	width = 32;

@@ -179,10 +179,10 @@ void SpriteManager::StartUp()
 	sprites->AddSprite(new EnemySprite(ELECTRICBAT, 260, 222, 300, 243));			//60
 
 	//Splitting Platform
-	sprites->AddSprite(new EnemySprite(SPLITTING_PLATFORM, 256, 368, 288, 384));	//IDLE		54
-	sprites->AddSprite(new EnemySprite(SPLITTING_PLATFORM, 232, 368, 248, 384));	//ACTIVE	55
+	sprites->AddSprite(new EnemySprite(SPLITTING_PLATFORM, 256, 368, 288, 384));	//IDLE		61
+	sprites->AddSprite(new EnemySprite(SPLITTING_PLATFORM, 232, 368, 248, 384));	//ACTIVE	62
 
-	sprites->AddSprite(new EnemySprite(MOVING_PLATFORM, 296, 368, 328, 384));		//IDLE		56
+	sprites->AddSprite(new EnemySprite(MOVING_PLATFORM, 296, 368, 328, 384));		//IDLE		63
 	//Nitro
 	sprites->AddSprite(new BulletSprite(MOVING_PLATFORM, 336, 367, 344, 379));		//Nitro vertical	16 
 	sprites->AddSprite(new BulletSprite(MOVING_PLATFORM, 351, 371, 361, 381));		//Nitro horizontal	17
