@@ -72,7 +72,7 @@ void Sound::LoadResources()
 	this->loadSound((char*)"Resource/Sounds/PlayerDead.wav", "playerdead");
 	this->loadSound((char*)"Resource/Sounds/item.wav", "item");
 	this->loadSound((char*)"Resource/Sounds/exploded.wav", "exploded");
-	//this->loadSound((char*)"Resource/Sounds/bossdie.wav", "bossdie");
+	this->loadSound((char*)"Resource/Sounds/Victory.wav", "victory");
 	//this->loadSound((char*)"Resource/Sounds/enemydie.wav", "enemydie");
 	//this->loadSound((char*)"Resource/Sounds/glasshour.wav", "glasshour");
 	//this->loadSound((char*)"Resource/Sounds/injured.wav", "injured");

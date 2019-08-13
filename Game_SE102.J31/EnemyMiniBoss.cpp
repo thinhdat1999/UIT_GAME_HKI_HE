@@ -187,6 +187,9 @@ void EnemyMiniBoss::Update(float dt)
 		}
 		if (delayDead <= 0)
 		{
+			Sound::getInstance()->stop("Theme");
+			Sound::getInstance()->play("victory", true);
+			Sound::getInstance()->setVolume(90.0f, "victory");
 			this->isDead = true;
 			this->isActive = false;
 		}
@@ -251,8 +254,7 @@ void EnemyMiniBoss::ChangeState(State StateName)
 	{
 		this->vx = this->dx = 0;
 		this->vy = this->dy = 0;
-		this->posY = this->groundBound.rect.y + (this->width >> 1);
-		//Sound::getInstance()->play("bossdie", true);
+		this->posY = this->groundBound.rect.y + (this->width >> 1) + 8;
 		break;
 	}
 	case INJURED:

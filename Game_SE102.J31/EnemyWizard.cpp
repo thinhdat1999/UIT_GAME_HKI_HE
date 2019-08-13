@@ -13,7 +13,7 @@ EnemyWizard::EnemyWizard()
 	animations[ATTACKING_JUMP] = new Animation(ENEMY, 14);
 	tag = ENEMY;
 	type = BOSS1;
-	health = 1;
+	health = 8;
 	width = ENEMY_BOSS_WIDTH;
 	height = ENEMY_BOSS_HEIGHT;
 	bullets = bulletCount = 3;
