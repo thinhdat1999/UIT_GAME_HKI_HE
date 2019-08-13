@@ -61,12 +61,12 @@ void MovingPlatform::UpdateDistance(float dt)
 			}
 			break;
 		case 2:
-			this->posX = posX + cos(angle) * rotationRadius;
-			//this->posY = posY + sin(angle) * rotationRadius;
-			/*angle += dt * angularSpeed;
+			this->dx = (cos(angle) * 0.1f * dt) / 2;
+			this->dy = (sin(angle) * 1.0f);
+			angle += 0.02f;
 			if (angle >= 360) {
 				angle = 0;
-			}*/
+			}
 			break;
 
 		}
@@ -88,7 +88,7 @@ void MovingPlatform::Render(float cameraX, float cameraY)
 {
 	screenX = this->posX - cameraX;
 	screenY = cameraY - this->posY;
-	curAnimation->AlphaRender(screenX, screenY, curColor, NULL);
+	SpriteManager::GetInstance()->GetSprite(ENEMY, 63)->AlphaRender(screenX, screenY, curColor, NULL);
 }
 
 void MovingPlatform::ChangeState(State StateName)

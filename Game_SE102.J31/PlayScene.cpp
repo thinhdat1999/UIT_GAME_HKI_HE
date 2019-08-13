@@ -448,7 +448,7 @@ void PlayScene::UpdateObjects(float dt)
 				auto rbp = player->GetRect();					//rect broading-phase
 				auto bottom = rbp.y - rbp.height;
 				if(player->isOnMovingPlatform && movingPlatform->dy < 0)
-				rbp.y = rbp.y + movingPlatform->dy;
+					rbp.y = rbp.y + movingPlatform->dy;
 				else 
 					rbp.y = rbp.y + player->dy;
 

@@ -889,7 +889,7 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 				case ENEMY:
 				{
 					auto e = (Enemy*)o;
-					if (e->isActive)
+					if (e->isActive && e->type != MOVING_PLATFORM)
 					{
 						e->isActive = false;
 						it = c->objects.erase(it);
@@ -903,6 +903,10 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 							this->MoveObject(e, e->spawnX, e->spawnY);
 						}
 						continue;
+					}
+					else if (e->type == MOVING_PLATFORM) {
+						auto movingPlatform = (MovingPlatform*)e;
+						setObjects.insert(movingPlatform);
 					}
 					break;
 				}

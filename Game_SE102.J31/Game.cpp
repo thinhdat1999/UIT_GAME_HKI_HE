@@ -157,7 +157,7 @@ void Game::GameStartUp()
 	gSpriteManager->StartUp();
 	MapManager::GetInstance()->LoadResources();
 	Sound::getInstance()->LoadResources();
-	gSceneManager->ReplaceScene(new PlayScene(1));
+	gSceneManager->ReplaceScene(new PlayScene(4));
 	CurScene = gSceneManager->GetInstance()->GetCurScene();
 
 }

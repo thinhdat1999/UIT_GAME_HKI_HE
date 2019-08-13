@@ -460,6 +460,12 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 			this->vy = this->dy = 0;
 		return;
 	}
+	else if (this->groundBound.dy > 0 && this->groundBound.type == 3 && this->isOnMovingPlatform) {
+		this->isOnGround = true;
+		if (this->vy < 0)
+			this->vy = this->dy = 0;
+		return;
+	}
 	// Tìm được vùng đất va chạm
 	if (DetectGround(grounds))
 	{
