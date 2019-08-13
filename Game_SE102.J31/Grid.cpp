@@ -102,7 +102,7 @@ void Grid::CreateGridFile(int level)
 					ifile >> value;
 					obj->value.push_back(value);
 					e->typeAI = value;
-					if (e->typeAI == 1) {
+					if (e->typeAI == 1 || e->typeAI == 0) {
 						ifile >> value;
 						obj->value.push_back(value);
 					}
@@ -299,6 +299,11 @@ Grid::Grid(int level)
 					ifile >> value;
 					values.push_back(value);
 					soldier->activeDistance = value;
+				}
+				else if (soldier->typeAI == 0) {
+					ifile >> value;
+					values.push_back(value);
+					soldier->delay = value;
 				}
 				break;
 			}

@@ -15,6 +15,7 @@ EnemyBlueSoldier::EnemyBlueSoldier()
 	width = 23;
 	height = 40;
 	speed = 0.128f;
+	delay = 3000;
 	bullets = bulletCount = 1;
 	this->typeAI = 0;
 	curColor = originalColor;
@@ -55,7 +56,7 @@ void EnemyBlueSoldier::UpdateDistance(float dt)
 				this->posY += 8;
 				this->ChangeState(ATTACKING);
 
-				delayTime = 3000;
+				delayTime = delay;
 			}
 			break;
 		}
