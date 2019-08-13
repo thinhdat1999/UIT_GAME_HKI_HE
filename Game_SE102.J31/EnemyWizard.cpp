@@ -9,6 +9,7 @@ EnemyWizard::EnemyWizard()
 	animations[ATTACKING] = new Animation(ENEMY, 8, 11);
 	animations[JUMPING] = new Animation(ENEMY, 12);
 	animations[FALLING] = new Animation(ENEMY, 13);
+	animations[WAITING_TO_SPAWN] = new Animation(ENEMY, 13);
 	animations[ATTACKING_JUMP] = new Animation(ENEMY, 14);
 	tag = ENEMY;
 	type = BOSS1;
@@ -17,7 +18,7 @@ EnemyWizard::EnemyWizard()
 	height = ENEMY_BOSS_HEIGHT;
 	bullets = bulletCount = 3;
 	bulletCountdown = 3;
-	delayHit = 3000;
+	delayHit = 2500;
 	delayDead = ENEMY_BOSS_DELAY_DEATH;
 	speed = 0;
 	firstJump = false;
@@ -158,6 +159,12 @@ void EnemyWizard::UpdateState(float dt)
 		//}
 		break;
 	}
+	case WAITING_TO_SPAWN: {
+		/*if (firstJump) {
+			ChangeState(FALLING);
+		}*/
+		break;
+	}
 	}
 }
 
@@ -232,6 +239,13 @@ void EnemyWizard::ChangeState(State StateName)
 			this->vy = -0.2f;
 			this->vx = 0;
 		//}
+		break;
+	}
+	case WAITING_TO_SPAWN: {
+		this->isActive = true;
+		curColor = D3DCOLOR_ARGB(0, 255, 255, 255);
+		this->vx = this->dx = 0;
+		this->vy = this->dy = 0;
 		break;
 	}
 	case ATTACKING_JUMP:
@@ -316,7 +330,8 @@ void EnemyWizard::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 
 void EnemyWizard::Render(float cameraX, float cameraY)
 {
-	UpdateColor();
+	if(firstJump)
+		UpdateColor();
 	screenX = this->posX - cameraX;
 	screenY = cameraY - this->posY;
 	curAnimation->isReverse = this->isReverse;

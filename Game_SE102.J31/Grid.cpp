@@ -821,23 +821,11 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 						else if (e->type == SPLITTING_PLATFORM || e->type == MOVING_PLATFORM) {
 							e->ChangeState(STANDING);
 						}
-						else if (e->type == BOSS1 || e->type == BOSS2) {
-							//auto boss = (EnemyWizard*)e;
-							//if (boss->bulletCountdown > 0 && !boss->firstJump) {
-							//	auto b = BulletManager::CreateBullet(BOSS1);
-							//	b->bulletType = 0;
-							//	b->ChangeType(b->bulletType);
-							//	b->isReverse = boss->isReverse;
-							//	boss->isReverse = !boss->isReverse;
-							//	if (!b->isReverse)
-							//		b->vx = -b->vx;
-							//	b->posX = b->isReverse ? SCREEN_WIDTH - 1 : 1;
-							//	b->posY = 54;
-							//	b->ChangeState(ACTIVE);
-							//	this->AddObject(b);
-							//	boss->bulletCountdown--;
-							//}
+						else if (e->type == BOSS2) {
 							e->ChangeState(FALLING);
+						}
+						else if (e->type == BOSS1) {
+							e->ChangeState(WAITING_TO_SPAWN);
 						}
 						else 
 						{

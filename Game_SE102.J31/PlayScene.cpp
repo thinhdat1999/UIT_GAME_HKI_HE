@@ -223,15 +223,35 @@ void PlayScene::UpdateObjects(float dt)
 			{
 
 				auto boss = (EnemyWizard*)e;
-				if (!boss->firstJump) {
 					if (boss->delayHit > 0) {
 						boss->delayHit -= dt;
 					}
-				}
-				if (!boss->isOnGround) {
+					else if (boss->delayHit <= 0) {
+						boss->delayHit = 0;
+					}
+				
+				if (!boss->isOnGround && !boss->bulletCountdown && !boss->delayHit) {
 					boss->CheckGroundCollision(grid->GetVisibleGrounds());
+					if (!boss->firstJump) {
+						boss->bulletCountdown = 0;
+						boss->firstJump = true;
+					}
 				}
 				
+				if (boss->bulletCountdown > 0 && !boss->firstJump && boss->delayHit == 0) {
+					auto b = BulletManager::CreateBullet(BOSS1);
+					b->isReverse = boss->isReverse;
+					boss->isReverse = !boss->isReverse;
+					if (!b->isReverse)
+						b->vx = -b->vx;
+					b->posX = b->isReverse ? 10 : SCREEN_WIDTH - 10;
+					b->posY = 64;
+					b->ChangeState(ACTIVE);
+					grid->AddObject(b);
+					boss->delayHit = 2500;
+					boss->bulletCountdown--;
+				}
+
 				if (boss->isFinishAttack())
 				{
 					auto b = BulletManager::CreateBullet(BOSS1);
