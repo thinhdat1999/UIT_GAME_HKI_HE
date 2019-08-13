@@ -9,6 +9,7 @@ public:
 	bool isOnGround;
 	float delayTime;
 	float activeDistance;
+	int bulletType;
 	EnemyRocketSoldier();
 	~EnemyRocketSoldier();
 	void DetectCurGround(std::unordered_set<Platform*> grounds);

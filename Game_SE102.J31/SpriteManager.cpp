@@ -138,8 +138,8 @@ void SpriteManager::StartUp()
 	//Bullet
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 231, 71, 248, 82));			//6
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 254, 71, 270, 82));			//7
-	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 233, 94, 249, 110));			//8
-	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 258, 94, 274, 110));			//9
+	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 233, 96, 249, 112));			//8
+	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 259, 96, 275, 112));			//9
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 235, 82, 246, 84));			//10
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 259, 81, 273, 96));			//11
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 374, 68, 383, 86));			//12

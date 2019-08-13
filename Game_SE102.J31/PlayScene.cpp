@@ -389,24 +389,26 @@ void PlayScene::UpdateObjects(float dt)
 			case ROCKETSOLDIER: 
 			{
 				auto soldier = (EnemyRocketSoldier*)e;
-				if (soldier->typeAI == 1) {
+				/*if (soldier->typeAI == 1) {
 
 					if (!soldier->isOnGround)
 					{
 						soldier->DetectCurGround(grid->GetColliableGrounds(soldier));
 					}
 					break;
-				}
+				}*/
 				if (soldier->isFinishAttack())
 				{
 					if (soldier->bulletCount > 0)
 					{
 						auto b = BulletManager::CreateBullet(e->type);
 						b->isReverse = e->isReverse;
+						b->bulletType = soldier->bulletType;
+						b->ChangeType(b->bulletType);
 						if (!b->isReverse)
 							b->vx = -b->vx;
-						b->posX = e->posX + (e->isReverse ? 10 : -10);
-						b->posY = e->posY + 15;
+						b->posX = b->spawnX = e->posX + (e->isReverse ? 10 : -10);
+						b->posY = b->spawnY = e->posY + 15;
 						b->ChangeState(ACTIVE);
 						grid->AddObject(b);
 						soldier->bulletCount--;

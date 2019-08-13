@@ -93,6 +93,8 @@ void Grid::CreateGridFile(int level)
 				{
 					ifile >> value;
 					obj->value.push_back(value);
+					ifile >> value;
+					obj->value.push_back(value);
 					break;
 				}
 				case BLUESOLDIER:
@@ -305,6 +307,9 @@ Grid::Grid(int level)
 				values.push_back(value);
 				auto soldier = (EnemyRocketSoldier*)enemy;
 				soldier->typeAI = value;
+				ifile >> value;
+				values.push_back(value);
+				soldier->bulletType = value;
 				break;
 			}
 			case MOVING_PLATFORM: {

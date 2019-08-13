@@ -199,6 +199,7 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 									break;
 								default:
 									o->ChangeState(DEAD);
+									Sound::getInstance()->play("exploded");
 									break;
 								}
 							}
