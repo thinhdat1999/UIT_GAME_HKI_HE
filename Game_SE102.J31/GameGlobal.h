@@ -34,7 +34,7 @@ extern std::unordered_map<int, bool> keyCode;
 // ===== Các thông số cho Scene =====
 #define SCENE_DELAY_START 3000
 #define SCENE_DELAY_END 2000
-#define SCENE_DELAY_RESTART 4500
+#define SCENE_DELAY_RESTART 2500
 
 // ===== CÁC THÔNG SỐ CHO HOLDERS & ITEM ====
 #define HOLDER_WIDTH 16

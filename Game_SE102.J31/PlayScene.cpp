@@ -530,7 +530,7 @@ void PlayScene::UpdateObjects(float dt)
 }
 void PlayScene::UpdatePlayer(float dt)
 {
-	if (p->isDead)
+	if (p->isDead && p->isOnGround)
 	{
 		player->vy = -PLAYER_FALLING_SPEED;
 		player->ChangeAnimation(DEAD);
@@ -604,7 +604,7 @@ void PlayScene::UpdateVisibleObjects()
 void PlayScene::SetRestartScene()
 {
 	Sound::getInstance()->stop("Theme");
-	Sound::getInstance()->play("over");
+	Sound::getInstance()->play("playerdead");
 	delayRestart = SCENE_DELAY_RESTART;
 	p->health = p->MaxHealth;
 	for (auto o : visibleObjects)
