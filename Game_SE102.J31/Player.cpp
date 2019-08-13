@@ -26,8 +26,9 @@ Player::Player()
 	tag = PLAYER;
 	width = PLAYER_WIDTH;
 	height = PLAYER_STANDING_HEIGHT;
-	health = 20;
-	MaxHealth = 20;
+	curGroundBoundID = -1; //mặc định
+	health = 15;
+	MaxHealth = 15;
 }
 
 // Destructor
@@ -57,6 +58,7 @@ void Player::Respawn()
 	this->_allow[RUNNING] = true;
 	this->_allow[THROWING] = true;
 	this->isHoldingShield = true;
+	this->isOnMovingPlatform = false;
 	this->isAttacking = false;
 	this->isThrowing = false;
 	this->vx = this->vy = this->dx = this->dy = 0;
@@ -125,15 +127,128 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 			if (this->stateName != INJURED)
 			{
 				auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), o->GetBoundingBox());
-				if (r.isCollide)
+				if (r.isCollide || ((player->GetRect().isContain(o->GetRect()) &&
+					(player->stateName == ATTACKING_SIT || player->stateName == ATTACKING_STAND 
+					|| player->stateName == ATTACKING_JUMP))))
 				{
 					switch (this->stateName) {
-					case DASHING: 
+					case DASHING:
 						r.isCollide = false;
+						if (o->tag == ENEMY) {
+							switch (o->type) {
+							case BOSS1:
+								o->SubtractHealth();
+								break;
+							case BOSS2:
+								if (o->typeAI == 0)
+								{
+									r.isCollide = true;
+									if(!this->flashingTime)
+										this->SetHealth(health - 3);
+								}
+								else if(o->typeAI == 1) 
+									o->SubtractHealth();
+								break;
+							case MOVING_PLATFORM: case SPLITTING_PLATFORM: case LIGHTCONTROL:
+								break;
+							default:
+								o->ChangeState(DEAD);
+								break;
+							}
+						}
 						break;
 					case SHIELD_DOWN:
-						if (r.ny == -1)
-							r.isCollide = false;
+						if (r.ny == 1) {
+							if (o->tag == ENEMY) {
+								r.isCollide = false;
+								switch (o->type) {
+								case BOSS1: case BOSS2:
+									o->SubtractHealth();
+									break;
+								case MOVING_PLATFORM: case SPLITTING_PLATFORM: case LIGHTCONTROL:
+									break;
+								default:
+									o->ChangeState(DEAD);
+									break;
+								}
+							}
+						}
+						break;
+					case ATTACKING_JUMP: case ATTACKING_SIT: case ATTACKING_STAND:
+						if ((this->isReverse && (o->posX - this->posX > 10)) || (!this->isReverse && (10 < this->posX - o->posX))) {
+							if (o->tag == ENEMY) {
+								switch (o->type) {
+								case BOSS1:
+									r.isCollide = false;
+									o->SubtractHealth();
+									break;
+								case BOSS2:
+									if (o->typeAI == 1)
+									{
+										r.isCollide = false;
+										o->SubtractHealth();
+									}
+									break;
+								case MOVING_PLATFORM: case SPLITTING_PLATFORM: 
+									r.isCollide = false;
+									break;
+								case LIGHTCONTROL:
+									if(!o->flashingTime)
+										o->isAttacked = true;
+									r.isCollide = false;
+									break;
+								default:
+									o->ChangeState(DEAD);
+									break;
+								}
+							}
+							if (o->tag == BULLET) {
+								switch (o->type) {
+								case BOSS2:
+									auto b = (BulletMiniBoss*)o;
+									if (b->bulletType == 0)
+									{
+										r.isCollide = false;
+										b->ChangeState(DEAD);
+									}
+									break;
+								}
+							}
+						}
+						else {
+							switch (o->type)
+							{
+							case LIGHTCONTROL: {
+								r.isCollide = false;
+								break;
+							}
+							case BOSS1 : case BOSS2: {
+								if (!this->flashingTime)
+									this->SetHealth(health - 3);
+								break;
+							}
+							case ROCKETSOLDIER:
+								if (!flashingTime && o->tag == BULLET) {
+									auto b = (BulletRocketSoldier*)o;
+									b->ChangeState(DEAD);
+
+								}
+								if (!this->flashingTime)
+									this->SetHealth(health - 2);
+								break;
+							case SPLITTING_PLATFORM: case MOVING_PLATFORM:
+
+								r.isCollide = false;
+								break;
+							default:
+								this->SetHealth(health - 1);
+								if (o->tag == BULLET) {
+									auto b = (Bullet*)o;
+									b->isDead = true;
+								}
+								break;
+							}
+						}
 						break;
 					default:
 					{
@@ -144,12 +259,14 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 							break;
 						}
 						case BOSS2: {
-							this->SetHealth(health - 3);
+							if (!this->flashingTime)
+								this->SetHealth(health - 3);
 							break;
 						}
 						case BOSS1:
 							//set máu
-							this->SetHealth(health - 3);
+							if (!this->flashingTime)
+								this->SetHealth(health - 3);
 							break;
 						case ROCKETSOLDIER:
 							if (!flashingTime && o->tag == BULLET) {
@@ -157,14 +274,16 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 								b->ChangeState(DEAD);
 
 							}
-							this->SetHealth(health - 2);
+							if (!this->flashingTime)
+								this->SetHealth(health - 2);
 							break;
 						case SPLITTING_PLATFORM: case MOVING_PLATFORM:
 
 							r.isCollide = false;
 							break;
 						default:
-							this->SetHealth(health - 1);
+							if (!this->flashingTime)
+								this->SetHealth(health - 1);
 							if (o->tag == BULLET) {
 								auto b = (Bullet*)o;
 								b->isDead = true;
@@ -172,10 +291,21 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 							break;
 						}
 					}
-					result = r;
+
 					break;
 					}
+					result = r;
 				}
+			}
+			break;
+		}
+		case HOLDER:
+		{
+			if ((player->GetRect().isContain(o->GetRect()) &&
+				(player->stateName == ATTACKING_SIT || player->stateName == ATTACKING_STAND
+					|| player->stateName == ATTACKING_JUMP))) {
+				auto h = (Holder*)o;
+				h->isAttacked = true;
 			}
 			break;
 		}
@@ -322,6 +452,7 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 		this->isOnGround = false;
 		this->isOnWater = false;
 	}
+	if (this->isOnWater) return;
 	if (this->groundBound.dy < 0 && this->groundBound.type == 3 && this->isOnMovingPlatform) {
 		this->isOnGround = true;
 		this->posY += groundBound.dy;
@@ -423,43 +554,50 @@ void Player::Render(float cameraX, float cameraY)
 
 void Player::OnKeyDown(int keyCode)
 {
-	switch (keyCode) {
-	case DIK_Z:
-		if (_allow[THROWING] && weaponType == SHIELD && isHoldingShield
-			&& this->stateName != ATTACKING_SIT && this->stateName != ATTACKING_STAND 
-			&& this->stateName != ATTACKING_JUMP) {
-			_allow[THROWING] = false;
-			_allow[ATTACKING] = true;
-			this->isThrowing = true;
-			ChangeState(new PlayerAttackingState());
-		}
-		else if (_allow[ATTACKING])
+	if (!player->isDead) {
+		switch (keyCode) {
+		case DIK_Z:
+			if (_allow[THROWING] && weaponType == SHIELD && isHoldingShield
+				&& this->stateName != ATTACKING_SIT && this->stateName != ATTACKING_STAND
+				&& this->stateName != ATTACKING_JUMP) {
+				_allow[THROWING] = false;
+				_allow[ATTACKING] = true;
+				this->isThrowing = true;
+				ChangeState(new PlayerAttackingState());
+			}
+			else if (_allow[ATTACKING])
 			{
-			_allow[ATTACKING] = false;
-			ChangeState(new PlayerAttackingState());
-			this->isAttacking = true;
+				_allow[ATTACKING] = false;
+				ChangeState(new PlayerAttackingState());
+				this->isAttacking = true;
 			}
-		break;
-	case DIK_X:
+			break;
+		case DIK_X:
 
-		if (_allow[JUMPING])
-		{
-			_allow[JUMPING] = false;
-    			if (stateName == SITTING && groundBound.type == 0) {
-				player->height = PLAYER_STANDING_HEIGHT;
-				this->groundBound = Platform();
-				ChangeState(new PlayerFallingState());
+			if (_allow[JUMPING])
+			{
+				_allow[JUMPING] = false;
+				/*if(groundBoundID != -1)
+					curGroundBoundID = groundBoundID;*/
+				if (stateName == SITTING && groundBound.type == 0) {
+					player->height = PLAYER_STANDING_HEIGHT;
+					this->groundBound = Platform();
+					ChangeState(new PlayerFallingState());
+				}
+				else
+				{
+					this->groundBound = Platform();
+					ChangeState(new PlayerJumpingState());
+				}
 			}
-			else 
-			ChangeState(new PlayerJumpingState());
+
+			break;
+		case DIK_UP:
+			if (_allow[SHIELD_UP]) {
+				ChangeState(new PlayerShieldUpState());
+			}
+			break;
 		}
-		
-		break;
-	case DIK_UP:
-		if (_allow[SHIELD_UP]) {
-			ChangeState(new PlayerShieldUpState());
-		}
-		break;
 	}
 }
 

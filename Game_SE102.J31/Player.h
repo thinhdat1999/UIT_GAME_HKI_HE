@@ -33,6 +33,7 @@ public:
 	LPDIRECT3DTEXTURE9 originalTexture = TextureManager::GetInstance()->GetTexture(PLAYER);
 	LPDIRECT3DTEXTURE9 flashTexture = TextureManager::GetInstance()->GetTexture(PLAYERFLASHING);
 	Platform groundBound;
+	int curGroundBoundID, groundBoundID;
 	Wall wallBound;
 	PlayerState* state;
 	State stateName;

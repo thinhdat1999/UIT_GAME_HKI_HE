@@ -103,6 +103,7 @@ void EnemyTank::ChangeState(State stateName)
 	this->curAnimation = animations[stateName];
 	if (stateName == RUNNING)
 	{
+		isActive = true;
 		switch (hitcount)
 		{
 		case 0:

@@ -19,9 +19,6 @@ private:
 	int level;
 	Rect endRect;
 	float delayRestart;
-	float timeCounter;
-	int totalObjects;
-	int ObjsCount;
 	std::unordered_set<Object*> visibleObjects;
 	vector<Rect> lightbuttons;
 	// Counter nhằm Update Scene sau một khoảng thời gian

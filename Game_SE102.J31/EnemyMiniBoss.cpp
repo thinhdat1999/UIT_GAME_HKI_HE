@@ -19,6 +19,7 @@ EnemyMiniBoss::EnemyMiniBoss()
 	width = ENEMY_BOSS_WIDTH;
 	height = ENEMY_BOSS_HEIGHT;
 	bullets = bulletCount = 1;
+	typeAI = 0;
 	delayDead = ENEMY_BOSS_DELAY_DEATH;
 	delayAttack = 1500;
 	speed = 0;
@@ -134,6 +135,7 @@ void EnemyMiniBoss::UpdateState(float dt)
 		}
 		else if (this->health <= 3) {
 			bulletType = 1;
+			this->typeAI = 1;
 			animations[STANDING] = animations[LOWHP_STANDING];
 			animations[ATTACKING] = animations[LOWHP_ATTACKING];
 			this->ChangeState(STANDING);

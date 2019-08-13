@@ -185,7 +185,6 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ScoreBoard.h" />
     <ClInclude Include="Sound.h" />
-    <ClInclude Include="SpawnerWaveEnemies.h" />
     <ClInclude Include="SplittingPlatform.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />
@@ -234,7 +233,6 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScoreBoard.cpp" />
     <ClCompile Include="Sound.cpp" />
-    <ClCompile Include="SpawnerWaveEnemies.cpp" />
     <ClCompile Include="SplittingPlatform.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />

@@ -1,4 +1,4 @@
-#include "MovingPlatform.h"
+﻿#include "MovingPlatform.h"
 
 MovingPlatform::MovingPlatform()
 {
@@ -8,6 +8,7 @@ MovingPlatform::MovingPlatform()
 	type = MOVING_PLATFORM;
 	width = 32;
 	height = 16;
+	typeAI = 0;
 	//speed = 0.1f;
 	platform = new Platform();
 	platform->type = 3;
@@ -34,15 +35,40 @@ void MovingPlatform::UpdateDistance(float dt)
 	}
 	case RUNNING:
 	{
+		// TypeAI: 
+		// 0: di chuyển ngang
+		// 1: di chuyển xéo
+		// 2: di chuyển tròn 
 		oldPosY = posY;
-		if (((this->vx < 0) && (this->posX - this->spawnX < -maxDistanceX )) 
-			|| ((this->vx > 0) && (this->posX - this->spawnX > maxDistanceX))
-			|| ((this->vy > 0) && (this->posY - this->spawnY > maxDistanceY))
-			|| ((this->vy < 0) && (this->posY - this->spawnY < -maxDistanceY)))
-		{
-			this->vx = -this->vx;
-			this->vy = -this->vy;
-			this->ChangeState(STANDING);
+		switch (typeAI) {
+		case 0:
+			if (((this->vx < 0) && (this->posX - this->spawnX < -maxDistanceX))
+				|| ((this->vx > 0) && (this->posX - this->spawnX > maxDistanceX)))
+			{
+				this->vx = -this->vx;
+				this->vy = 0;
+				this->ChangeState(STANDING);
+			}
+			break;
+		case 1:
+			if (((this->vx < 0) && (this->posX - this->spawnX < -maxDistanceX))
+				|| ((this->vx > 0) && (this->posX - this->spawnX > maxDistanceX))
+				|| ((this->vy > 0) && (this->posY - this->spawnY > maxDistanceY))
+				|| ((this->vy < 0) && (this->posY - this->spawnY < -maxDistanceY))) {
+				this->vx = -this->vx;
+				this->vy = -this->vy;
+				this->ChangeState(STANDING);
+			}
+			break;
+		case 2:
+			this->posX = posX + cos(angle) * rotationRadius;
+			//this->posY = posY + sin(angle) * rotationRadius;
+			/*angle += dt * angularSpeed;
+			if (angle >= 360) {
+				angle = 0;
+			}*/
+			break;
+
 		}
 		break;
 	}

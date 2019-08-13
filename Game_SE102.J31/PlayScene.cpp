@@ -16,9 +16,6 @@ PlayScene::PlayScene(int level)
 		p->posY = p->spawnY = 70;
 		break;
 	case 2: case 3:
-		totalObjects = 3;
-		ObjsCount = 0;
-		timeCounter = 0;
 		p->posX = p->spawnX = 20;
 		p->posY = p->spawnY = 70;
 		break;
@@ -59,9 +56,6 @@ PlayScene::PlayScene(int level)
 
 	case 2: case 3: case 6:
 		endRect = Rect(0, 0, 0, 0);
-		//auto button = new Rect(80, 416, 16, 16);
-		//auto button2 = new Rect(16, 352, 16, 16);
-		//auto button3 = new Rect(176, 384, 16, 16);
 		break;
 	case 4: case 5:
 		endRect = Rect(958, 95, 32, 64);
@@ -86,27 +80,8 @@ void PlayScene::Update(float dt)
 		}
 		return;
 	}
-	if (gameLevel == 2) {
- 		if (timeCounter <= 0) {
-			timeCounter += dt;
-		}
-		if (timeCounter > 1500 && ObjsCount < totalObjects) {
-			auto b = new BulletWizard();
-			b->bulletType = 0;
-			b->ChangeType(b->bulletType);
-			b->isReverse = (ObjsCount % 2 == 0) ? 0 : 1;
-			if (!b->isReverse)
-				b->vx = -b->vx;
-			b->posX = b->isReverse ? SCREEN_WIDTH - 1 : 1;
-			b->posY = 54;
-			b->ChangeState(ACTIVE);
-			grid->AddObject(b);
-			timeCounter = 0;
-			ObjsCount++;
-		}
-	}
 	UpdateScene();
-
+	scoreboard->playerHealth = player->health;
 	scoreboard->Update(dt);
 	/*endRect = p->GetRect();*/
 	UpdateObjects(dt);
@@ -320,6 +295,8 @@ void PlayScene::UpdateObjects(float dt)
 						auto b = new BulletMiniBoss();
 						b->bulletType = boss->bulletType;
 						b->ChangeType(b->bulletType);
+						if(abs(player->posX - boss->posX) < 30)
+							b->vy = -0.3f;
 						b->isReverse = e->isReverse;
 						if (!b->isReverse)
 							b->vx = -b->vx;
@@ -483,6 +460,7 @@ void PlayScene::UpdateObjects(float dt)
 				auto button = (LightControl*)o;
 				if (button->isAttacked) {
 					button->isAttacked = false;
+					button->flashingTime = 500;
 					if (gameLevel == 2 || gameLevel == 4) {
 						map = MapManager::GetInstance()->GetMap(gameLevel + 1);
 						gameLevel++;
@@ -609,7 +587,15 @@ void PlayScene::SetRestartScene()
 	Sound::getInstance()->play("over");
 	delayRestart = SCENE_DELAY_RESTART;
 	p->health = p->MaxHealth;
-	p->SetHealth(p->health);
+	for (auto o : visibleObjects)
+	{
+		if (o->tag == BULLET)
+		{
+			auto b = (Bullet*)o;
+			b->isDead = true;
+		}
+
+	}
 }
 
 void PlayScene::RestartScene()
@@ -622,7 +608,8 @@ void PlayScene::RestartScene()
 	}
 	player->Respawn();
 	player->ChangeState(new PlayerStandingState());
-
+	weapon = new WeaponShield();
+	scoreboard->playerHealth = player->health;
 	for (auto o : grid->respawnObjects)
 	{
 		switch (o->tag)
@@ -648,9 +635,15 @@ void PlayScene::RestartScene()
 		if (o->tag == ENEMY)
 		{
 			auto e = (Enemy*)o;
-			e->ChangeState(STANDING);
+			if (o->type == BOSS1 || o->type == BOSS2) {
+				e->ChangeState(FALLING);
+				e->isReverse = !(player->posX < e->spawnX);
+			}
+			else
+				e->ChangeState(STANDING);
 			grid->MoveObject(o, o->spawnX, o->spawnY);
 		}
+
 	}
 	this->visibleObjects.clear();
 	grid->respawnObjects.clear();

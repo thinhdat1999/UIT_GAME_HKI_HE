@@ -239,9 +239,6 @@
     <ClInclude Include="MapManager.h">
       <Filter>Framework\Game</Filter>
     </ClInclude>
-    <ClInclude Include="SpawnerWaveEnemies.h">
-      <Filter>Framework\Game Entity\Enemies</Filter>
-    </ClInclude>
     <ClInclude Include="LightControl.h">
       <Filter>Framework\Game Entity\Enemies</Filter>
     </ClInclude>
@@ -381,9 +378,6 @@
     </ClCompile>
     <ClCompile Include="MapManager.cpp">
       <Filter>Framework\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="SpawnerWaveEnemies.cpp">
-      <Filter>Framework\Game Entity\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EnemyElectricBat1.cpp">
       <Filter>Framework\Game Entity\Enemies</Filter>

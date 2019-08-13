@@ -141,7 +141,9 @@ public:
 						case LIGHTCONTROL:
 						{
 							auto e = (LightControl*)obj;
-							e->isAttacked = true;
+							if (!e->flashingTime) {
+								e->isAttacked = true;
+							}
 							break;
 						}
 						case BOSS1:
@@ -221,12 +223,12 @@ public:
 								if (b->vy == 0)
 								{
 									b->vx = b->dx = 0;
-									b->vy = b->dy = 6.0f;
+									b->vy = b->dy = 1.0f;
 									b->isStopped = true;
 									break;
 								}
 								else {
-									b->vx = b->dx = 6.0f;
+									b->vx = b->dx = 1.0f;
 									b->vy = b->dy = 0;
 									b->isStopped = true;
 									break;

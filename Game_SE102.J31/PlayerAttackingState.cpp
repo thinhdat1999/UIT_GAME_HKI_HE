@@ -8,12 +8,14 @@ PlayerAttackingState::PlayerAttackingState()
 	switch (_curState) {
 	case SITTING:
 		StateName = ATTACKING_SIT;
+		player->width = 30;
 		break;
 	case JUMPING: case FALLING: case SPINNING:
 		StateName = ATTACKING_JUMP;
 		if (player->isOnMovingPlatform) {
 			StateName = ATTACKING_STAND;
 		}
+		player->width = 30;
 		break;
 	case STANDING: case RUNNING: case SHIELD_UP: case DASHING:
 		if (player->isThrowing)
@@ -21,8 +23,10 @@ PlayerAttackingState::PlayerAttackingState()
 			StateName = THROWING;
 			player->isHoldingShield = false;
 		}
-		else
+		else {
 			StateName = ATTACKING_STAND;
+			player->width = 30;
+		}
 		break;
 	case SHIELD_DOWN:
 		if (player->isOnGround) {
@@ -31,8 +35,9 @@ PlayerAttackingState::PlayerAttackingState()
 		else {
 			StateName = ATTACKING_JUMP;
 		}
+		player->width = 30;
 	}
-	
+
 	player->_allow[JUMPING] = player->_allow[SITTING] = false;
 }
 
@@ -45,7 +50,7 @@ void PlayerAttackingState::Update(float dt)
 	if (player->curAnimation->isLastFrame)
 	{
 		player->_allow[ATTACKING] = player->_allow[JUMPING] = player->_allow[SITTING] = true;
-
+		player->width = PLAYER_WIDTH;
 		switch (_curState)
 		{
 		case STANDING: case RUNNING: case DASHING:

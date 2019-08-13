@@ -106,12 +106,24 @@ void Grid::CreateGridFile(int level)
 					}
 					break;
 				}
-				//Moving platform có vx, vy, distanceX, distanceY
+				//Moving platform có typeAI, vx, vy, distanceX, distanceY
 				case MOVING_PLATFORM: {
-					for (int i = 0; i < 4; ++i) {
-						ifile >> value;
-						obj->value.push_back(value);
+					ifile >> value;
+					obj->value.push_back(value);
+					e->typeAI = value;
+					if (e->typeAI == 0) {
+						for (int i = 0; i < 2; ++i) {
+							ifile >> value;
+							obj->value.push_back(value);
+						}
 					}
+					else if (e->typeAI == 1) {
+						for (int i = 0; i < 4; ++i) {
+							ifile >> value;
+							obj->value.push_back(value);
+						}
+					}
+					
 					break;
 				}
 				}
@@ -298,13 +310,31 @@ Grid::Grid(int level)
 			case MOVING_PLATFORM: {
 				auto platform = (MovingPlatform*)enemy;
 				ifile >> value;
-				platform->speed = float(value) / 10;
-				ifile >> value;
-				platform->vy = platform->dy = float(value);
-				ifile >> value;
-				platform->maxDistanceX = value;
-				ifile >> value;
-				platform->maxDistanceY = value;
+				values.push_back(value);
+				platform->typeAI = value;
+				platform->platformID = value;
+				if (platform->typeAI == 0) {
+					ifile >> value;
+					values.push_back(value);
+					platform->speed = float(value) / 10;
+					ifile >> value;
+					values.push_back(value);
+					platform->maxDistanceX = value;
+				}
+				else if (platform->typeAI == 1) {
+					ifile >> value;
+					values.push_back(value);
+					platform->speed = float(value) / 10;
+					ifile >> value;
+					values.push_back(value);
+					platform->vy = value;
+					ifile >> value;
+					values.push_back(value);
+					platform->maxDistanceX = value;
+					ifile >> value;
+					values.push_back(value);
+					platform->maxDistanceY = value;
+				}
 				break;
 			}
 			}

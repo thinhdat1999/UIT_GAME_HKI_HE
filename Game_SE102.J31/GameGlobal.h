@@ -56,7 +56,7 @@ extern std::unordered_map<int, bool> keyCode;
 #define PLAYER_ONWATER_SPEED -0.015f
 #define PLAYER_JUMPING_SPEED 0.2f
 #define PLAYER_FALLING_SPEED 0.25f
-#define PLAYER_WIDTH 12
+#define PLAYER_WIDTH 16
 #define PLAYER_STANDING_HEIGHT 40
 #define PLAYER_SITTING_HEIGHT 24
 #define GRAVITY_SPEED 0.014f	
