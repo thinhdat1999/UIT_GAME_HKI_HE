@@ -394,9 +394,16 @@ bool Player::DetectGround(std::unordered_set<Platform*> grounds)
 		if (rbp.isContain(g->rect) && g->type == 1 && this->vy > 0 && (g->rect.y - g->rect.height) > this->posY) {
 			this->ChangeState(new PlayerFallingState());
 		}
+		else if (rbp.isContain(g->rect) && g->type == 5 && !this->flashingTime){
+			SetHealth(health - 1);
+			groundBound = *g;
+			this->flashingTime = 3000;
+			this->ChangeState(new PlayerInjuredState());
+			return true;
+		}
 
-		else if (rbp.isContain(g->rect) && g->type == 2 && this->vy <= 0 && player->stateName != SHIELD_DOWN) {
-			player->height = PLAYER_SITTING_HEIGHT;
+		else if (rbp.isContain(g->rect) && g->type == 2 && this->vy <= 0 && this->stateName != SHIELD_DOWN) {
+			this->height = PLAYER_SITTING_HEIGHT;
 			groundBound = *g;
 			return true;
 		}
@@ -583,6 +590,7 @@ void Player::OnKeyDown(int keyCode)
 			if (_allow[JUMPING])
 			{
 				_allow[JUMPING] = false;
+				curGroundBoundID = -1;
 				/*if(groundBoundID != -1)
 					curGroundBoundID = groundBoundID;*/
 				if (stateName == SITTING && groundBound.type == 0) {

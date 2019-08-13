@@ -452,14 +452,19 @@ void PlayScene::UpdateObjects(float dt)
 				else 
 					rbp.y = rbp.y + player->dy;
 
-				if (rbp.isContain(movingPlatform->GetRect()) && (bottom >= movingPlatform->GetRect().y) && !player->isOnMovingPlatform)
+				if (rbp.isContain(movingPlatform->GetRect()) && (bottom >= movingPlatform->GetRect().y) && (player->curGroundBoundID == -1)&& player->vy < 0/*!player->isOnMovingPlatform*/)
 				{
 					player->groundBound = *movingPlatform->platform;
+					player->isOnGround = true;
+					player->vy = player->dy = 0;
+					player->posY = player->groundBound.rect.y + (player->height >> 1);
+					if (player->curGroundBoundID == -1)
+						player->curGroundBoundID = player->groundBoundID;
 					/*player->groundBound.dx = movingPlatform->dx;*/
 					player->isOnMovingPlatform = true;
 					/*movingPlatform->isHasPlayerOn = true;*/
 				}
-				else if (rbp.isContain(movingPlatform->GetRect()) && player->isOnMovingPlatform) {
+				else if (rbp.isContain(movingPlatform->GetRect()) && player->isOnMovingPlatform && player->curGroundBoundID == player->groundBoundID) {
 					player->groundBound = *movingPlatform->platform;
 					player->posX += movingPlatform->dx;
 		/*			player->posY = movingPlatform->platform->rect.y + (player->height >> 1);*/
@@ -470,9 +475,11 @@ void PlayScene::UpdateObjects(float dt)
 						player->posY = movingPlatform->platform->rect.y + (player->height >> 1) + movingPlatform->dy;
 					}/*+ movingPlatform->dy*/;
 				}
-				else if(player->isOnMovingPlatform && !rbp.isContain(movingPlatform->GetRect())) {
-					player->isOnMovingPlatform = false;
-					player->groundBound = Platform();
+				else if(player->isOnMovingPlatform && player->curGroundBoundID != player->groundBoundID) {
+					if (!rbp.isContain(movingPlatform->GetRect())) {
+						player->isOnMovingPlatform = false;
+						player->groundBound = Platform();
+					}
 				}
 				break;
 			}

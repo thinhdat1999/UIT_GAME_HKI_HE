@@ -5,6 +5,8 @@ class EnemyFlyingRocket : public Enemy
 {
 public:
 	float delayTime;
+	int maxDistanceX;
+	int maxDistanceY;
 
 	EnemyFlyingRocket();
 	~EnemyFlyingRocket() {};

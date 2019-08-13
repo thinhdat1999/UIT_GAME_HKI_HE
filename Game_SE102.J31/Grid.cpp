@@ -316,7 +316,7 @@ Grid::Grid(int level)
 				if (platform->typeAI == 0) {
 					ifile >> value;
 					values.push_back(value);
-					platform->speed = float(value) / 10;
+					platform->vx = platform->speed = float(value) / 10;
 					ifile >> value;
 					values.push_back(value);
 					platform->maxDistanceX = value;
@@ -324,7 +324,7 @@ Grid::Grid(int level)
 				else if (platform->typeAI == 1) {
 					ifile >> value;
 					values.push_back(value);
-					platform->speed = float(value) / 10;
+					platform->vx = platform->speed = float(value) / 10;
 					ifile >> value;
 					values.push_back(value);
 					platform->vy = value;
