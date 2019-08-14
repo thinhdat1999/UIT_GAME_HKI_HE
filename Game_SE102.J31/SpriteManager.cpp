@@ -190,6 +190,10 @@ void SpriteManager::StartUp()
 	//Nitro
 	sprites->AddSprite(new BulletSprite(MOVING_PLATFORM, 336, 367, 344, 379));		//Nitro vertical	16 
 	sprites->AddSprite(new BulletSprite(MOVING_PLATFORM, 351, 371, 361, 381));		//Nitro horizontal	17
+
+	// BOSS1
+	sprites->AddSprite(new BulletSprite(BOSS1, 228, 159, 244, 171));		//18
+	sprites->AddSprite(new BulletSprite(BOSS1, 213, 159, 229, 171));		//19
 }
 
 

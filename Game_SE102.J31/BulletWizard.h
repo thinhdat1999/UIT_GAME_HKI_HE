@@ -36,6 +36,13 @@ public:
 			vy = -0.2f;
 			vx = 0.0f;
 			break;
+		case 3:
+			activeAnimation = new Animation(BULLET, 19);
+			this->height = 8;
+			this->width = 16;
+			vx = 0.1f;
+			vy = 0.07f;
+			break;
 		default: 
 			activeAnimation = new Animation(BULLET, 0);
 			this->height = 8;

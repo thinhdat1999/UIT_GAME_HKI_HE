@@ -237,9 +237,13 @@ void PlayScene::UpdateObjects(float dt)
 						boss->firstJump = true;
 					}
 				}
-				
+				// 3 viên đạn đầu tiên
 				if (boss->bulletCountdown > 0 && !boss->firstJump && boss->delayHit == 0) {
 					auto b = BulletManager::CreateBullet(BOSS1);
+					
+					if (player->posY > 64) {
+						b->ChangeType(3);
+					}
 					b->isReverse = boss->isReverse;
 					boss->isReverse = !boss->isReverse;
 					if (!b->isReverse)
@@ -248,8 +252,14 @@ void PlayScene::UpdateObjects(float dt)
 					b->posY = 64;
 					b->ChangeState(ACTIVE);
 					grid->AddObject(b);
-					boss->delayHit = 2500;
+					/*if (boss->bulletCountdown != 0)
+						boss->delayHit = 5000;
+					else */
+					boss->delayHit = 5000;
 					boss->bulletCountdown--;
+					if (boss->bulletCountdown == 0) {
+						boss->delayHit = 2500;
+					}
 				}
 
 				if (boss->isFinishAttack())
@@ -257,11 +267,15 @@ void PlayScene::UpdateObjects(float dt)
 					auto b = BulletManager::CreateBullet(BOSS1);
 					b->bulletType = boss->bulletType;
 					b->ChangeType(b->bulletType);
+					b->posY = e->posY + 8;
+					if (b->bulletType == 0 && player->posY > b->posY) {
+						b->ChangeType(3);
+					}
 					b->isReverse = e->isReverse;
 					if (!b->isReverse) 
 						b->vx = -b->vx;
 					b->posX = e->posX + (e->isReverse ? 5 : -5);
-					b->posY = e->posY + 8;
+					
 					b->ChangeState(ACTIVE);
 					grid->AddObject(b);
 					boss->bulletCount--;
