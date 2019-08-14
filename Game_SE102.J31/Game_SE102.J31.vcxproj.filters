@@ -257,6 +257,9 @@
     <ClInclude Include="Grid.h">
       <Filter>Framework\Game</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerClingingState.h">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameGlobal.cpp">
@@ -390,6 +393,9 @@
     </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Framework\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerClingingState.cpp">
+      <Filter>Framework\Game Entity\PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

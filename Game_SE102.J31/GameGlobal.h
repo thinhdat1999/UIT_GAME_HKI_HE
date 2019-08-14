@@ -56,7 +56,7 @@ extern std::unordered_map<int, bool> keyCode;
 #define PLAYER_ONWATER_SPEED -0.015f
 #define PLAYER_JUMPING_SPEED 0.2f
 #define PLAYER_FALLING_SPEED 0.25f
-#define PLAYER_WIDTH 16
+#define PLAYER_WIDTH 12
 #define PLAYER_STANDING_HEIGHT 40
 #define PLAYER_SITTING_HEIGHT 24
 #define GRAVITY_SPEED 0.014f	
@@ -143,6 +143,7 @@ extern enum State
 	ATTACKING_SIT,
 	THROWING,
 	CLINGING,
+	JUMPONWALL,
 	ACTIVE,
 	DEAD,
 	INJURED,
@@ -184,6 +185,7 @@ struct Rect {
 // 3: Moving platform
 // 4: Split  platform
 // 5: Gai
+// 6: Dây
 struct Platform {
 	Rect rect;
 	int type;
@@ -199,10 +201,10 @@ struct Platform {
 		this->dy = dy;
 	}
 };
+
 struct Wall
 {
 	Rect rect;
-
 	Wall() {}
 	Wall(float x, float y, float width, float height)
 	{

@@ -50,8 +50,12 @@ void SpriteManager::StartUp()
 
 	sprites->AddSprite(new PlayerSprite(SCOREBOARD, 215, 307, 225, 317));		//34 HEALTH
 	sprites->AddSprite(new PlayerSprite(SCOREBOARD, 279, 302, 310, 322));		//35 EXIT
-	sprites->AddSprite(new PlayerSprite(DEAD, 240, 186, 274, 233));
-	sprites->AddSprite(new PlayerSprite(DEAD, 282, 186, 326, 233));
+	sprites->AddSprite(new PlayerSprite(DEAD, 240, 186, 274, 233));				//36
+	sprites->AddSprite(new PlayerSprite(DEAD, 282, 186, 326, 233));				//37
+	sprites->AddSprite(new PlayerSprite(CLINGING, 291, 119, 313, 177));			//38
+	sprites->AddSprite(new PlayerSprite(CLINGING, 323, 119, 345, 177));
+	sprites->AddSprite(new PlayerSprite(CLINGING, 347, 119, 369, 177));			//40
+	sprites->AddSprite(new PlayerSprite(JUMPONWALL, 247, 124, 279, 170));
 
 
 	//Load Weapon

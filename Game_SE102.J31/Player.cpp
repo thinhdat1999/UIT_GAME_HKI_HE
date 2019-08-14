@@ -23,6 +23,8 @@ Player::Player()
 	animations[WATER_FALLING] = new Animation(PLAYER, 26, 28);
 	animations[WATER_DIVING] = new Animation(PLAYER, 29, 30);
 	animations[INWATER] = new Animation(PLAYER, 31, 33);
+	animations[CLINGING] = new Animation(PLAYER, 38, 40);
+	animations[JUMPONWALL] = new Animation(PLAYER, 41);
 	tag = PLAYER;
 	width = PLAYER_WIDTH;
 	height = PLAYER_STANDING_HEIGHT;
@@ -402,6 +404,10 @@ bool Player::DetectGround(std::unordered_set<Platform*> grounds)
 			this->ChangeState(new PlayerInjuredState());
 			return true;
 		}
+		else if (rbp.isContain(g->rect) && g->type == 6 && this->vy){
+			groundBound = *g;
+			return true;
+		}
 
 		else if (rbp.isContain(g->rect) && g->type == 2 && this->vy <= 0 && this->stateName != SHIELD_DOWN) {
 			this->height = PLAYER_SITTING_HEIGHT;
@@ -479,7 +485,7 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 	{
 		if (this->vy <= 0)
 		{
-			if (groundBound.type != 2) {
+			if (groundBound.type != 2 && groundBound.type != 6) {
 				this->isOnGround = true;
 				this->vy = this->dy = 0;
 				this->posY = groundBound.rect.y + (this->height >> 1);
@@ -490,6 +496,13 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 				//}
 				if (stateName == ATTACKING_STAND)
 					this->_allow[RUNNING] = false;
+			}
+			else if (groundBound.type == 6) {
+				if (this->posY <= groundBound.rect.y) {
+					this->posY = groundBound.rect.y - (this->height) + 5;
+					this->ChangeState(new PlayerClingingState());
+				}
+
 			}
 			else if (groundBound.type == 2) {
 				this->vy = this->dy = 0;
@@ -544,13 +557,13 @@ void Player::CheckWallCollision(std::unordered_set<Wall*> walls)
 			this->vx = this->dx = 0;
 			this->posX = wallRight + (this->width >> 1);
 
-			//if (wallBound.type && this->vy
-			//	&& this->posY + (this->height >> 1) <= wallBound.rect.y
-			//	&& this->posY - (this->height >> 1) >= wallBound.rect.y - wallBound.rect.height)
-			//{
-			//	this->isReverse = true;
-			//	this->ChangeState(new PlayerClingingState());
-			//}
+		/*	if (wallBound.type && this->vy
+				&& this->posY + (this->height >> 1) <= wallBound.rect.y
+				&& this->posY - (this->height >> 1) >= wallBound.rect.y - wallBound.rect.height)
+			{
+				this->isReverse = true;
+				this->ChangeState(new PlayerClingingState());
+			}*/
 		}
 	}
 }
@@ -602,7 +615,14 @@ void Player::OnKeyDown(int keyCode)
 				else
 				{
 					this->groundBound = Platform();
-					ChangeState(new PlayerJumpingState());
+					if (stateName == CLINGING) {
+						this->curAnimation = animations[JUMPONWALL];
+						if (curAnimation->isLastFrame) {
+							ChangeState(new PlayerJumpingState());
+						}
+					}
+					else
+						ChangeState(new PlayerJumpingState());
 				}
 			}
 

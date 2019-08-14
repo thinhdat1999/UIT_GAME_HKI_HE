@@ -32,7 +32,7 @@ EnemyTank::EnemyTank()
 	hitdelay = 1500;
 	typeAI = 0;
 	speed = 0;
-	isActive = true;
+	//isActive = true;
 	curAnimation = animations[LEFT];
 	//isSpinning = false;
 }

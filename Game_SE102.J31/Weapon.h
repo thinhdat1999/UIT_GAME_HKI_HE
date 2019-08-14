@@ -223,12 +223,12 @@ public:
 								if (b->vy == 0)
 								{
 									b->vx = b->dx = 0;
-									b->vy = b->dy = 1.0f;
+									b->vy = b->dy = 0.5f;
 									b->isStopped = true;
 									break;
 								}
 								else {
-									b->vx = b->dx = 1.0f;
+									b->vx = b->dx = 0.5f;
 									b->vy = b->dy = 0;
 									b->isStopped = true;
 									break;

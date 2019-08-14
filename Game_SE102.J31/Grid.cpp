@@ -810,7 +810,7 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 							it = c->objects.erase(it);
 							respawnObjects.insert(e);
 						}
-						else if (e->type = MINITANK)
+						else if (e->type == MINITANK)
 						{
 							//e->isDead = false;
 							respawnObjects.insert(e);

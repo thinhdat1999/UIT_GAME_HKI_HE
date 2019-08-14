@@ -167,6 +167,7 @@
     <ClInclude Include="GameGlobal.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PlayerAttackingState.h" />
+    <ClInclude Include="PlayerClingingState.h" />
     <ClInclude Include="PlayerDashingState.h" />
     <ClInclude Include="PlayerFallingState.h" />
     <ClInclude Include="PlayerInjuredState.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerAttackingState.cpp" />
+    <ClCompile Include="PlayerClingingState.cpp" />
     <ClCompile Include="PlayerDashingState.cpp" />
     <ClCompile Include="PlayerFallingState.cpp" />
     <ClCompile Include="PlayerInjuredState.cpp" />

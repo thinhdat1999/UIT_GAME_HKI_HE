@@ -527,6 +527,20 @@ void PlayScene::UpdateObjects(float dt)
 					b->CheckGroundCollision(grid->GetColliableGrounds(b));
 				break;
 			}
+			case ROCKETSOLDIER:
+			{
+				if (b->CheckGround(grid->GetColliableGrounds(b))) {
+					b->ChangeState(DEAD);
+				}
+				break;
+			}
+			case BLUESOLDIER: 
+			{
+				if (b->CheckGround(grid->GetColliableGrounds(b))) {
+					b->isDead = true;
+				}
+				break;
+			}
 			}
 			b->Update(dt);
 			grid->MoveObject(b, b->posX + b->dx, b->posY + b->dy);

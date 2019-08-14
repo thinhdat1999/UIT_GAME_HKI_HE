@@ -8,6 +8,7 @@
 #include "PlayerAttackingState.h"
 #include "PlayerInjuredState.h"
 #include "PlayerOnWaterState.h"
+#include "PlayerClingingState.h"
 #include "Holder.h"
 #include "BulletManager.h"
 #include "Sound.h"
