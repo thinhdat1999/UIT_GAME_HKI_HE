@@ -7,7 +7,7 @@ ScoreBoard::ScoreBoard()
 	score = 0;
 	this->sprites = SpriteManager::GetInstance();
 	this->playerPower = 0;
-	this->playerHealth = 20;
+	this->playerHealth = 15;
 	this->delayTime = 300;
 	exitcurColor = originalColor;
 }

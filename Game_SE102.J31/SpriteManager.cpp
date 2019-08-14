@@ -50,8 +50,12 @@ void SpriteManager::StartUp()
 
 	sprites->AddSprite(new PlayerSprite(SCOREBOARD, 215, 307, 225, 317));		//34 HEALTH
 	sprites->AddSprite(new PlayerSprite(SCOREBOARD, 279, 302, 310, 322));		//35 EXIT
-	sprites->AddSprite(new PlayerSprite(DEAD, 240, 186, 274, 233));
-	sprites->AddSprite(new PlayerSprite(DEAD, 282, 186, 326, 233));
+	sprites->AddSprite(new PlayerSprite(DEAD, 240, 186, 274, 233));				//36
+	sprites->AddSprite(new PlayerSprite(DEAD, 282, 186, 326, 233));				//37
+	sprites->AddSprite(new PlayerSprite(CLINGING, 291, 119, 313, 177));			//38
+	sprites->AddSprite(new PlayerSprite(CLINGING, 323, 119, 345, 177));
+	sprites->AddSprite(new PlayerSprite(CLINGING, 347, 119, 369, 177));			//40
+	sprites->AddSprite(new PlayerSprite(JUMPONWALL, 247, 124, 279, 170));
 
 
 	//Load Weapon
@@ -138,8 +142,8 @@ void SpriteManager::StartUp()
 	//Bullet
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 231, 71, 248, 82));			//6
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 254, 71, 270, 82));			//7
-	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 233, 94, 249, 110));			//8
-	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 258, 94, 274, 110));			//9
+	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 233, 96, 249, 112));			//8
+	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 259, 96, 275, 112));			//9
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 235, 82, 246, 84));			//10
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 259, 81, 273, 96));			//11
 	sprites->AddSprite(new BulletSprite(ROCKETSOLDIER, 374, 68, 383, 86));			//12
@@ -186,6 +190,10 @@ void SpriteManager::StartUp()
 	//Nitro
 	sprites->AddSprite(new BulletSprite(MOVING_PLATFORM, 336, 367, 344, 379));		//Nitro vertical	16 
 	sprites->AddSprite(new BulletSprite(MOVING_PLATFORM, 351, 371, 361, 381));		//Nitro horizontal	17
+
+	// BOSS1
+	sprites->AddSprite(new BulletSprite(BOSS1, 228, 159, 244, 171));		//18
+	sprites->AddSprite(new BulletSprite(BOSS1, 213, 159, 229, 171));		//19
 }
 
 

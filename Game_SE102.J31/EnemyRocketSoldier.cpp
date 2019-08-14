@@ -14,7 +14,7 @@ EnemyRocketSoldier::EnemyRocketSoldier()
 	type = ROCKETSOLDIER;
 	width = 23;
 	height = 40;
-	speed = 0.1f;
+	speed = 0.05f;
 	typeAI = 0;
 	bullets = bulletCount = 1;
 	curColor = originalColor;
@@ -63,33 +63,35 @@ void EnemyRocketSoldier::UpdateDistance(float dt)
 		}
 		break;
 	}
-	//case 1:
-	//{
-	//	delayTime -= dt;
-	//	vx -= 0.01;
-	//	switch (this->stateName)
-	//	{
-	//	case RUNNING:
-	//	{
-	//		this->dx = vx * dt;
-
-	//		if (vx <= 0)
-	//		{
-	//			this->posY -= 8;
-
-	//			this->ChangeState(ATTACKING_SIT);
-	//			delayTime = 1600;
-	//		}
-	//		break;
-	//	}
-	//	case ATTACKING:
-	//	{
-	//		this->dx = 0;
-	//		break;
-	//	}
-	//	}
-	//	break;
-	//}
+	case 1:
+	{
+		delayTime -= dt;
+		switch (this->stateName)
+		{
+		case RUNNING:
+		{
+			this->dx = vx * dt;
+			if (delayTime <= 0)
+			{
+				this->ChangeState(ATTACKING_SIT);
+				delayTime = 1600;
+			}
+			break;
+		}
+		case ATTACKING_SIT:
+		{
+			this->dx = 0;
+			if (delayTime <= 0) {
+				this->vx = -this->vx;
+				this->posY += 8;
+				ChangeState(RUNNING);
+				delayTime = 1600;
+			}
+			break;
+		}
+		}
+		break;
+	}
 	//case 2:
 	//{
 	//	//this->isReverse = (player->posX > this->posX);
@@ -168,6 +170,7 @@ void EnemyRocketSoldier::ChangeState(State StateName)
 		this->bullets = this->bulletCount = 1;
 		this->height = 20;
 		this->posY -= 8;
+		break;
 	}
 	case RUNNING: {
 		this->isActive = true;

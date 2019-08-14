@@ -15,6 +15,7 @@ public:
 	void UpdateDistance(float dt) {
 		this->dy = vy * dt;
 		this->dx = vx * dt;
+		this->dy = vy * dt;
 	}
 
 };

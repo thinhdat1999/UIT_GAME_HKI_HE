@@ -16,9 +16,6 @@ PlayScene::PlayScene(int level)
 		p->posY = p->spawnY = 70;
 		break;
 	case 2: case 3:
-		totalObjects = 3;
-		ObjsCount = 0;
-		timeCounter = 0;
 		p->posX = p->spawnX = 20;
 		p->posY = p->spawnY = 70;
 		break;
@@ -59,9 +56,6 @@ PlayScene::PlayScene(int level)
 
 	case 2: case 3: case 6:
 		endRect = Rect(0, 0, 0, 0);
-		//auto button = new Rect(80, 416, 16, 16);
-		//auto button2 = new Rect(16, 352, 16, 16);
-		//auto button3 = new Rect(176, 384, 16, 16);
 		break;
 	case 4: case 5:
 		endRect = Rect(958, 95, 32, 64);
@@ -86,27 +80,8 @@ void PlayScene::Update(float dt)
 		}
 		return;
 	}
-	if (gameLevel == 2) {
- 		if (timeCounter <= 0) {
-			timeCounter += dt;
-		}
-		if (timeCounter > 1500 && ObjsCount < totalObjects) {
-			auto b = new BulletWizard();
-			b->bulletType = 0;
-			b->ChangeType(b->bulletType);
-			b->isReverse = (ObjsCount % 2 == 0) ? 0 : 1;
-			if (!b->isReverse)
-				b->vx = -b->vx;
-			b->posX = b->isReverse ? SCREEN_WIDTH - 1 : 1;
-			b->posY = 54;
-			b->ChangeState(ACTIVE);
-			grid->AddObject(b);
-			timeCounter = 0;
-			ObjsCount++;
-		}
-	}
 	UpdateScene();
-
+	scoreboard->playerHealth = player->health;
 	scoreboard->Update(dt);
 	/*endRect = p->GetRect();*/
 	UpdateObjects(dt);
@@ -160,6 +135,7 @@ void PlayScene::UpdateObjects(float dt)
 			case FLYINGROCKET:
 			{
 				auto flying = (EnemyFlyingRocket*)e;
+				flying->CheckGroundCollision(grid->GetColliableGrounds(flying));
 				if (flying->bulletCount > 0)
 				{
 					auto b = BulletManager::CreateBullet(e->type);
@@ -248,25 +224,59 @@ void PlayScene::UpdateObjects(float dt)
 			{
 
 				auto boss = (EnemyWizard*)e;
-				if (!boss->firstJump) {
 					if (boss->delayHit > 0) {
 						boss->delayHit -= dt;
 					}
-				}
-				if (!boss->isOnGround) {
-					boss->CheckGroundCollision(grid->GetVisibleGrounds());
-				}
+					else if (boss->delayHit <= 0) {
+						boss->delayHit = 0;
+					}
 				
+				if (!boss->isOnGround && !boss->bulletCountdown && !boss->delayHit) {
+					boss->CheckGroundCollision(grid->GetVisibleGrounds());
+					if (!boss->firstJump) {
+						boss->bulletCountdown = 0;
+						boss->firstJump = true;
+					}
+				}
+				// 3 viên đạn đầu tiên
+				if (boss->bulletCountdown > 0 && !boss->firstJump && boss->delayHit == 0) {
+					auto b = BulletManager::CreateBullet(BOSS1);
+					
+					if (player->posY > 64) {
+						b->ChangeType(3);
+					}
+					b->isReverse = boss->isReverse;
+					boss->isReverse = !boss->isReverse;
+					if (!b->isReverse)
+						b->vx = -b->vx;
+					b->posX = b->isReverse ? 10 : SCREEN_WIDTH - 10;
+					b->posY = 64;
+					b->ChangeState(ACTIVE);
+					grid->AddObject(b);
+					/*if (boss->bulletCountdown != 0)
+						boss->delayHit = 5000;
+					else */
+					boss->delayHit = 5000;
+					boss->bulletCountdown--;
+					if (boss->bulletCountdown == 0) {
+						boss->delayHit = 2500;
+					}
+				}
+
 				if (boss->isFinishAttack())
 				{
 					auto b = BulletManager::CreateBullet(BOSS1);
 					b->bulletType = boss->bulletType;
 					b->ChangeType(b->bulletType);
+					b->posY = e->posY + 8;
+					if (b->bulletType == 0 && player->posY > b->posY) {
+						b->ChangeType(3);
+					}
 					b->isReverse = e->isReverse;
 					if (!b->isReverse) 
 						b->vx = -b->vx;
 					b->posX = e->posX + (e->isReverse ? 5 : -5);
-					b->posY = e->posY + 8;
+					
 					b->ChangeState(ACTIVE);
 					grid->AddObject(b);
 					boss->bulletCount--;
@@ -320,6 +330,8 @@ void PlayScene::UpdateObjects(float dt)
 						auto b = new BulletMiniBoss();
 						b->bulletType = boss->bulletType;
 						b->ChangeType(b->bulletType);
+						if(abs(player->posX - boss->posX) < 30)
+							b->vy = -0.3f;
 						b->isReverse = e->isReverse;
 						if (!b->isReverse)
 							b->vx = -b->vx;
@@ -392,24 +404,26 @@ void PlayScene::UpdateObjects(float dt)
 			case ROCKETSOLDIER: 
 			{
 				auto soldier = (EnemyRocketSoldier*)e;
-				if (soldier->typeAI == 1) {
+				/*if (soldier->typeAI == 1) {
 
 					if (!soldier->isOnGround)
 					{
 						soldier->DetectCurGround(grid->GetColliableGrounds(soldier));
 					}
 					break;
-				}
+				}*/
 				if (soldier->isFinishAttack())
 				{
 					if (soldier->bulletCount > 0)
 					{
 						auto b = BulletManager::CreateBullet(e->type);
 						b->isReverse = e->isReverse;
+						b->bulletType = soldier->bulletType;
+						b->ChangeType(b->bulletType);
 						if (!b->isReverse)
 							b->vx = -b->vx;
-						b->posX = e->posX + (e->isReverse ? 10 : -10);
-						b->posY = e->posY + 15;
+						b->posX = b->spawnX = e->posX + (e->isReverse ? 10 : -10);
+						b->posY = b->spawnY = e->posY + 15;
 						b->ChangeState(ACTIVE);
 						grid->AddObject(b);
 						soldier->bulletCount--;
@@ -451,18 +465,23 @@ void PlayScene::UpdateObjects(float dt)
 				auto rbp = player->GetRect();					//rect broading-phase
 				auto bottom = rbp.y - rbp.height;
 				if(player->isOnMovingPlatform && movingPlatform->dy < 0)
-				rbp.y = rbp.y + movingPlatform->dy;
+					rbp.y = rbp.y + movingPlatform->dy;
 				else 
 					rbp.y = rbp.y + player->dy;
 
-				if (rbp.isContain(movingPlatform->GetRect()) && (bottom >= movingPlatform->GetRect().y) && !player->isOnMovingPlatform)
+				if (rbp.isContain(movingPlatform->GetRect()) && (bottom >= movingPlatform->GetRect().y) && (player->curGroundBoundID == -1)&& player->vy < 0/*!player->isOnMovingPlatform*/)
 				{
 					player->groundBound = *movingPlatform->platform;
+					player->isOnGround = true;
+					player->vy = player->dy = 0;
+					player->posY = player->groundBound.rect.y + (player->height >> 1);
+					if (player->curGroundBoundID == -1)
+						player->curGroundBoundID = player->groundBoundID;
 					/*player->groundBound.dx = movingPlatform->dx;*/
 					player->isOnMovingPlatform = true;
 					/*movingPlatform->isHasPlayerOn = true;*/
 				}
-				else if (rbp.isContain(movingPlatform->GetRect()) && player->isOnMovingPlatform) {
+				else if (rbp.isContain(movingPlatform->GetRect()) && player->isOnMovingPlatform && player->curGroundBoundID == player->groundBoundID) {
 					player->groundBound = *movingPlatform->platform;
 					player->posX += movingPlatform->dx;
 		/*			player->posY = movingPlatform->platform->rect.y + (player->height >> 1);*/
@@ -473,9 +492,11 @@ void PlayScene::UpdateObjects(float dt)
 						player->posY = movingPlatform->platform->rect.y + (player->height >> 1) + movingPlatform->dy;
 					}/*+ movingPlatform->dy*/;
 				}
-				else if(player->isOnMovingPlatform && !rbp.isContain(movingPlatform->GetRect())) {
-					player->isOnMovingPlatform = false;
-					player->groundBound = Platform();
+				else if(player->isOnMovingPlatform && player->curGroundBoundID != player->groundBoundID) {
+					if (!rbp.isContain(movingPlatform->GetRect())) {
+						player->isOnMovingPlatform = false;
+						player->groundBound = Platform();
+					}
 				}
 				break;
 			}
@@ -483,6 +504,7 @@ void PlayScene::UpdateObjects(float dt)
 				auto button = (LightControl*)o;
 				if (button->isAttacked) {
 					button->isAttacked = false;
+					button->flashingTime = 500;
 					if (gameLevel == 2 || gameLevel == 4) {
 						map = MapManager::GetInstance()->GetMap(gameLevel + 1);
 						gameLevel++;
@@ -520,6 +542,20 @@ void PlayScene::UpdateObjects(float dt)
 					b->CheckGroundCollision(grid->GetColliableGrounds(b));
 				break;
 			}
+			case ROCKETSOLDIER:
+			{
+				if (b->CheckGround(grid->GetColliableGrounds(b))) {
+					b->ChangeState(DEAD);
+				}
+				break;
+			}
+			case BLUESOLDIER: 
+			{
+				if (b->CheckGround(grid->GetColliableGrounds(b))) {
+					b->isDead = true;
+				}
+				break;
+			}
 			}
 			b->Update(dt);
 			grid->MoveObject(b, b->posX + b->dx, b->posY + b->dy);
@@ -532,7 +568,7 @@ void PlayScene::UpdateObjects(float dt)
 }
 void PlayScene::UpdatePlayer(float dt)
 {
-	if (p->isDead)
+	if (p->isDead && p->isOnGround)
 	{
 		player->vy = -PLAYER_FALLING_SPEED;
 		player->ChangeAnimation(DEAD);
@@ -606,10 +642,18 @@ void PlayScene::UpdateVisibleObjects()
 void PlayScene::SetRestartScene()
 {
 	Sound::getInstance()->stop("Theme");
-	Sound::getInstance()->play("over");
+	Sound::getInstance()->play("playerdead");
 	delayRestart = SCENE_DELAY_RESTART;
 	p->health = p->MaxHealth;
-	p->SetHealth(p->health);
+	for (auto o : visibleObjects)
+	{
+		if (o->tag == BULLET)
+		{
+			auto b = (Bullet*)o;
+			b->isDead = true;
+		}
+
+	}
 }
 
 void PlayScene::RestartScene()
@@ -622,7 +666,8 @@ void PlayScene::RestartScene()
 	}
 	player->Respawn();
 	player->ChangeState(new PlayerStandingState());
-
+	weapon = new WeaponShield();
+	scoreboard->playerHealth = player->health;
 	for (auto o : grid->respawnObjects)
 	{
 		switch (o->tag)
@@ -648,9 +693,15 @@ void PlayScene::RestartScene()
 		if (o->tag == ENEMY)
 		{
 			auto e = (Enemy*)o;
-			e->ChangeState(STANDING);
+			if (o->type == BOSS1 || o->type == BOSS2) {
+				e->ChangeState(FALLING);
+				e->isReverse = !(player->posX < e->spawnX);
+			}
+			else
+				e->ChangeState(STANDING);
 			grid->MoveObject(o, o->spawnX, o->spawnY);
 		}
+
 	}
 	this->visibleObjects.clear();
 	grid->respawnObjects.clear();

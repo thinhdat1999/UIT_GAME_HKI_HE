@@ -1,11 +1,15 @@
 #pragma once
 #include "Enemy.h"
-
+#include <cmath>
 class MovingPlatform : public Enemy {
 
 public:
+	int platformID;
 	int maxDistanceX;
 	int maxDistanceY;
+	float rotationRadius = 0.2f; 
+	float angularSpeed = 2.0f;
+	float angle;
 	float delayTime;
 	float oldPosY;
 	Platform *platform;

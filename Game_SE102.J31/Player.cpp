@@ -23,11 +23,14 @@ Player::Player()
 	animations[WATER_FALLING] = new Animation(PLAYER, 26, 28);
 	animations[WATER_DIVING] = new Animation(PLAYER, 29, 30);
 	animations[INWATER] = new Animation(PLAYER, 31, 33);
+	animations[CLINGING] = new Animation(PLAYER, 38, 40);
+	animations[JUMPONWALL] = new Animation(PLAYER, 41);
 	tag = PLAYER;
 	width = PLAYER_WIDTH;
 	height = PLAYER_STANDING_HEIGHT;
-	health = 20;
-	MaxHealth = 20;
+	curGroundBoundID = -1; //mặc định
+	health = 15;
+	MaxHealth = 15;
 }
 
 // Destructor
@@ -57,6 +60,7 @@ void Player::Respawn()
 	this->_allow[RUNNING] = true;
 	this->_allow[THROWING] = true;
 	this->isHoldingShield = true;
+	this->isOnMovingPlatform = false;
 	this->isAttacking = false;
 	this->isThrowing = false;
 	this->vx = this->vy = this->dx = this->dy = 0;
@@ -81,7 +85,7 @@ void Player::ChangeAnimation(State stateName)
 }
 void Player::DetectSpawnY(std::unordered_set<Platform*> grounds)
 {
-	this->groundBound = Platform();
+	//this->groundBound = Platform();
 
 	for (auto g : grounds)
 	{
@@ -125,15 +129,133 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 			if (this->stateName != INJURED)
 			{
 				auto r = Collision::GetInstance()->SweptAABB(this->GetBoundingBox(), o->GetBoundingBox());
-				if (r.isCollide)
+				if (r.isCollide || ((player->GetRect().isContain(o->GetRect()) &&
+					(player->stateName == ATTACKING_SIT || player->stateName == ATTACKING_STAND 
+					|| player->stateName == ATTACKING_JUMP))))
 				{
 					switch (this->stateName) {
-					case DASHING: 
+					case DASHING:
 						r.isCollide = false;
+						if (o->tag == ENEMY) {
+							switch (o->type) {
+							case BOSS1:
+								o->SubtractHealth();
+								break;
+							case BOSS2:
+								if (o->typeAI == 0)
+								{
+									r.isCollide = true;
+									if(!this->flashingTime)
+										this->SetHealth(health - 3);
+								}
+								else if(o->typeAI == 1) 
+									o->SubtractHealth();
+								break;
+							case MOVING_PLATFORM: case SPLITTING_PLATFORM: case LIGHTCONTROL:
+								break;
+							default:
+								o->ChangeState(DEAD);
+								break;
+							}
+						}
 						break;
 					case SHIELD_DOWN:
-						if (r.ny == -1)
-							r.isCollide = false;
+						if (r.ny == 1) {
+							if (o->tag == ENEMY) {
+								r.isCollide = false;
+								switch (o->type) {
+								case BOSS1: case BOSS2:
+									o->SubtractHealth();
+									break;
+								case MOVING_PLATFORM: case SPLITTING_PLATFORM: case LIGHTCONTROL:
+									break;
+								default:
+									o->ChangeState(DEAD);
+									break;
+								}
+							}
+						}
+						break;
+					case ATTACKING_JUMP: case ATTACKING_SIT: case ATTACKING_STAND:
+						if ((this->isReverse && (o->posX - this->posX > 10)) || (!this->isReverse && (10 < this->posX - o->posX))) {
+							if (o->tag == ENEMY) {
+								switch (o->type) {
+								case BOSS1:
+									r.isCollide = false;
+									o->SubtractHealth();
+									break;
+								case BOSS2:
+									if (o->typeAI == 1)
+									{
+										r.isCollide = false;
+										o->SubtractHealth();
+									}
+									break;
+								case MOVING_PLATFORM: case SPLITTING_PLATFORM: 
+									r.isCollide = false;
+									break;
+								case LIGHTCONTROL:
+									if(!o->flashingTime)
+										o->isAttacked = true;
+									r.isCollide = false;
+									break;
+								case FLYINGROCKET: 
+									o->ChangeState(INJURED);
+									r.isCollide = false;
+									break;
+								default:
+									o->ChangeState(DEAD);
+									Sound::getInstance()->play("exploded");
+									break;
+								}
+							}
+							if (o->tag == BULLET) {
+								switch (o->type) {
+								case BOSS2:
+									auto b = (BulletMiniBoss*)o;
+									if (b->bulletType == 0)
+									{
+										r.isCollide = false;
+										b->ChangeState(DEAD);
+									}
+									break;
+								}
+							}
+						}
+						else {
+							switch (o->type)
+							{
+							case LIGHTCONTROL: {
+								r.isCollide = false;
+								break;
+							}
+							case BOSS1 : case BOSS2: {
+								if (!this->flashingTime)
+									this->SetHealth(health - 3);
+								break;
+							}
+							case ROCKETSOLDIER:
+								if (!flashingTime && o->tag == BULLET) {
+									auto b = (BulletRocketSoldier*)o;
+									b->ChangeState(DEAD);
+
+								}
+								if (!this->flashingTime)
+									this->SetHealth(health - 2);
+								break;
+							case SPLITTING_PLATFORM: case MOVING_PLATFORM:
+
+								r.isCollide = false;
+								break;
+							default:
+								this->SetHealth(health - 1);
+								if (o->tag == BULLET) {
+									auto b = (Bullet*)o;
+									b->isDead = true;
+								}
+								break;
+							}
+						}
 						break;
 					default:
 					{
@@ -144,12 +266,14 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 							break;
 						}
 						case BOSS2: {
-							this->SetHealth(health - 3);
+							if (!this->flashingTime)
+								this->SetHealth(health - 3);
 							break;
 						}
 						case BOSS1:
 							//set máu
-							this->SetHealth(health - 3);
+							if (!this->flashingTime)
+								this->SetHealth(health - 3);
 							break;
 						case ROCKETSOLDIER:
 							if (!flashingTime && o->tag == BULLET) {
@@ -157,14 +281,16 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 								b->ChangeState(DEAD);
 
 							}
-							this->SetHealth(health - 2);
+							if (!this->flashingTime)
+								this->SetHealth(health - 2);
 							break;
 						case SPLITTING_PLATFORM: case MOVING_PLATFORM:
 
 							r.isCollide = false;
 							break;
 						default:
-							this->SetHealth(health - 1);
+							if (!this->flashingTime)
+								this->SetHealth(health - 1);
 							if (o->tag == BULLET) {
 								auto b = (Bullet*)o;
 								b->isDead = true;
@@ -172,10 +298,21 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 							break;
 						}
 					}
-					result = r;
+
 					break;
 					}
+					result = r;
 				}
+			}
+			break;
+		}
+		case HOLDER:
+		{
+			if ((player->GetRect().isContain(o->GetRect()) &&
+				(player->stateName == ATTACKING_SIT || player->stateName == ATTACKING_STAND
+					|| player->stateName == ATTACKING_JUMP))) {
+				auto h = (Holder*)o;
+				h->isAttacked = true;
 			}
 			break;
 		}
@@ -264,9 +401,20 @@ bool Player::DetectGround(std::unordered_set<Platform*> grounds)
 		if (rbp.isContain(g->rect) && g->type == 1 && this->vy > 0 && (g->rect.y - g->rect.height) > this->posY) {
 			this->ChangeState(new PlayerFallingState());
 		}
+		else if (rbp.isContain(g->rect) && g->type == 5 && !this->flashingTime){
+			SetHealth(health - 1);
+			groundBound = *g;
+			this->flashingTime = 3000;
+			this->ChangeState(new PlayerInjuredState());
+			return true;
+		}
+		else if (rbp.isContain(g->rect) && g->type == 6 && this->vy){
+			groundBound = *g;
+			return true;
+		}
 
-		else if (rbp.isContain(g->rect) && g->type == 2 && this->vy <= 0 && player->stateName != SHIELD_DOWN) {
-			player->height = PLAYER_SITTING_HEIGHT;
+		else if (rbp.isContain(g->rect) && g->type == 2 && this->vy <= 0 && this->stateName != SHIELD_DOWN) {
+			this->height = PLAYER_SITTING_HEIGHT;
 			groundBound = *g;
 			return true;
 		}
@@ -322,10 +470,17 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 		this->isOnGround = false;
 		this->isOnWater = false;
 	}
+	if (this->isOnWater) return;
 	if (this->groundBound.dy < 0 && this->groundBound.type == 3 && this->isOnMovingPlatform) {
 		this->isOnGround = true;
 		this->posY += groundBound.dy;
 		if(this->vy < 0)
+			this->vy = this->dy = 0;
+		return;
+	}
+	else if (this->groundBound.dy > 0 && this->groundBound.type == 3 && this->isOnMovingPlatform) {
+		this->isOnGround = true;
+		if (this->vy < 0)
 			this->vy = this->dy = 0;
 		return;
 	}
@@ -334,7 +489,7 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 	{
 		if (this->vy <= 0)
 		{
-			if (groundBound.type != 2) {
+			if (groundBound.type != 2 && groundBound.type != 6) {
 				this->isOnGround = true;
 				this->vy = this->dy = 0;
 				this->posY = groundBound.rect.y + (this->height >> 1);
@@ -345,6 +500,13 @@ void Player::CheckGroundCollision(std::unordered_set<Platform*> grounds)
 				//}
 				if (stateName == ATTACKING_STAND)
 					this->_allow[RUNNING] = false;
+			}
+			else if (groundBound.type == 6) {
+				if (this->posY <= groundBound.rect.y) {
+					this->posY = groundBound.rect.y - (this->height) + 5;
+					this->ChangeState(new PlayerClingingState());
+				}
+
 			}
 			else if (groundBound.type == 2) {
 				this->vy = this->dy = 0;
@@ -399,13 +561,13 @@ void Player::CheckWallCollision(std::unordered_set<Wall*> walls)
 			this->vx = this->dx = 0;
 			this->posX = wallRight + (this->width >> 1);
 
-			//if (wallBound.type && this->vy
-			//	&& this->posY + (this->height >> 1) <= wallBound.rect.y
-			//	&& this->posY - (this->height >> 1) >= wallBound.rect.y - wallBound.rect.height)
-			//{
-			//	this->isReverse = true;
-			//	this->ChangeState(new PlayerClingingState());
-			//}
+		/*	if (wallBound.type && this->vy
+				&& this->posY + (this->height >> 1) <= wallBound.rect.y
+				&& this->posY - (this->height >> 1) >= wallBound.rect.y - wallBound.rect.height)
+			{
+				this->isReverse = true;
+				this->ChangeState(new PlayerClingingState());
+			}*/
 		}
 	}
 }
@@ -423,43 +585,58 @@ void Player::Render(float cameraX, float cameraY)
 
 void Player::OnKeyDown(int keyCode)
 {
-	switch (keyCode) {
-	case DIK_Z:
-		if (_allow[THROWING] && weaponType == SHIELD && isHoldingShield
-			&& this->stateName != ATTACKING_SIT && this->stateName != ATTACKING_STAND 
-			&& this->stateName != ATTACKING_JUMP) {
-			_allow[THROWING] = false;
-			_allow[ATTACKING] = true;
-			this->isThrowing = true;
-			ChangeState(new PlayerAttackingState());
-		}
-		else if (_allow[ATTACKING])
+	if (!player->isDead) {
+		switch (keyCode) {
+		case DIK_Z:
+			if (_allow[THROWING] && weaponType == SHIELD && isHoldingShield
+				&& this->stateName != ATTACKING_SIT && this->stateName != ATTACKING_STAND
+				&& this->stateName != ATTACKING_JUMP) {
+				_allow[THROWING] = false;
+				_allow[ATTACKING] = true;
+				this->isThrowing = true;
+				ChangeState(new PlayerAttackingState());
+			}
+			else if (_allow[ATTACKING])
 			{
-			_allow[ATTACKING] = false;
-			ChangeState(new PlayerAttackingState());
-			this->isAttacking = true;
+				_allow[ATTACKING] = false;
+				ChangeState(new PlayerAttackingState());
+				this->isAttacking = true;
 			}
-		break;
-	case DIK_X:
+			break;
+		case DIK_X:
 
-		if (_allow[JUMPING])
-		{
-			_allow[JUMPING] = false;
-    			if (stateName == SITTING && groundBound.type == 0) {
-				player->height = PLAYER_STANDING_HEIGHT;
-				this->groundBound = Platform();
-				ChangeState(new PlayerFallingState());
+			if (_allow[JUMPING])
+			{
+				_allow[JUMPING] = false;
+				curGroundBoundID = -1;
+				/*if(groundBoundID != -1)
+					curGroundBoundID = groundBoundID;*/
+				if (stateName == SITTING && groundBound.type == 0) {
+					player->height = PLAYER_STANDING_HEIGHT;
+					this->groundBound = Platform();
+					ChangeState(new PlayerFallingState());
+				}
+				else
+				{
+					this->groundBound = Platform();
+					if (stateName == CLINGING) {
+						this->curAnimation = animations[JUMPONWALL];
+						if (curAnimation->isLastFrame) {
+							ChangeState(new PlayerJumpingState());
+						}
+					}
+					else
+						ChangeState(new PlayerJumpingState());
+				}
 			}
-			else 
-			ChangeState(new PlayerJumpingState());
+
+			break;
+		case DIK_UP:
+			if (_allow[SHIELD_UP]) {
+				ChangeState(new PlayerShieldUpState());
+			}
+			break;
 		}
-		
-		break;
-	case DIK_UP:
-		if (_allow[SHIELD_UP]) {
-			ChangeState(new PlayerShieldUpState());
-		}
-		break;
 	}
 }
 

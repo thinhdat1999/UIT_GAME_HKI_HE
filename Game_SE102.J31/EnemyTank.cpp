@@ -24,14 +24,15 @@ EnemyTank::EnemyTank()
 
 	animations[ATTACKING] = new Animation(ENEMY, 46);
 
-	height = 14;
-	width = 14;
+	height = 16;
+	width = 16;
 	hitcount = 2;
 	bullets = bulletCount = 1;
 	delayTime = 3000;
 	hitdelay = 1500;
 	typeAI = 0;
-	isActive = true;
+	speed = 0;
+	//isActive = true;
 	curAnimation = animations[LEFT];
 	//isSpinning = false;
 }
@@ -99,8 +100,7 @@ void EnemyTank::UpdateDistance(float dt)
 
 void EnemyTank::ChangeState(State stateName)
 {
-	this->stateName = stateName;
-	this->curAnimation = animations[stateName];
+
 	if (stateName == RUNNING)
 	{
 		isActive = true;
@@ -132,4 +132,6 @@ void EnemyTank::ChangeState(State stateName)
 			break;
 		}
 	}
+	this->stateName = stateName;
+	this->curAnimation = animations[stateName];
 }

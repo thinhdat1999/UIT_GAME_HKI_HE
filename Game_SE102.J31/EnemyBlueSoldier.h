@@ -7,7 +7,7 @@ private:
 	Platform curGroundBound;
 public:
 	bool isOnGround;
-	float delayTime;
+	float delayTime, delay;
 	float activeDistance;
 	EnemyBlueSoldier();
 	~EnemyBlueSoldier() {};

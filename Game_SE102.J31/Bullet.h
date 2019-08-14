@@ -86,6 +86,21 @@ public:
 		}
 		return false;
 	}
+	virtual bool CheckGround(std::unordered_set<Platform*> grounds) {
+		auto rbp = this->GetRect();					//rect broading-phase
+		auto bottom = rbp.y - rbp.height;
+		rbp.y = rbp.y + dy;
+		rbp.height = rbp.height - dy;
+		for (auto g : grounds)
+		{
+			if (rbp.isContain(g->rect) && g->type != 6)
+			{
+				groundBound = *g;
+				return true;
+			}
+		}
+		return false;
+	}
 	virtual void CheckGroundCollision(std::unordered_set<Platform*> grounds) {
 		// Trên không
 		if (this->vy)

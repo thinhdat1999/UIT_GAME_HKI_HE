@@ -133,4 +133,5 @@ void Enemy::UpdateColor()
 		}
 	}
 	else curColor = originalColor;
+ 
 }

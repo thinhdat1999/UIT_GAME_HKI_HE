@@ -10,8 +10,8 @@ PlayerOnWaterState::PlayerOnWaterState()
 	player->height = PLAYER_SITTING_HEIGHT;
 	player->vx = 0;
 	player->vy = 0;
-	StateName = ONWATER;
-	prevState = ONWATER;
+	StateName = WATER_FALLING;
+	prevState = WATER_FALLING;
 }
 
 void PlayerOnWaterState::Update(float dt)

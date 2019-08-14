@@ -34,7 +34,7 @@ extern std::unordered_map<int, bool> keyCode;
 // ===== Các thông số cho Scene =====
 #define SCENE_DELAY_START 3000
 #define SCENE_DELAY_END 2000
-#define SCENE_DELAY_RESTART 4500
+#define SCENE_DELAY_RESTART 2500
 
 // ===== CÁC THÔNG SỐ CHO HOLDERS & ITEM ====
 #define HOLDER_WIDTH 16
@@ -143,6 +143,7 @@ extern enum State
 	ATTACKING_SIT,
 	THROWING,
 	CLINGING,
+	JUMPONWALL,
 	ACTIVE,
 	DEAD,
 	INJURED,
@@ -154,6 +155,7 @@ extern enum State
 	WATER_FALLING,
 	INWATER,
 	SCOREBOARD,
+	WAITING_TO_SPAWN,
 	//MINITANK
 	TOP,TOPLEFT,LEFT,BOTLEFT,BOT,BOTRIGHT,RIGHT,TOPRIGHT,
 	SPINNING_LEFT, SPINNING_RIGHT,
@@ -183,6 +185,7 @@ struct Rect {
 // 3: Moving platform
 // 4: Split  platform
 // 5: Gai
+// 6: Dây
 struct Platform {
 	Rect rect;
 	int type;
@@ -198,10 +201,10 @@ struct Platform {
 		this->dy = dy;
 	}
 };
+
 struct Wall
 {
 	Rect rect;
-
 	Wall() {}
 	Wall(float x, float y, float width, float height)
 	{

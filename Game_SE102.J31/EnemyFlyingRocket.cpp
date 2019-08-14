@@ -1,4 +1,4 @@
-#include "EnemyFlyingRocket.h"
+﻿#include "EnemyFlyingRocket.h"
 
 EnemyFlyingRocket::EnemyFlyingRocket()
 {
@@ -13,69 +13,145 @@ EnemyFlyingRocket::EnemyFlyingRocket()
 
 	height = 24;
 	width = 18;
+	speed = 0.1f;
+	this->isReverse = true;
+	maxDistanceX = 60;
+	maxDistanceY = 30;
 	bullets = bulletCount = 1;
-	//speed = 0.1f;
 	typeAI = 0;
+	this->isOnGround = false;
 	this->delayTime = 5000;
+}
+
+void EnemyFlyingRocket::CheckGroundCollision(std::unordered_set<Platform*> grounds)
+{
+	// Trên không
+	if (this->vy)
+	{
+		this->isOnGround = false;
+	}
+	// Tìm được vùng đất va chạm
+	if (DetectGround(grounds))
+	{
+		if (this->vy < 0)
+		{
+			this->isOnGround = true;
+			this->vy = this->dy = 0;
+			this->posY = groundBound.rect.y + (this->height >> 1);
+		}
+	}
 }
 
 
 void EnemyFlyingRocket::UpdateDistance(float dt)
 {
-	delayTime -= dt;
 	this->dx = vx * dt;
-	if (typeAI = 0)
+	this->dy = vy * dt;
+
+	delayTime -= dt;
+	if (typeAI == 0)
 	{
-		this->isReverse = (player->posX > this->posX);
-		if (stateName == ATTACKING)
+		switch (stateName) {
+		case RUNNING:
+		{
+			if (((this->vx < 0) && (this->posX - this->spawnX < -maxDistanceX))
+				|| ((this->vx > 0) && (this->posX - this->spawnX > maxDistanceX))) {
+				this->vy = this->vx > 0 ? -0.1f : 0.1f;
+				this->vx = 0;
+			}
+			else if (((this->vy > 0) && (this->posY - this->spawnY > maxDistanceY))
+				|| ((this->vy < 0) && (this->posY - this->spawnY < -maxDistanceY)))
+			{
+				this->vx = this->vy > 0 ? speed : -speed;
+				this->vy = 0;
+			}
+			break;
+		}
+		case ATTACKING:
 		{
 			if (curAnimation->isLastFrame)
 			{
 				ChangeState(RUNNING);
 			}
+			break;
+		}
+		case INJURED:
+			if (isOnGround) {
+				ChangeState(DEAD);
+			}
+			break;
 		}
 	}
-	//}
-	//if (posX < 80)
-	//{
-	//	posX = 80;
-	//	speed = -0.1f;
-	//}
-	//if (posX > 160)
-	//{
-	//	posX = 160;
-	//}
+}
 
-
+void EnemyFlyingRocket::Update(float dt)
+{
+	UpdateDistance(dt);
+	curAnimation->Update(dt);
+	if (flashingTime > 0) {
+		flashingTime -= dt;
+	}
+	else {
+		flashingTime = 0;
+	}
+	if (this->stateName == DEAD)
+	{
+		if (this->curAnimation->isLastFrame) {
+			this->isDead = true;
+			this->isActive = false;
+		}
+	}
 }
 
 void EnemyFlyingRocket::ChangeState(State StateName)
 {
-	isActive = true;
 	this->stateName = StateName;
-	this->curAnimation = animations[stateName];
+	
 	switch (stateName)
 	{
+	case STANDING:
+	{
+		this->isOutScreen = false;
+		this->isActive = false;
+		this->isDead = false;
+		this->isOnGround = false;
+		break;
+	}
 	case RUNNING:
 	{
-		if (activeDistance)
-		{
-			this->isActive = true;
-			auto distance = player->posX - this->spawnX;
-
-			if (activeDistance * distance > 0 && distance >= this->activeDistance)
-			{
-				this->vy = 0;
-				this->isActive = true;
-			}
-		}
+		this->isReverse = true;
+		this->isActive = true;
 		break;
 	}
-	/*	vx = 0.2f;
-		isActive = true;
-		break;*/
+	case INJURED: {
+		this->vx = this->dx = 0;
+		this->vy = this->dy = -0.1f;
+		break;
+	}
+	case DEAD:
+	{
+		this->vx = this->dx = 0;
+		this->vy = this->dy = 0;
+		this->posY = this->groundBound.rect.y + (this->height >> 1);
+		break;
+	}
 	case ATTACKING:
-		vx = 0;
+	{
+		dx = dy = 0;
 		break;
 	}
+	}
+	this->curAnimation = animations[stateName];
+}
+
+void EnemyFlyingRocket::Render(float cameraX, float cameraY)
+{
+	UpdateColor();
+	if (this->stateName == INJURED) {
+		this->isReverse = !this->isReverse;
+	}
+	screenX = this->posX - cameraX;
+	screenY = cameraY - this->posY;
+	curAnimation->isReverse = this->isReverse;
+	curAnimation->AlphaRender(screenX, screenY, curColor, NULL);
 }

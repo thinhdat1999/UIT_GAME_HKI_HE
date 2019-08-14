@@ -19,6 +19,7 @@ EnemyMiniBoss::EnemyMiniBoss()
 	width = ENEMY_BOSS_WIDTH;
 	height = ENEMY_BOSS_HEIGHT;
 	bullets = bulletCount = 1;
+	typeAI = 0;
 	delayDead = ENEMY_BOSS_DELAY_DEATH;
 	delayAttack = 1500;
 	speed = 0;
@@ -134,6 +135,7 @@ void EnemyMiniBoss::UpdateState(float dt)
 		}
 		else if (this->health <= 3) {
 			bulletType = 1;
+			this->typeAI = 1;
 			animations[STANDING] = animations[LOWHP_STANDING];
 			animations[ATTACKING] = animations[LOWHP_ATTACKING];
 			this->ChangeState(STANDING);
@@ -185,6 +187,9 @@ void EnemyMiniBoss::Update(float dt)
 		}
 		if (delayDead <= 0)
 		{
+			Sound::getInstance()->stop("Theme");
+			Sound::getInstance()->play("victory", true);
+			Sound::getInstance()->setVolume(90.0f, "victory");
 			this->isDead = true;
 			this->isActive = false;
 		}
@@ -249,8 +254,7 @@ void EnemyMiniBoss::ChangeState(State StateName)
 	{
 		this->vx = this->dx = 0;
 		this->vy = this->dy = 0;
-		this->posY = this->groundBound.rect.y + (this->width >> 1);
-		//Sound::getInstance()->play("bossdie", true);
+		this->posY = this->groundBound.rect.y + (this->width >> 1) + 8;
 		break;
 	}
 	case INJURED:

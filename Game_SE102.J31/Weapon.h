@@ -79,6 +79,14 @@ public:
 				stateName = STANDING;
 				this->posY += 6;
 				this->posX += (player->isReverse ? 16 : -16);
+				isRender = true;
+				break;
+			}
+			case CLINGING: {
+				stateName = JUMPING;
+				this->posY += -2;
+				this->posX += (player->isReverse ? -5 : 5);
+				isRender = true;
 				break;
 			}
 			default:
@@ -141,7 +149,9 @@ public:
 						case LIGHTCONTROL:
 						{
 							auto e = (LightControl*)obj;
-							e->isAttacked = true;
+							if (!e->flashingTime) {
+								e->isAttacked = true;
+							}
 							break;
 						}
 						case BOSS1:
@@ -221,12 +231,12 @@ public:
 								if (b->vy == 0)
 								{
 									b->vx = b->dx = 0;
-									b->vy = b->dy = 6.0f;
+									b->vy = b->dy = 0.5f;
 									b->isStopped = true;
 									break;
 								}
 								else {
-									b->vx = b->dx = 6.0f;
+									b->vx = b->dx = 0.5f;
 									b->vy = b->dy = 0;
 									b->isStopped = true;
 									break;

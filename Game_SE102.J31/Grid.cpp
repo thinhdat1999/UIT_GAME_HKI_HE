@@ -93,6 +93,8 @@ void Grid::CreateGridFile(int level)
 				{
 					ifile >> value;
 					obj->value.push_back(value);
+					ifile >> value;
+					obj->value.push_back(value);
 					break;
 				}
 				case BLUESOLDIER:
@@ -100,18 +102,30 @@ void Grid::CreateGridFile(int level)
 					ifile >> value;
 					obj->value.push_back(value);
 					e->typeAI = value;
-					if (e->typeAI == 1) {
+					if (e->typeAI == 1 || e->typeAI == 0) {
 						ifile >> value;
 						obj->value.push_back(value);
 					}
 					break;
 				}
-				//Moving platform có vx, vy, distanceX, distanceY
+				//Moving platform có typeAI, vx, vy, distanceX, distanceY
 				case MOVING_PLATFORM: {
-					for (int i = 0; i < 4; ++i) {
-						ifile >> value;
-						obj->value.push_back(value);
+					ifile >> value;
+					obj->value.push_back(value);
+					e->typeAI = value;
+					if (e->typeAI == 0) {
+						for (int i = 0; i < 2; ++i) {
+							ifile >> value;
+							obj->value.push_back(value);
+						}
 					}
+					else if (e->typeAI == 1) {
+						for (int i = 0; i < 4; ++i) {
+							ifile >> value;
+							obj->value.push_back(value);
+						}
+					}
+					
 					break;
 				}
 				}
@@ -286,6 +300,11 @@ Grid::Grid(int level)
 					values.push_back(value);
 					soldier->activeDistance = value;
 				}
+				else if (soldier->typeAI == 0) {
+					ifile >> value;
+					values.push_back(value);
+					soldier->delay = value;
+				}
 				break;
 			}
 			case ROCKETSOLDIER: {
@@ -293,18 +312,39 @@ Grid::Grid(int level)
 				values.push_back(value);
 				auto soldier = (EnemyRocketSoldier*)enemy;
 				soldier->typeAI = value;
+				ifile >> value;
+				values.push_back(value);
+				soldier->bulletType = value;
 				break;
 			}
 			case MOVING_PLATFORM: {
 				auto platform = (MovingPlatform*)enemy;
 				ifile >> value;
-				platform->speed = float(value) / 10;
-				ifile >> value;
-				platform->vy = platform->dy = float(value);
-				ifile >> value;
-				platform->maxDistanceX = value;
-				ifile >> value;
-				platform->maxDistanceY = value;
+				values.push_back(value);
+				platform->typeAI = value;
+				platform->platformID = value;
+				if (platform->typeAI == 0) {
+					ifile >> value;
+					values.push_back(value);
+					platform->vx = platform->speed = float(value) / 10;
+					ifile >> value;
+					values.push_back(value);
+					platform->maxDistanceX = value;
+				}
+				else if (platform->typeAI == 1) {
+					ifile >> value;
+					values.push_back(value);
+					platform->vx = platform->speed = float(value) / 10;
+					ifile >> value;
+					values.push_back(value);
+					platform->vy = value;
+					ifile >> value;
+					values.push_back(value);
+					platform->maxDistanceX = value;
+					ifile >> value;
+					values.push_back(value);
+					platform->maxDistanceY = value;
+				}
 				break;
 			}
 			}
@@ -770,7 +810,7 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 							it = c->objects.erase(it);
 							respawnObjects.insert(e);
 						}
-						else if (e->type = MINITANK)
+						else if (e->type == MINITANK)
 						{
 							//e->isDead = false;
 							respawnObjects.insert(e);
@@ -791,23 +831,11 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 						else if (e->type == SPLITTING_PLATFORM || e->type == MOVING_PLATFORM) {
 							e->ChangeState(STANDING);
 						}
-						else if (e->type == BOSS1 || e->type == BOSS2) {
-							//auto boss = (EnemyWizard*)e;
-							//if (boss->bulletCountdown > 0 && !boss->firstJump) {
-							//	auto b = BulletManager::CreateBullet(BOSS1);
-							//	b->bulletType = 0;
-							//	b->ChangeType(b->bulletType);
-							//	b->isReverse = boss->isReverse;
-							//	boss->isReverse = !boss->isReverse;
-							//	if (!b->isReverse)
-							//		b->vx = -b->vx;
-							//	b->posX = b->isReverse ? SCREEN_WIDTH - 1 : 1;
-							//	b->posY = 54;
-							//	b->ChangeState(ACTIVE);
-							//	this->AddObject(b);
-							//	boss->bulletCountdown--;
-							//}
+						else if (e->type == BOSS2) {
 							e->ChangeState(FALLING);
+						}
+						else if (e->type == BOSS1) {
+							e->ChangeState(WAITING_TO_SPAWN);
 						}
 						else 
 						{
@@ -871,7 +899,7 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 				case ENEMY:
 				{
 					auto e = (Enemy*)o;
-					if (e->isActive)
+					if (e->isActive && e->type != MOVING_PLATFORM)
 					{
 						e->isActive = false;
 						it = c->objects.erase(it);
@@ -885,6 +913,10 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 							this->MoveObject(e, e->spawnX, e->spawnY);
 						}
 						continue;
+					}
+					else if (e->type == MOVING_PLATFORM) {
+						auto movingPlatform = (MovingPlatform*)e;
+						setObjects.insert(movingPlatform);
 					}
 					break;
 				}
