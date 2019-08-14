@@ -899,7 +899,7 @@ std::unordered_set<Object*> Grid::GetVisibleObjects()
 				case ENEMY:
 				{
 					auto e = (Enemy*)o;
-					if (e->isActive && e->type != MOVING_PLATFORM)
+					if (e->isActive && e->type != MOVING_PLATFORM && e->type != MINITANK)
 					{
 						e->isActive = false;
 						it = c->objects.erase(it);

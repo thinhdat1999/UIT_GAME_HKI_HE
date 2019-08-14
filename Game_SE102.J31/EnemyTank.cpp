@@ -26,7 +26,7 @@ EnemyTank::EnemyTank()
 
 	height = 16;
 	width = 16;
-	hitcount = 2;
+	hitcount = 1;
 	bullets = bulletCount = 1;
 	delayTime = 3000;
 	hitdelay = 1500;
