@@ -79,6 +79,14 @@ public:
 				stateName = STANDING;
 				this->posY += 6;
 				this->posX += (player->isReverse ? 16 : -16);
+				isRender = true;
+				break;
+			}
+			case CLINGING: {
+				stateName = JUMPING;
+				this->posY += -2;
+				this->posX += (player->isReverse ? -5 : 5);
+				isRender = true;
 				break;
 			}
 			default:
