@@ -659,8 +659,10 @@ void Player::OnKeyUp(int keyCode)
 void Player::SetHealth(int health)
 {
 	this->health = health;
-	scoreboard->playerHealth = health;
-
+	if (this->health > this->MaxHealth) {
+		this->health = this->MaxHealth;
+	}
+	scoreboard->playerHealth = this->health;
 	if (this->health <= 0)
 	{
 		scoreboard->playerHealth = 0;
