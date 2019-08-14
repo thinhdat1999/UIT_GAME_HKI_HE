@@ -15,8 +15,8 @@ EnemyFlyingRocket::EnemyFlyingRocket()
 	width = 18;
 	speed = 0.1f;
 	this->isReverse = true;
-	maxDistanceX = 60;
-	maxDistanceY = 30;
+	maxDistanceX = 80;
+	maxDistanceY = 25;
 	bullets = bulletCount = 1;
 	typeAI = 0;
 	this->isOnGround = false;

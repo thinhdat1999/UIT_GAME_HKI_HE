@@ -136,6 +136,9 @@ void PlayScene::UpdateObjects(float dt)
 			{
 				auto flying = (EnemyFlyingRocket*)e;
 				flying->CheckGroundCollision(grid->GetColliableGrounds(flying));
+				if (flying->stateName == INJURED || flying->stateName == DEAD) {
+					break;
+				}
 				if (flying->bulletCount > 0)
 				{
 					auto b = BulletManager::CreateBullet(e->type);
@@ -147,9 +150,8 @@ void PlayScene::UpdateObjects(float dt)
 					b->ChangeState(ACTIVE);
 					grid->AddObject(b);
 					flying->bulletCount--;
-
 				}
-				else if (flying->bulletCount == 0 && flying->delayTime < 1000)
+				else if (flying->bulletCount == 0 && flying->delayTime < 1000 && flying->stateName != INJURED)
 				{
 					flying->bulletCount = flying->bullets;
 					if (flying->typeAI == 0) {
@@ -384,7 +386,7 @@ void PlayScene::UpdateObjects(float dt)
 						if (!b->isReverse)
 							b->vx = -b->vx;
 						b->posX = e->posX + (e->isReverse ? 10 : -10);
-						b->posY = e->posY + 15;
+						b->posY = e->posY + 17;
 						b->ChangeState(ACTIVE);
 						grid->AddObject(b);
 						soldier->bulletCount--;

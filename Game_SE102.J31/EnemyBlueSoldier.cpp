@@ -46,7 +46,11 @@ void EnemyBlueSoldier::UpdateDistance(float dt)
 	switch (this->typeAI) {
 	case 0:
 	{
-		this->isReverse = (player->posX > this->posX);
+		if(delay == 3000)
+			this->isReverse = (player->posX > this->posX);
+		else {
+			this->isReverse = true;
+		}
 		delayTime -= dt;
 		switch (this->stateName) {
 		case SITTING:
