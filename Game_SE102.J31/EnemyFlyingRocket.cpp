@@ -14,6 +14,7 @@ EnemyFlyingRocket::EnemyFlyingRocket()
 	height = 24;
 	width = 18;
 	bullets = bulletCount = 1;
+	//speed = 0.1f;
 	typeAI = 0;
 	this->delayTime = 5000;
 }
@@ -22,6 +23,7 @@ EnemyFlyingRocket::EnemyFlyingRocket()
 void EnemyFlyingRocket::UpdateDistance(float dt)
 {
 	delayTime -= dt;
+	this->dx = vx * dt;
 	if (typeAI = 0)
 	{
 		this->isReverse = (player->posX > this->posX);
@@ -33,10 +35,23 @@ void EnemyFlyingRocket::UpdateDistance(float dt)
 			}
 		}
 	}
+	//}
+	//if (posX < 80)
+	//{
+	//	posX = 80;
+	//	speed = -0.1f;
+	//}
+	//if (posX > 160)
+	//{
+	//	posX = 160;
+	//}
+
+
 }
 
 void EnemyFlyingRocket::ChangeState(State StateName)
 {
+	isActive = true;
 	this->stateName = StateName;
 	this->curAnimation = animations[stateName];
 	switch (stateName)
