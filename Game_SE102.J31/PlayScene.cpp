@@ -135,6 +135,7 @@ void PlayScene::UpdateObjects(float dt)
 			case FLYINGROCKET:
 			{
 				auto flying = (EnemyFlyingRocket*)e;
+				flying->CheckGroundCollision(grid->GetColliableGrounds(flying));
 				if (flying->bulletCount > 0)
 				{
 					auto b = BulletManager::CreateBullet(e->type);

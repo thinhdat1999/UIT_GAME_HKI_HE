@@ -85,7 +85,7 @@ void Player::ChangeAnimation(State stateName)
 }
 void Player::DetectSpawnY(std::unordered_set<Platform*> grounds)
 {
-	this->groundBound = Platform();
+	//this->groundBound = Platform();
 
 	for (auto g : grounds)
 	{
@@ -197,6 +197,10 @@ void Player::Update(float dt, std::unordered_set<Object*> ColliableObjects)
 								case LIGHTCONTROL:
 									if(!o->flashingTime)
 										o->isAttacked = true;
+									r.isCollide = false;
+									break;
+								case FLYINGROCKET: 
+									o->ChangeState(INJURED);
 									r.isCollide = false;
 									break;
 								default:
